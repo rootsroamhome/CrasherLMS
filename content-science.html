@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rock Cycle — CrasherLMS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .back-btn { display:inline-flex; align-items:center; gap:6px; color:var(--text-muted); font-size:0.85rem; font-weight:500; margin-bottom:20px; transition:color .15s; }
+    .back-btn:hover { color:var(--text); }
+    .content-title { font-size:1.4rem; font-weight:700; margin-bottom:4px; }
+    .content-meta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:24px; }
+    .deep-item { padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:8px; }
+    .deep-item a { color:var(--accent); font-size:0.875rem; }
+    .deep-item a:hover { text-decoration:underline; }
+    .deep-item p { font-size:0.8rem; color:var(--text-dim); margin-top:3px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">CrasherLMS</span>
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Today</span>
+    </a>
+    <a href="rabbit-hole.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Rabbit Hole</span>
+    </a>
+    <a href="big-picture.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Big Picture</span>
+    </a>
+  </div>
+</nav>
+
+<main class="page">
+  <a href="index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Today's List
+  </a>
+
+  <div class="content-meta">
+    <span class="subject-badge" style="background:#14391f; color:#86EFAC;">Science</span>
+    <span style="font-size:0.75rem; color:var(--text-dim); font-family:monospace;">7.ESS2.1</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">Unit 1 — Earth Systems</span>
+  </div>
+
+  <div class="content-title">Earth's Rock Cycle — Building a Model</div>
+
+  <!-- Hook -->
+  <div class="content-section" style="margin-top:16px;">
+    <div class="content-section-header">
+      <span class="content-section-icon">🎬</span>
+      <span class="content-section-title">Hook</span>
+    </div>
+    <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">
+      The rock under your feet right now used to be lava. And in a few million years, it might be lava again.
+      The whole Earth is constantly recycling itself — slowly, violently, and in ways that would seem completely impossible
+      if you didn't know the science. Watch this eruption clip and try to imagine what happens to that lava after it cools.
+    </p>
+    <div class="video-wrap">
+      <!--
+        This is a spectacular volcanic eruption clip — short and visually striking.
+        Replace VIDEO_ID if you find a better one. Search: "volcanic eruption short clip hd"
+      -->
+      <iframe
+        src="https://www.youtube.com/embed/LQwZwKS9RPs"
+        title="Volcanic Eruption"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <!-- I Can -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✅</span>
+      <span class="content-section-title">I Can…</span>
+    </div>
+    <h2>I can build a model showing how Earth's materials cycle through processes like melting, weathering, and sedimentation.</h2>
+  </div>
+
+  <!-- I'll Know I've Got It When -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">🎯</span>
+      <span class="content-section-title">I'll Know I've Got It When…</span>
+    </div>
+    <h2>I can look at a rock and make a reasonable guess about how it formed — and explain what might happen to it next in the cycle.</h2>
+  </div>
+
+  <!-- Learn It -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">📚</span>
+      <span class="content-section-title">Choose How to Learn It — pick at least one</span>
+    </div>
+    <ul class="choice-list">
+      <li class="choice-item">
+        <span class="choice-type">Watch</span>
+        <span class="choice-desc">Crash Course Geography — The Rock Cycle</span>
+        <span class="choice-meta">~12 minutes — covers all three rock types and how they transform</span>
+        <a class="choice-link" href="https://www.youtube.com/watch?v=bUZhN7RWOZU" target="_blank" rel="noopener">
+          Watch on YouTube ↗
+        </a>
+      </li>
+      <li class="choice-item">
+        <span class="choice-type">Read</span>
+        <span class="choice-desc">CK-12 — The Rock Cycle (Earth Science, 7th Grade)</span>
+        <span class="choice-meta">~10 min read with diagrams and built-in questions</span>
+        <a class="choice-link" href="https://flexbooks.ck12.org/cbook/ck-12-earth-science-for-middle-school/section/3.4/primary/lesson/rock-cycle-ms-es/" target="_blank" rel="noopener">
+          Open on CK-12 ↗
+        </a>
+      </li>
+      <li class="choice-item">
+        <span class="choice-type">Explore</span>
+        <span class="choice-desc">USGS Interactive — How Rocks Form and Transform</span>
+        <span class="choice-meta">~10 min — click through each rock type and transformation</span>
+        <a class="choice-link" href="https://www.usgs.gov/programs/national-land-imaging-program/rock-cycle" target="_blank" rel="noopener">
+          Explore on USGS ↗
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Show It -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">📝</span>
+      <span class="content-section-title">Choose How to Show What You Learned — pick one</span>
+    </div>
+    <ul class="choice-list">
+      <li class="choice-item">
+        <span class="choice-type">Draw</span>
+        <span class="choice-desc">Draw and label the rock cycle from memory. Include: igneous, sedimentary, and metamorphic rocks, plus the processes that connect them (melting, cooling, weathering, pressure, etc.).</span>
+      </li>
+      <li class="choice-item">
+        <span class="choice-type">Write</span>
+        <span class="choice-desc">Write a paragraph telling the story of a single piece of granite. What happens to it over millions of years? Take it all the way through at least two full transformations.</span>
+      </li>
+      <li class="choice-item">
+        <span class="choice-type">Teach It Back</span>
+        <span class="choice-desc">Explain the rock cycle out loud to a parent, using your drawing as a guide. They should be able to ask "okay so what happens if it gets buried deep underground?" and you can answer without looking anything up.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Where Does Work Go -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">📁</span>
+      <span class="content-section-title">Where Does Your Work Go?</span>
+    </div>
+    <p><strong>Photo of drawing to your Drive folder</strong> — or tell a parent out loud and they'll note it when you mark done. Written paragraph goes in a Google Doc in your Drive folder.</p>
+  </div>
+
+  <!-- Going Deeper -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">🕳️</span>
+      <span class="content-section-title">Going Deeper — totally optional, only if curious</span>
+    </div>
+    <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:12px;">No pressure. Only if something made you go "wait, but what about…"</p>
+    <div class="deep-item">
+      <a href="https://www.youtube.com/watch?v=dHrPOBaQKyA" target="_blank" rel="noopener">How old are rocks? — Dating rocks with radioactivity ↗</a>
+      <p>~8 min — scientists figured out a way to measure time using atoms that slowly fall apart</p>
+    </div>
+    <div class="deep-item">
+      <a href="https://www.youtube.com/watch?v=pSGR7h3r7cY" target="_blank" rel="noopener">Hydrothermal vents — rocks forming in the ocean right now ↗</a>
+      <p>~5 min — there are places at the bottom of the ocean where new rock is being made this very second</p>
+    </div>
+  </div>
+
+  <!-- Mark Done -->
+  <div class="content-section" id="mark-done-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">All done?</span>
+    </div>
+    <p style="margin-bottom:12px; font-size:0.875rem; color:var(--text-muted);">Head back to your list and hit "Mark Done" — or do it right here.</p>
+    <div id="done-area"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const recordId = params.get('recordId');
+  const TODAY = new Date().toISOString().split('T')[0];
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  if (recordId) {
+    document.getElementById('done-area').innerHTML = `
+      <textarea id="notes-content" class="rh-input" placeholder="Where is your work? (Drive photo, verbal to parent, notebook…)"></textarea>
+      <button class="btn btn-success" onclick="markDone()">✓ Mark This Done</button>
+    `;
+  } else {
+    document.getElementById('done-area').innerHTML = `<a href="index.html" class="btn btn-ghost">← Go back to Today's List</a>`;
+  }
+
+  async function markDone() {
+    const notes = document.getElementById('notes-content')?.value.trim() || '';
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: { Status: 'Done', 'Completion date': TODAY, 'Student notes': notes } }),
+      });
+      if (!res.ok) throw new Error('Save failed');
+      showToast('Marked done! ✓');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+    } catch (e) {
+      showToast('Error saving — try from the main list.');
+    }
+  }
+  window.markDone = markDone;
+</script>
+</body>
+</html>

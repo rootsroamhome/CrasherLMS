@@ -1,0 +1,24 @@
+# Netlify configuration for CrasherLMS
+
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+
+# Route /api/airtable/* → the serverless proxy function
+[[redirects]]
+  from   = "/api/airtable/*"
+  to     = "/.netlify/functions/airtable/:splat"
+  status = 200
+
+# Cache static assets
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

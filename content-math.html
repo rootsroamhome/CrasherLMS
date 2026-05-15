@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rational Numbers — CrasherLMS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+      transition: color 0.15s;
+    }
+    .back-btn:hover { color: var(--text); }
+    .content-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+    .content-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .deep-item {
+      padding: 10px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+    }
+    .deep-item a { color: var(--accent); font-size: 0.875rem; }
+    .deep-item a:hover { text-decoration: underline; }
+    .deep-item p { font-size: 0.8rem; color: var(--text-dim); margin-top: 3px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">CrasherLMS</span>
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Today</span>
+    </a>
+    <a href="rabbit-hole.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Rabbit Hole</span>
+    </a>
+    <a href="big-picture.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Big Picture</span>
+    </a>
+  </div>
+</nav>
+
+<main class="page">
+  <a href="index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Today's List
+  </a>
+
+  <div class="content-meta">
+    <span class="subject-badge" style="background:#1e3a5f; color:#93C5FD;">Math</span>
+    <span style="font-size:0.75rem; color:var(--text-dim); font-family:monospace;">7.NS.A.1</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">Unit 1 — Number Sense</span>
+  </div>
+
+  <div class="content-title">Rational Numbers — Adding and Subtracting</div>
+
+  <!-- Hook -->
+  <div class="content-section" style="margin-top:16px;">
+    <div class="content-section-header">
+      <span class="content-section-icon">🎬</span>
+      <span class="content-section-title">Hook</span>
+    </div>
+    <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">
+      You've already been using negative numbers your whole life — you just didn't know it.
+      Every time someone owes money, checks the temperature in winter, or talks about sea level, they're doing math with negatives.
+      Watch this 90-second clip to see where negative numbers show up in the real world.
+    </p>
+    <div class="video-wrap">
+      <!--
+        Replace VIDEO_ID below with the YouTube video ID you want to use.
+        Example: if the URL is https://www.youtube.com/watch?v=ABC123, use ABC123.
+        Good search: "negative numbers real world examples short"
+      -->
+      <iframe
+        src="https://www.youtube.com/embed/cgRVk3HQKX4"
+        title="Negative Numbers in Real Life"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <!-- I Can -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✅</span>
+      <span class="content-section-title">I Can…</span>
+    </div>
+    <h2>I can add and subtract positive and negative rational numbers and explain why subtraction is the same as adding the opposite.</h2>
+  </div>
+
+  <!-- I'll Know I've Got It When -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">🎯</span>
+      <span class="content-section-title">I'll Know I've Got It When…</span>
+    </div>
+    <h2>I can solve problems with negative numbers without a calculator and explain my thinking out loud — no peeking at notes.</h2>
+  </div>
+
+  <!-- Learn It -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">📚</span>
+      <span class="content-section-title">Choose How to Learn It — pick at least one</span>
+    </div>
+    <ul class="choice-list">
+      <li class="choice-item">
+        <span class="choice-type">Watch</span>
+        <span class="choice-desc">Khan Academy — Adding &amp; Subtracting Negative Numbers</span>
+        <span class="choice-meta">~15 minutes of video + practice</span>
+        <a class="choice-link" href="https://www.khanacademy.org/math/7th-grade-foundations-engageny/7th-m2-engage-ny-foundations/7th-m2-ta-foundations/v/adding-negative-numbers" target="_blank" rel="noopener">
+          Open on Khan Academy ↗
+        </a>
+      </li>
+      <li class="choice-item">
+        <span class="choice-type">Read</span>
+        <span class="choice-desc">CK-12 — Adding and Subtracting Rational Numbers (7th Grade)</span>
+        <span class="choice-meta">~10 min read + built-in practice questions</span>
+        <a class="choice-link" href="https://flexbooks.ck12.org/cbook/ck-12-middle-school-math-concepts-grade-7/section/2.1/primary/lesson/add-and-subtract-rational-numbers-msm7/" target="_blank" rel="noopener">
+          Open on CK-12 ↗
+        </a>
+      </li>
+      <li class="choice-item">
+        <span class="choice-type">Talk</span>
+        <span class="choice-desc">Ask a parent: "Can you think of a time this week where you either spent money or earned money? Let's add those up using positive and negative numbers together."</span>
+        <span class="choice-meta">10–15 min conversation</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Show It -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">📝</span>
+      <span class="content-section-title">Choose How to Show What You Learned — pick one</span>
+    </div>
+    <ul class="choice-list">
+      <li class="choice-item">
+        <span class="choice-type">Practice Problems</span>
+        <span class="choice-desc">Complete 5 practice problems on Khan Academy and screenshot your score.</span>
+        <a class="choice-link" href="https://www.khanacademy.org/math/7th-grade-foundations-engageny/7th-m2-engage-ny-foundations/7th-m2-ta-foundations/e/adding-negative-numbers" target="_blank" rel="noopener">
+          Start Practice ↗
+        </a>
+      </li>
+      <li class="choice-item">
+        <span class="choice-type">Teach It Back</span>
+        <span class="choice-desc">Explain out loud to a parent: How would you calculate it if you owed someone $15, then earned $8, then spent $3 more? Walk them through it step by step.</span>
+      </li>
+      <li class="choice-item">
+        <span class="choice-type">Write</span>
+        <span class="choice-desc">Write out three real-life situations where you'd use negative numbers. For each one, write the math equation that goes with it.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Where Does Work Go -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">📁</span>
+      <span class="content-section-title">Where Does Your Work Go?</span>
+    </div>
+    <p><strong>Screenshot to your Drive folder</strong> — or just tell a parent out loud and they'll note it in your to-do list when you mark it done.</p>
+  </div>
+
+  <!-- Going Deeper -->
+  <div class="content-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">🕳️</span>
+      <span class="content-section-title">Going Deeper — totally optional, only if curious</span>
+    </div>
+    <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:12px;">No pressure. Only if a question popped into your head while you were learning.</p>
+    <div class="deep-item">
+      <a href="https://www.youtube.com/watch?v=BRRolKTlF6Q" target="_blank" rel="noopener">Why do two negatives make a positive? ↗</a>
+      <p>Numberphile video (~8 min) — the real mathematical reason, not just the rule</p>
+    </div>
+    <div class="deep-item">
+      <a href="https://www.khanacademy.org/math/7th-grade-foundations-engageny/7th-m2-engage-ny-foundations/7th-m2-ta-foundations/v/number-line-adding-negative-numbers" target="_blank" rel="noopener">Number Line — Visualizing Negative Addition ↗</a>
+      <p>If the rule feels magical and you want it to make visual sense, this helps</p>
+    </div>
+  </div>
+
+  <!-- Mark Done from content page -->
+  <div class="content-section" id="mark-done-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">All done?</span>
+    </div>
+    <p style="margin-bottom:12px; font-size:0.875rem; color:var(--text-muted);">Head back to your list and hit "Mark Done" — or do it right here.</p>
+    <div id="done-area"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script>
+  // Read recordId from URL params so Mark Done works from this page
+  const params = new URLSearchParams(window.location.search);
+  const recordId = params.get('recordId');
+  const TODAY = new Date().toISOString().split('T')[0];
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  if (recordId) {
+    document.getElementById('done-area').innerHTML = `
+      <textarea id="notes-content" class="rh-input" placeholder="Where is your work? (Drive screenshot, verbal to parent, notebook…)"></textarea>
+      <button class="btn btn-success" onclick="markDone()">✓ Mark This Done</button>
+    `;
+  } else {
+    document.getElementById('done-area').innerHTML = `<a href="index.html" class="btn btn-ghost">← Go back to Today's List</a>`;
+  }
+
+  async function markDone() {
+    const notes = document.getElementById('notes-content')?.value.trim() || '';
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: { Status: 'Done', 'Completion date': TODAY, 'Student notes': notes } }),
+      });
+      if (!res.ok) throw new Error('Save failed');
+      showToast('Marked done! ✓');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+    } catch (e) {
+      showToast('Error saving — try from the main list.');
+    }
+  }
+  window.markDone = markDone;
+</script>
+</body>
+</html>

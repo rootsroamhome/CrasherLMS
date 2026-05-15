@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Brain This Week — CrasherLMS</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">CrasherLMS</span>
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Today</span>
+    </a>
+    <a href="rabbit-hole.html" class="nav-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Rabbit Hole</span>
+    </a>
+    <a href="big-picture.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Big Picture</span>
+    </a>
+  </div>
+</nav>
+
+<main class="page">
+  <div class="page-header">
+    <!-- He'll rename this himself — placeholder name here -->
+    <h1>Your Brain This Week</h1>
+    <div class="date">These are yours. No right answer. No rubric. Just space.</div>
+  </div>
+
+  <!-- Important framing note at top -->
+  <div style="background:rgba(20,184,166,0.1); border:1px solid rgba(20,184,166,0.3); border-radius:var(--radius); padding:14px 16px; margin-bottom:24px; font-size:0.875rem; color:#5EEAD4; line-height:1.6;">
+    These are <strong>not lessons</strong>. There's no rubric, no right answer, nothing to grade.
+    This is school making room for the stuff you already think about — not asking you to think about something new.
+    Do what sounds interesting. Skip what doesn't.
+  </div>
+
+  <!-- Long item: Make Something -->
+  <div class="card rh-card" style="--card-accent: #14B8A6;">
+    <span class="subject-badge" style="background:#0d3330; color:#5EEAD4;">Rabbit Hole</span>
+    <div class="section-label" style="margin-top:10px;">~15–20 min · Anytime this week</div>
+    <div class="todo-title" style="margin-bottom:10px;">Make Something</div>
+    <div class="rh-prompt">
+      Make something — a video, a drawing, a voice memo, a slideshow, a song, a meme, a story, a diagram of something you've been thinking about, whatever. No topic requirement. No rules. Just make something and drop it somewhere we can find it (or tell us where it is).
+    </div>
+
+    <label for="make-where" style="font-size:0.8rem; color:var(--text-muted); font-weight:500;">Where is it? (Drive link, or describe it)</label>
+    <textarea class="rh-input" id="make-where" placeholder="e.g. Google Drive / Drawings folder  — or just describe it here"></textarea>
+    <button class="btn btn-success" id="make-btn" onclick="submitRabbitHole('make', 'make-where', 'make-btn', 'Make Something')">
+      Drop it here ↑
+    </button>
+    <div class="submit-confirm" id="make-confirm" style="display:none; color:#5EEAD4; font-size:0.85rem; margin-top:8px;">Saved! ✓</div>
+  </div>
+
+  <!-- Short item 1: Share Something Weird -->
+  <div class="card rh-card" style="--card-accent: #14B8A6;">
+    <span class="subject-badge" style="background:#0d3330; color:#5EEAD4;">Rabbit Hole</span>
+    <div class="section-label" style="margin-top:10px;">~2–5 min · Anytime this week</div>
+    <div class="todo-title" style="margin-bottom:10px;">Share Something Weird</div>
+    <div class="rh-prompt">
+      Find something weird or interesting on the internet this week. Could be a video, an article, a photo, a subreddit, a Wikipedia deep dive, anything. Drop the link here and write one sentence about why you're sharing it.
+    </div>
+
+    <label for="weird-link" style="font-size:0.8rem; color:var(--text-muted); font-weight:500;">The link</label>
+    <input type="url" class="rh-input" id="weird-link" placeholder="https://..." style="min-height:auto; resize:none; height:40px;" />
+
+    <label for="weird-why" style="font-size:0.8rem; color:var(--text-muted); font-weight:500; margin-top:8px; display:block;">One sentence — why are you sharing this?</label>
+    <textarea class="rh-input" id="weird-why" placeholder="Because it made me think / it's impossible / I've never seen anything like it / I have 12 questions now…" style="min-height:54px;"></textarea>
+
+    <button class="btn btn-success" id="weird-btn" onclick="submitWeird()">
+      Share it ↑
+    </button>
+    <div class="submit-confirm" id="weird-confirm" style="display:none; color:#5EEAD4; font-size:0.85rem; margin-top:8px;">Saved! ✓</div>
+  </div>
+
+  <!-- Short item 2: Right Now -->
+  <div class="card rh-card" style="--card-accent: #14B8A6;">
+    <span class="subject-badge" style="background:#0d3330; color:#5EEAD4;">Rabbit Hole</span>
+    <div class="section-label" style="margin-top:10px;">~2–5 min · Anytime this week</div>
+    <div class="todo-title" style="margin-bottom:10px;">What Are You Into Right Now?</div>
+    <div class="rh-prompt">
+      Drop a quick thought, reaction, or update about something you're currently into. Could be a game, a show, a band, something you've been thinking about, something you figured out, anything. Voice memo, photo, or just type it here. No requirements.
+    </div>
+
+    <label for="into-note" style="font-size:0.8rem; color:var(--text-muted); font-weight:500;">Type it here — or describe where a voice memo / photo is</label>
+    <textarea class="rh-input" id="into-note" placeholder="I've been really into… / I just figured out… / This week I can't stop thinking about…"></textarea>
+    <button class="btn btn-success" id="into-btn" onclick="submitRabbitHole('into', 'into-note', 'into-btn', 'What Are You Into Right Now?')">
+      Drop it here ↑
+    </button>
+    <div class="submit-confirm" id="into-confirm" style="display:none; color:#5EEAD4; font-size:0.85rem; margin-top:8px;">Saved! ✓</div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script src="rabbit-hole.js"></script>
+</body>
+</html>
