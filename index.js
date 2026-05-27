@@ -263,7 +263,7 @@ async function loadTodos() {
       records = await airtableGet(TABLES.todos, filter, [{ field: 'Scheduled date', direction: 'asc' }]);
       runCarryForward(records).catch(e => console.warn('carry-forward:', e));
     } else {
-      filter = `AND({Scheduled date}>="${viewDate}",{Scheduled date}<="${viewDate}")`;
+      filter = `IS_SAME({Scheduled date},"${viewDate}","day")`;
       records = await airtableGet(TABLES.todos, filter, [{ field: 'Scheduled date', direction: 'asc' }]);
     }
 
