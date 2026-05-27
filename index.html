@@ -30,8 +30,21 @@
 <!-- Page -->
 <main class="page">
   <div class="page-header">
-    <h1>Today's List</h1>
-    <div class="date" id="today-date"></div>
+    <div class="date-nav">
+      <button class="btn btn-ghost" id="prev-day">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Prev
+      </button>
+      <div class="date-nav-center">
+        <div class="date-nav-label" id="nav-title">Today's List</div>
+        <div class="date-nav-sub" id="nav-date"></div>
+        <button class="btn btn-today" id="back-today" style="display:none">Back to Today</button>
+      </div>
+      <button class="btn btn-ghost" id="next-day">
+        Next
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
   </div>
 
   <div id="todo-list">

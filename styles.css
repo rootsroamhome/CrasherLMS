@@ -533,6 +533,81 @@ button { font-family: var(--font); cursor: pointer; }
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
+/* ---- Date navigation ---- */
+.date-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.date-nav-center {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+}
+
+.date-nav-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.date-nav-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.date-nav .btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.btn-today {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  margin-top: 4px;
+}
+.btn-today:hover { background: rgba(59,130,246,0.1); }
+
+.view-banner {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  text-align: center;
+}
+.view-banner.past  { border-left: 3px solid var(--text-dim); }
+.view-banner.future { border-left: 3px solid var(--accent); }
+
+.card-past-done .todo-title { text-decoration: line-through; color: var(--text-dim); }
+.card-past-done { opacity: 0.65; }
+.card-future { opacity: 0.55; }
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  margin-top: 8px;
+}
+.status-badge.done    { background: rgba(34,197,94,0.15); color: #86EFAC; }
+.status-badge.pending { background: rgba(100,116,139,0.15); color: var(--text-dim); }
+.status-badge.preview { background: rgba(59,130,246,0.12); color: #93C5FD; }
+
 /* ---- Responsive ---- */
 @media (max-width: 600px) {
   .nav-brand { display: none; }
