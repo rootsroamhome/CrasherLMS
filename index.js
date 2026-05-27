@@ -17,6 +17,12 @@ function proxyUrl(table, recordId = '') {
   return recordId ? `${base}/${recordId}` : base;
 }
 
+function fetchWithTimeout(url, opts = {}, ms = 10000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(timer));
+}
+
 async function airtableGet(table, filterFormula, sort = []) {
   const params = new URLSearchParams();
   if (filterFormula) params.set('filterByFormula', filterFormula);
@@ -24,14 +30,14 @@ async function airtableGet(table, filterFormula, sort = []) {
     params.set(`sort[${i}][field]`, s.field);
     params.set(`sort[${i}][direction]`, s.direction || 'asc');
   });
-  const res  = await fetch(`${proxyUrl(table)}?${params}`);
+  const res  = await fetchWithTimeout(`${proxyUrl(table)}?${params}`);
   const json = await res.json();
   if (!res.ok) throw new Error(json.error?.message || 'Failed to load list');
   return json.records || [];
 }
 
 async function airtablePatch(table, recordId, fields) {
-  const res = await fetch(proxyUrl(table, recordId), {
+  const res = await fetchWithTimeout(proxyUrl(table, recordId), {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ fields }),
@@ -252,7 +258,7 @@ async function loadTodos() {
     if (mode === 'today') {
       filter = `AND({Status}="Not Started", {Scheduled date}<="${TODAY}")`;
       records = await airtableGet(TABLES.todos, filter, [{ field: 'Scheduled date', direction: 'asc' }]);
-      await runCarryForward(records);
+      runCarryForward(records).catch(e => console.warn('carry-forward:', e));
     } else {
       filter = `{Scheduled date}="${viewDate}"`;
       records = await airtableGet(TABLES.todos, filter, [{ field: 'Scheduled date', direction: 'asc' }]);
