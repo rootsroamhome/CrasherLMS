@@ -11,7 +11,7 @@
  *   Key: AIRTABLE_BASE_ID   Value: appIDb3twC9mJj4jO
  */
 const CONFIG = {
-  apiBase: '/api/airtable',   // proxied through Netlify function
+  apiBase: '/.netlify/functions/airtable',
 };
 
 // Table names — change here if you rename them in Airtable
