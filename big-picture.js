@@ -19,7 +19,10 @@ async function airtableGetAll(table, filterFormula) {
     const url  = `${CONFIG.apiBase}/${encodeURIComponent(table)}?${params}`;
     const res  = await fetch(url);
     const json = await res.json();
-    if (!res.ok) throw new Error(json.error?.message || 'Fetch failed');
+    if (!res.ok) {
+      const msg = (typeof json.error === 'string' ? json.error : json.error?.message) || `HTTP ${res.status}`;
+      throw new Error(msg);
+    }
 
     all.push(...(json.records || []));
     offset = json.offset || null;

@@ -32,7 +32,10 @@ async function airtableGet(table, filterFormula, sort = []) {
   });
   const res  = await fetchWithTimeout(`${proxyUrl(table)}?${params}`);
   const json = await res.json();
-  if (!res.ok) throw new Error(json.error?.message || 'Failed to load list');
+  if (!res.ok) {
+    const msg = (typeof json.error === 'string' ? json.error : json.error?.message) || `HTTP ${res.status}`;
+    throw new Error(msg);
+  }
   return json.records || [];
 }
 

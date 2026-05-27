@@ -16,7 +16,7 @@ exports.handler = async (event) => {
   if (!API_KEY || !BASE_ID) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Missing AIRTABLE_API_KEY or AIRTABLE_BASE_ID environment variables.' }),
+      body: JSON.stringify({ error: { message: 'Missing AIRTABLE_API_KEY or AIRTABLE_BASE_ID environment variables on Netlify.' } }),
     };
   }
 
