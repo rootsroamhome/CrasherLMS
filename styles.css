@@ -635,7 +635,7 @@ button { font-family: var(--font); cursor: pointer; }
 
 .card-past-done .todo-title { text-decoration: line-through; color: var(--text-dim); }
 .card-past-done { opacity: 0.7; }
-.card-future { opacity: 0.65; }
+.card-future { opacity: 1; }
 
 .status-badge {
   display: inline-flex;
