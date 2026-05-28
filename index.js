@@ -289,7 +289,8 @@ async function loadTodos() {
     let filter;
 
     if (mode === 'today') {
-      filter = `AND({Status}="Not Started", {Scheduled date}<="${TODAY}")`;
+      const tomorrow = offsetDate(TODAY, 1);
+      filter = `AND({Status}="Not Started", {Scheduled date}<"${tomorrow}")`;
       records = await airtableGet(TABLES.todos, filter, [{ field: 'Scheduled date', direction: 'asc' }]);
       runCarryForward(records).catch(e => console.warn('carry-forward:', e));
     } else {
