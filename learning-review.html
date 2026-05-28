@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Review — CrasherLMS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .review-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+    .review-filters { display:flex; gap:12px; margin-bottom:20px; }
+    .filter-select { padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-size:0.9rem; }
+    .review-table { width:100%; border-collapse:collapse; margin-top:20px; }
+    .review-table th { text-align:left; padding:12px; background:var(--bg); border:1px solid var(--border); font-weight:600; font-size:0.85rem; text-transform:uppercase; color:var(--text-dim); }
+    .review-table td { padding:14px 12px; border:1px solid var(--border); font-size:0.9rem; }
+    .review-table tr:hover { background:var(--bg); }
+    .assignment-name { font-weight:500; }
+    .i-can { font-size:0.85rem; color:var(--text-dim); font-style:italic; margin-top:4px; }
+    .response-preview { max-height:60px; overflow-y:auto; font-size:0.85rem; color:var(--text-muted); background:var(--bg-secondary); padding:8px; border-radius:4px; margin-top:4px; }
+    .unit-badge { display:inline-block; padding:4px 8px; background:var(--bg); border:1px solid var(--border); border-radius:4px; font-size:0.75rem; color:var(--text-dim); }
+    .score-cell { min-width:140px; }
+    .proficiency-badge { display:inline-block; padding:6px 10px; border-radius:4px; font-size:0.8rem; font-weight:600; }
+    .proficiency-badge.developing { background:#fee2e2; color:#991b1b; }
+    .proficiency-badge.proficient { background:#dbeafe; color:#1e40af; }
+    .proficiency-badge.advanced { background:#dcfce7; color:#166534; }
+    .score-btn { padding:6px 12px; font-size:0.8rem; background:var(--accent); color:white; border:none; border-radius:4px; cursor:pointer; transition:opacity .2s; }
+    .score-btn:hover { opacity:0.8; }
+    .score-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .feedback-text { font-size:0.8rem; color:var(--text-dim); margin-top:6px; line-height:1.4; }
+    .loading { display:inline-block; width:16px; height:16px; border:2px solid var(--border); border-top:2px solid var(--accent); border-radius:50%; animation:spin .6s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .empty-state { padding:40px; text-align:center; color:var(--text-dim); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">CrasherLMS</span>
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Today</span>
+    </a>
+    <a href="rabbit-hole.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Rabbit Hole</span>
+    </a>
+    <a href="big-picture.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Big Picture</span>
+    </a>
+  </div>
+</nav>
+
+<main class="page">
+  <div class="review-header">
+    <h1>Learning Review</h1>
+    <p style="color:var(--text-dim); font-size:0.9rem;">All completed work and AI scores</p>
+  </div>
+
+  <div class="review-filters">
+    <select class="filter-select" id="subject-filter">
+      <option value="">All Subjects</option>
+      <option value="Science">Science</option>
+      <option value="Math">Math</option>
+      <option value="ELA">ELA</option>
+      <option value="Social Science">Social Science</option>
+    </select>
+    <input type="date" class="filter-select" id="date-from" placeholder="From date" />
+    <input type="date" class="filter-select" id="date-to" placeholder="To date" />
+    <button class="btn btn-ghost" onclick="applyFilters()" style="padding:8px 16px; font-size:0.9rem;">Filter</button>
+  </div>
+
+  <div id="review-container">
+    <div class="empty-state">Loading work...</div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script>
+  let allRecords = [];
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  async function loadReviews() {
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}?filterByFormula={Status}="Done"&sort[0][field]=Scheduled%20date&sort[0][direction]=desc&pageSize=100`);
+      if (!res.ok) throw new Error('Failed to load records');
+      const data = await res.json();
+      allRecords = data.records || [];
+      renderReviews(allRecords);
+    } catch (e) {
+      console.error(e);
+      document.getElementById('review-container').innerHTML = `<div class="empty-state">Error loading work. ${e.message}</div>`;
+    }
+  }
+
+  function renderReviews(records) {
+    if (records.length === 0) {
+      document.getElementById('review-container').innerHTML = '<div class="empty-state">No completed work yet.</div>';
+      return;
+    }
+
+    let html = `
+      <table class="review-table">
+        <thead>
+          <tr>
+            <th>Unit</th>
+            <th>Date</th>
+            <th>Assignment</th>
+            <th>I Can…</th>
+            <th>Response</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    for (const rec of records) {
+      const f = rec.fields;
+      const unit = f['Unit'] || 'Uncategorized';
+      const date = f['Scheduled date'] || '—';
+      const itemName = f['Item name'] || '—';
+      const iCan = f['I Can statement'] || '—';
+      const response = f['Student notes'] || '';
+      const contentLink = f['Content page link'] || '';
+      const aiScore = f['AI Score'] || '';
+      const aiFeedback = f['AI Feedback'] || '';
+
+      const scoreHtml = aiScore
+        ? `<div class="proficiency-badge ${aiScore.toLowerCase()}">${aiScore}</div><div class="feedback-text">${aiFeedback}</div>`
+        : `<button class="score-btn" onclick="scoreResponse('${rec.id}', '${itemName.replace(/'/g, "\\'")}', '${iCan.replace(/'/g, "\\'")}')">Score</button>`;
+
+      const linkHtml = contentLink ? `<a href="${contentLink}?recordId=${rec.id}" target="_blank" style="color:var(--accent); text-decoration:none;">→</a>` : '';
+
+      html += `
+        <tr>
+          <td><span class="unit-badge">${unit.split('—')[1]?.trim() || unit}</span></td>
+          <td>${date}</td>
+          <td>
+            <div class="assignment-name">${itemName} ${linkHtml}</div>
+            <div class="i-can">${iCan}</div>
+          </td>
+          <td style="max-width:300px;">
+            <div class="response-preview">${response}</div>
+          </td>
+          <td class="score-cell">${scoreHtml}</td>
+        </tr>
+      `;
+    }
+
+    html += `</tbody></table>`;
+    document.getElementById('review-container').innerHTML = html;
+  }
+
+  window.scoreResponse = async function (recordId, itemName, iCanStatement) {
+    const btn = event.target;
+    btn.disabled = true;
+    btn.innerHTML = '<div class="loading"></div>';
+
+    try {
+      const res = await fetch('/.netlify/functions/score-response', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          response: allRecords.find(r => r.id === recordId)?.fields['Student notes'] || '',
+          iCanStatement,
+          assignmentName: itemName,
+        }),
+      });
+
+      if (!res.ok) throw new Error('Scoring failed');
+      const { proficiency, feedback } = await res.json();
+
+      // Save to Airtable
+      const updateRes = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fields: {
+            'AI Score': proficiency,
+            'AI Feedback': feedback,
+          },
+        }),
+      });
+
+      if (!updateRes.ok) throw new Error('Save failed');
+
+      // Update display
+      const rec = allRecords.find(r => r.id === recordId);
+      if (rec) {
+        rec.fields['AI Score'] = proficiency;
+        rec.fields['AI Feedback'] = feedback;
+      }
+      renderReviews(allRecords);
+      showToast('Response scored! ✓');
+    } catch (e) {
+      console.error(e);
+      showToast(`Error: ${e.message}`);
+      btn.disabled = false;
+      btn.innerHTML = 'Score';
+    }
+  };
+
+  function applyFilters() {
+    const subject = document.getElementById('subject-filter').value;
+    const dateFrom = document.getElementById('date-from').value;
+    const dateTo = document.getElementById('date-to').value;
+
+    let filtered = allRecords;
+
+    if (subject) {
+      filtered = filtered.filter(r => r.fields['Subject'] === subject);
+    }
+
+    if (dateFrom) {
+      filtered = filtered.filter(r => (r.fields['Scheduled date'] || '') >= dateFrom);
+    }
+
+    if (dateTo) {
+      filtered = filtered.filter(r => (r.fields['Scheduled date'] || '') <= dateTo);
+    }
+
+    renderReviews(filtered);
+  }
+
+  loadReviews();
+</script>
+</body>
+</html>
