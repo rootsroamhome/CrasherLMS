@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matter & Energy in Organisms — CrasherLMS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .back-btn { display:inline-flex; align-items:center; gap:6px; color:var(--text-muted); font-size:0.85rem; font-weight:500; margin-bottom:20px; transition:color .15s; }
+    .back-btn:hover { color:var(--text); }
+    .content-title { font-size:1.4rem; font-weight:700; margin-bottom:4px; }
+    .content-meta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:24px; }
+    .content-section { margin-bottom:28px; }
+    .content-section-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .content-section-icon { font-size:1.2rem; }
+    .content-section-title { font-size:1rem; font-weight:600; }
+    .choice-list { list-style:none; padding:0; }
+    .choice-item { padding:14px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px; }
+    .choice-type { display:inline-block; font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
+    .choice-desc { display:block; font-size:0.95rem; font-weight:500; margin-bottom:6px; }
+    .choice-meta { display:block; font-size:0.8rem; color:var(--text-dim); margin-bottom:8px; }
+    .check-option { padding:12px; background:var(--bg-secondary); border-left:3px solid var(--accent); margin-bottom:12px; }
+    .check-option-title { font-weight:600; margin-bottom:6px; font-size:0.95rem; }
+    .check-option-desc { font-size:0.85rem; color:var(--text-dim); line-height:1.4; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">CrasherLMS</span>
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Today</span>
+    </a>
+    <a href="rabbit-hole.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Rabbit Hole</span>
+    </a>
+    <a href="big-picture.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Big Picture</span>
+    </a>
+  </div>
+</nav>
+
+<main class="page" id="content-main">
+  <a href="index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Today's List
+  </a>
+
+  <div class="content-meta">
+    <span class="subject-badge" style="background:#14391f; color:#86EFAC;">Science</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">MS-LS1-6, MS-LS1-7</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">Unit 2 — Matter & Energy in Organisms</span>
+  </div>
+
+  <div class="content-title" id="lesson-title">Matter & Energy in Organisms</div>
+  <div id="lesson-content"></div>
+
+  <div class="content-section" id="check-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">Show What You Know — Pick One</span>
+    </div>
+    <div id="check-options"></div>
+  </div>
+
+  <div class="content-section" id="mark-done-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">Mark This Done</span>
+    </div>
+    <p style="margin-bottom:12px; font-size:0.875rem; color:var(--text-muted);">Once you've completed your chosen check above, submit it here.</p>
+    <div id="done-area"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const recordId = params.get('recordId');
+  const TODAY = new Date().toISOString().split('T')[0];
+
+  const lessonData = {
+    'Photosynthesis in organisms': {
+      title: 'Photosynthesis in Organisms',
+      hook: 'Plants are solar panels with roots. They capture light energy from the sun and turn it into chemical energy (sugar) that they can use to grow. All the food on Earth — everything you eat — started with a plant doing photosynthesis.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header"><span class="content-section-icon">🎬</span><span class="content-section-title">Hook</span></div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Plants are solar panels with roots. They capture light energy from the sun and turn it into chemical energy (sugar) that they can use to grow. All the food on Earth — everything you eat — started with a plant doing photosynthesis.</p>
+        </div>
+        <div class="content-section">
+          <div class="content-section-header"><span class="content-section-icon">✅</span><span class="content-section-title">I Can…</span></div>
+          <h2>I can explain how plants use photosynthesis to turn light energy into chemical energy (sugar) that powers their growth.</h2>
+        </div>
+        <div class="content-section">
+          <div class="content-section-header"><span class="content-section-icon">📚</span><span class="content-section-title">Learn It — Pick at least one way</span></div>
+          <ul class="choice-list">
+            <li class="choice-item"><span class="choice-type">Watch</span><span class="choice-desc">Khan Academy — Photosynthesis</span><span class="choice-meta">~12 min</span><a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-organisms/x0c5bb03129646fd6:photosynthesis-in-organisms" target="_blank" rel="noopener">Watch ↗</a></li>
+            <li class="choice-item"><span class="choice-type">Read</span><span class="choice-desc">How Plants Make Food from Sunlight</span><span class="choice-meta">~10 min</span><a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-organisms/x0c5bb03129646fd6:photosynthesis-in-organisms" target="_blank" rel="noopener">Read ↗</a></li>
+            <li class="choice-item"><span class="choice-type">Explore</span><span class="choice-desc">Interactive Photosynthesis Diagram</span><span class="choice-meta">~8 min</span><a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-organisms/x0c5bb03129646fd6:photosynthesis-in-organisms" target="_blank" rel="noopener">Explore ↗</a></li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        { type: 'Summary', prompt: 'Write 2-3 sentences: What is photosynthesis? What does a plant need as inputs (what goes in) and what does it make as an output (what comes out)?', id: 'check-summary' },
+        { type: 'Questions', questions: ['1. A plant has sunlight, water, and carbon dioxide. What can it make with these?', '2. Why is it important that plants do photosynthesis? (Hint: think about where your food comes from.)'], id: 'check-questions' },
+        { type: 'Creative: Draw the Process', prompt: 'Draw a simple diagram of a plant doing photosynthesis. Label: sunlight, water, carbon dioxide, oxygen, and sugar. Use arrows to show what\'s coming in and what\'s going out.', id: 'check-creative' }
+      ]
+    },
+    'Food and energy in organisms': {
+      title: 'Food and Energy in Organisms',
+      hook: 'You eat food. Your body breaks it down and extracts the energy stored in it. That process is called cellular respiration — and it\'s basically the opposite of photosynthesis. Plants build sugars, you break them down. Both are about moving energy around.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header"><span class="content-section-icon">🎬</span><span class="content-section-title">Hook</span></div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">You eat food. Your body breaks it down and extracts the energy stored in it. That process is called cellular respiration — and it's basically the opposite of photosynthesis. Plants build sugars, you break them down. Both are about moving energy around.</p>
+        </div>
+        <div class="content-section">
+          <div class="content-section-header"><span class="content-section-icon">✅</span><span class="content-section-title">I Can…</span></div>
+          <h2>I can explain how organisms use cellular respiration to break down food and release energy.</h2>
+        </div>
+        <div class="content-section">
+          <div class="content-section-header"><span class="content-section-icon">📚</span><span class="content-section-title">Learn It — Pick at least one way</span></div>
+          <ul class="choice-list">
+            <li class="choice-item"><span class="choice-type">Watch</span><span class="choice-desc">Khan Academy — Cellular Respiration</span><span class="choice-meta">~12 min</span><a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-organisms/x0c5bb03129646fd6:food-and-energy-in-organisms" target="_blank" rel="noopener">Watch ↗</a></li>
+            <li class="choice-item"><span class="choice-type">Read</span><span class="choice-desc">How Your Body Gets Energy from Food</span><span class="choice-meta">~10 min</span><a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-organisms/x0c5bb03129646fd6:food-and-energy-in-organisms" target="_blank" rel="noopener">Read ↗</a></li>
+            <li class="choice-item"><span class="choice-type">Explore</span><span class="choice-desc">Compare Photosynthesis & Respiration</span><span class="choice-meta">~8 min — see how they're opposites</span><a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-organisms/x0c5bb03129646fd6:food-and-energy-in-organisms" target="_blank" rel="noopener">Explore ↗</a></li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        { type: 'Summary', prompt: 'Write 2-3 sentences: What happens during cellular respiration? What does your body need as inputs and what does it release as outputs?', id: 'check-summary' },
+        { type: 'Questions', questions: ['1. Photosynthesis makes sugar. Cellular respiration breaks down sugar. How are they related?', '2. Why do you need to eat food? What is your body doing with it?'], id: 'check-questions' },
+        { type: 'Creative: Teach It Back', prompt: 'Explain to a parent or sibling: "When I eat food, my cells do something called cellular respiration. Here\'s what happens..." Tell them what goes in, what comes out, and why your body needs to do it.', id: 'check-creative' }
+      ]
+    },
+    'Activity: Cellular Respiration & Fitness': {
+      title: 'How Measuring Cellular Respiration Helps Reach a Fitness Goal',
+      hook: 'When you exercise hard, you breathe faster. That faster breathing is your body doing respiration faster — breaking down more sugar to power your muscles. Scientists can measure respiration to track fitness. Let\'s see how.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header"><span class="content-section-icon">🎬</span><span class="content-section-title">Hook</span></div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">When you exercise hard, you breathe faster. That faster breathing is your body doing respiration faster — breaking down more sugar to power your muscles. Scientists can measure respiration to track fitness.</p>
+        </div>
+        <div class="content-section">
+          <div class="content-section-header"><span class="content-section-icon">✅</span><span class="content-section-title">I Can…</span></div>
+          <h2>I can explain how measuring respiration (breathing rate, heart rate) helps track fitness improvements.</h2>
+        </div>
+        <div class="content-section">
+          <div class="content-section-header"><span class="content-section-icon">📚</span><span class="content-section-title">Learn It — Pick at least one way</span></div>
+          <ul class="choice-list">
+            <li class="choice-item"><span class="choice-type">Watch</span><span class="choice-desc">Khan Academy Activity — Cellular Respiration & Fitness</span><span class="choice-meta">~10 min</span><a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-organisms" target="_blank" rel="noopener">Watch ↗</a></li>
+            <li class="choice-item"><span class="choice-type">Read</span><span class="choice-desc">Respiration Rate as a Fitness Measure</span><span class="choice-meta">~8 min</span><a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-organisms" target="_blank" rel="noopener">Read ↗</a></li>
+            <li class="choice-item"><span class="choice-type">Do It Yourself</span><span class="choice-desc">Simple Fitness Test: Measure Your Resting Heart Rate</span><span class="choice-meta">~5 min — find your pulse, count beats</span><a class="choice-link" href="#">Do below ↓</a></li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        { type: 'Summary', prompt: 'Write 2-3 sentences: Why would your breathing and heart rate increase when you exercise? What does this tell you about cellular respiration during exercise?', id: 'check-summary' },
+        { type: 'Questions', questions: ['1. If your resting heart rate decreases over time, what does that mean about your fitness?', '2. Why is it harder to breathe when you sprint than when you walk? (Think about respiration.)'], id: 'check-questions' },
+        { type: 'Creative: Measure & Record', prompt: 'Measure your resting heart rate (sit quietly for 2 min, then count beats for 15 seconds and multiply by 4). Now do 1 minute of jumping jacks or running. Measure your heart rate again. Write: What was your resting rate? Your active rate? How much did it increase? Why?', id: 'check-creative' }
+      ]
+    }
+  };
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  async function loadLesson() {
+    if (!recordId) {
+      document.getElementById('content-main').innerHTML = '<p>No lesson found. <a href="index.html">Go back</a></p>';
+      return;
+    }
+
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`);
+      if (!res.ok) throw new Error('Record not found');
+      const record = await res.json();
+      const itemName = record.fields['Item name'] || '';
+
+      let lesson = null;
+      for (const [key, data] of Object.entries(lessonData)) {
+        if (itemName.includes(key)) {
+          lesson = data;
+          break;
+        }
+      }
+
+      if (!lesson) {
+        if (itemName.includes('Unit test')) {
+          renderKhanTest();
+          return;
+        }
+        document.getElementById('content-main').innerHTML = '<p>Lesson not found.</p>';
+        return;
+      }
+
+      document.getElementById('lesson-title').textContent = lesson.title;
+      document.getElementById('lesson-content').innerHTML = lesson.content;
+
+      const checksHtml = lesson.checks.map((check, idx) => `
+        <div class="check-option">
+          <div class="check-option-title">Option ${idx + 1}: ${check.type}</div>
+          <div class="check-option-desc">
+            ${check.questions ? check.questions.map(q => `<p style="margin-bottom:6px;">${q}</p>`).join('') : check.prompt}
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('check-options').innerHTML = checksHtml;
+
+      if (recordId) {
+        document.getElementById('done-area').innerHTML = `
+          <textarea id="notes-content" class="rh-input" placeholder="Share your answer from the check above..." style="min-height:120px; margin-bottom:12px;"></textarea>
+          <button class="btn btn-success" onclick="markDone()">✓ Mark This Done</button>
+        `;
+      }
+
+    } catch (e) {
+      console.error(e);
+      document.getElementById('content-main').innerHTML = '<p>Error loading lesson.</p>';
+    }
+  }
+
+  function renderKhanTest() {
+    document.getElementById('lesson-content').innerHTML = `
+      <div class="content-section">
+        <div class="content-section-header"><span class="content-section-icon">🎯</span><span class="content-section-title">Khan Academy Unit Test</span></div>
+        <p style="margin-bottom:16px; font-size:0.95rem;">You've finished all the lessons for this unit. Now it's time to show what you know on the Khan Academy unit test.</p>
+        <p style="margin-bottom:16px; font-size:0.9rem; color:var(--text-dim);">The test has 10 questions. Take your time and do your best.</p>
+        <a href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-organisms/x0c5bb03129646fd6:food-and-energy-in-organisms/test/x0c5bb03129646fd6:matter-and-energy-in-organisms-unit-test" target="_blank" class="btn btn-success" style="display:inline-block; margin-bottom:20px;">Go to Khan Academy Unit Test ↗</a>
+      </div>
+    `;
+    document.getElementById('check-section').style.display = 'none';
+    document.getElementById('done-area').innerHTML = `
+      <textarea id="notes-content" class="rh-input" placeholder="Notes (optional)..." style="min-height:80px; margin-bottom:12px;"></textarea>
+      <button class="btn btn-success" onclick="markDone()">✓ Mark Unit Test Complete</button>
+    `;
+  }
+
+  window.markDone = async function () {
+    const notes = document.getElementById('notes-content')?.value.trim() || '';
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: { Status: 'Done', 'Completion date': TODAY, 'Student notes': notes } }),
+      });
+      if (!res.ok) throw new Error('Save failed');
+      showToast('Done! Great work. ✓');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+    } catch (e) {
+      console.error(e);
+      showToast('Error saving — try from the main list.');
+    }
+  };
+
+  loadLesson();
+</script>
+</body>
+</html>
