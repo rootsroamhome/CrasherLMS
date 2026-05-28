@@ -69,8 +69,7 @@ button { font-family: var(--font); cursor: pointer; }
   letter-spacing: -0.02em;
   display: inline-flex;
   align-items: center;
-  padding-bottom: 2px;
-  border-bottom: 2px solid var(--accent);
+  gap: 8px;
 }
 
 .nav-link {
