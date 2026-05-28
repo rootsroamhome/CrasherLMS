@@ -604,12 +604,14 @@ button { font-family: var(--font); cursor: pointer; }
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 8px 14px;
+  padding: 10px 14px;
   font-size: 0.8rem;
   color: var(--text-muted);
   margin-bottom: 16px;
   text-align: center;
+  line-height: 1.5;
 }
+.view-banner strong { color: var(--text); font-weight: 600; }
 .view-banner.past  { border-left: 3px solid #94A3B8; }
 .view-banner.future { border-left: 3px solid var(--accent); }
 

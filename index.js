@@ -126,6 +126,34 @@ document.getElementById('back-today').addEventListener('click', () => {
   loadTodos();
 });
 
+// ── Silly facts (rotate daily) ──
+
+const SILLY_FACTS = [
+  'Did you know? Octopuses have three hearts. Two pump blood to the gills, one to the rest of the body.',
+  'A group of flamingos is called a "flamboyance." Because they\'re fabulous like that.',
+  'Honey never spoils. Archaeologists found 3,000-year-old honey in Egyptian tombs that was still edible.',
+  'Bananas are berries, but strawberries aren\'t. The plant world is weird.',
+  'A octopus can taste with its arms. They have taste receptors on their suckers.',
+  'Sloths only poop once a week. When they do, they lose 30% of their body weight.',
+  'A group of crows is called a "murder." A group of owls is a "parliament."',
+  'Mantis shrimp can see 16 types of color vision. Humans can only see 3.',
+  'Cats can rotate their ears 180 degrees independently.',
+  'A blue whale\'s heart is so big a human could swim through its arteries.',
+  'Wombats poop cubes. It keeps them from rolling away.',
+  'Otters hold hands when they sleep so they don\'t drift apart.',
+  'A group of pandas is called an "embarrassment."',
+  'Tardigrades (water bears) can survive in space. They\'re basically indestructible.',
+  'Cows have best friends and get stressed when separated.',
+  'Axolotls can regenerate their entire brain.',
+  'Sea cucumbers are basically just a mouth with a butt at the other end.',
+  'Parrotfish poop creates beaches. Seriously.',
+];
+
+function getDailyFact(dateStr) {
+  const hash = dateStr.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return SILLY_FACTS[hash % SILLY_FACTS.length];
+}
+
 // ── Render ──
 
 function subjectStyle(subject) {
@@ -280,9 +308,11 @@ async function loadTodos() {
     if (mode !== 'today') {
       const banner = document.createElement('div');
       banner.className = `view-banner ${mode}`;
-      banner.textContent = mode === 'past'
-        ? 'Past date — read-only view'
-        : 'Preview — this day isn\'t active yet';
+      if (mode === 'past') {
+        banner.textContent = 'Past date — read-only view';
+      } else {
+        banner.innerHTML = `<strong>Hey Crasher —</strong> ${getDailyFact(viewDate)}`;
+      }
       container.appendChild(banner);
     }
 
