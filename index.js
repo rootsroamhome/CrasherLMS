@@ -180,7 +180,9 @@ function buildCard(rec, mode) {
       : `<span class="status-badge pending">↩ Carried over</span>`;
     actionsHtml = `<div class="card-actions">${openLessonBtn}${badgeHtml}</div>`;
   } else {
-    actionsHtml = `<div class="card-actions">${openLessonBtn}<span class="status-badge preview">Not active yet</span></div>`;
+    const allowWorkAhead = subject === 'Science';
+    const badge = allowWorkAhead ? '' : `<span class="status-badge preview">Not active yet</span>`;
+    actionsHtml = `<div class="card-actions">${openLessonBtn}${badge}</div>`;
   }
 
   card.innerHTML = `
