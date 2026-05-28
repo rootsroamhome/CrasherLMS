@@ -251,7 +251,7 @@ button { font-family: var(--font); cursor: pointer; }
   border-radius: var(--radius-sm);
   color: var(--text);
   font-family: var(--font);
-  font-size: 0.875rem;
+  font-size: 16px;
   padding: 10px 12px;
   resize: vertical;
   min-height: 60px;
@@ -467,7 +467,7 @@ button { font-family: var(--font); cursor: pointer; }
   border-radius: var(--radius-sm);
   color: var(--text);
   font-family: var(--font);
-  font-size: 0.875rem;
+  font-size: 16px;
   padding: 10px 12px;
   width: 100%;
   resize: vertical;
@@ -652,6 +652,12 @@ button { font-family: var(--font); cursor: pointer; }
 .status-badge.preview { background: rgba(242, 149, 89, 0.12); color: #B45D2C; }
 
 /* ---- Responsive ---- */
+@media (max-width: 768px) {
+  /* iPad portrait and smaller: tighten nav for breathing room */
+  .nav-inner { gap: 2px; }
+  .nav-link { padding: 6px 10px; font-size: 0.8rem; }
+}
+
 @media (max-width: 600px) {
   .nav-brand { display: none; }
   .nav-link span { display: none; }
@@ -659,6 +665,11 @@ button { font-family: var(--font); cursor: pointer; }
   .page { padding: 16px 12px 80px; }
   .card { padding: 14px; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* iOS input zoom prevention */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
 }
 
 @media (min-width: 601px) {
