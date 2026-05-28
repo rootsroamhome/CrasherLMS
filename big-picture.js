@@ -174,25 +174,6 @@ function renderStuck(todos) {
   return list;
 }
 
-function renderRabbitHole(todos) {
-  const rh = todos
-    .filter(r => r.fields['Subject'] === 'Rabbit Hole' && r.fields['Status'] === 'Done')
-    .sort((a, b) => (b.fields['Completion date'] || '').localeCompare(a.fields['Completion date'] || ''));
-
-  if (rh.length === 0) return el('p', 'empty-msg', 'No Rabbit Hole submissions yet.');
-
-  const list = el('div');
-  for (const r of rh) {
-    const row = el('div', 'completion-row');
-    row.innerHTML = `
-      <div class="completion-item" style="color:#5EEAD4;">${r.fields['Item name'] || 'Untitled'}</div>
-      ${r.fields['Student notes'] ? `<div class="completion-notes">"${r.fields['Student notes']}"</div>` : ''}
-      <div class="completion-date">${formatDate(r.fields['Completion date'])}</div>
-    `;
-    list.appendChild(row);
-  }
-  return list;
-}
 
 function section(title, icon, content) {
   const wrap = document.createElement('div');
@@ -229,7 +210,6 @@ async function load() {
     content.appendChild(section('Standards Tracker',                   '📋', renderStandards(standards)));
     content.appendChild(section('Completed in the Last 7 Days',        '✓',  renderRecent(todos)));
     content.appendChild(section('Items That Might Be Stuck (3+ days)', '⚠️', renderStuck(todos)));
-    content.appendChild(section('Rabbit Hole Submissions',             '🕳️', renderRabbitHole(todos)));
 
   } catch (e) {
     content.innerHTML = `
