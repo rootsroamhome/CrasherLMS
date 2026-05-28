@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evolution — CrasherLMS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .back-btn { display:inline-flex; align-items:center; gap:6px; color:var(--text-muted); font-size:0.85rem; font-weight:500; margin-bottom:20px; transition:color .15s; }
+    .back-btn:hover { color:var(--text); }
+    .content-title { font-size:1.4rem; font-weight:700; margin-bottom:4px; }
+    .content-meta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:24px; }
+    .content-section { margin-bottom:28px; }
+    .content-section-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .content-section-icon { font-size:1.2rem; }
+    .content-section-title { font-size:1rem; font-weight:600; }
+    .choice-list { list-style:none; padding:0; }
+    .choice-item { padding:14px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px; }
+    .choice-type { display:inline-block; font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
+    .choice-desc { display:block; font-size:0.95rem; font-weight:500; margin-bottom:6px; }
+    .choice-meta { display:block; font-size:0.8rem; color:var(--text-dim); margin-bottom:8px; }
+    .choice-link { display:inline-block; font-size:0.85rem; color:var(--accent); text-decoration:none; }
+    .choice-link:hover { text-decoration:underline; }
+    .check-section { margin-top:20px; padding:16px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); }
+    .check-option { padding:12px; background:var(--bg-secondary); border-left:3px solid var(--accent); margin-bottom:12px; }
+    .check-option-title { font-weight:600; margin-bottom:6px; font-size:0.95rem; }
+    .check-option-desc { font-size:0.85rem; color:var(--text-dim); line-height:1.4; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">CrasherLMS</span>
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Today</span>
+    </a>
+    <a href="rabbit-hole.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Rabbit Hole</span>
+    </a>
+    <a href="big-picture.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Big Picture</span>
+    </a>
+  </div>
+</nav>
+
+<main class="page" id="content-main">
+  <a href="index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Today's List
+  </a>
+
+  <div class="content-meta">
+    <span class="subject-badge" style="background:#14391f; color:#86EFAC;">Science</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">MS-LS4-2, MS-LS4-3</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">Unit 7 — Evolution</span>
+  </div>
+
+  <div class="content-title" id="lesson-title">Evolution</div>
+
+  <div id="lesson-content"></div>
+
+  <div class="content-section" id="check-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">Show What You Know — Pick One</span>
+    </div>
+    <div id="check-options"></div>
+  </div>
+
+  <div class="content-section" id="mark-done-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">Mark This Done</span>
+    </div>
+    <p style="margin-bottom:12px; font-size:0.875rem; color:var(--text-muted);">Once you've completed your chosen check above, submit it here.</p>
+    <div id="done-area"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const recordId = params.get('recordId');
+  const TODAY = new Date().toISOString().split('T')[0];
+
+  const lessonData = {
+    'Evolution and common ancestry': {
+      title: 'Evolution and Common Ancestry',
+      hook: 'Humans, chimpanzees, and bananas all share the same basic cellular machinery. We all use DNA. We all use the same genetic code. We all have mitochondria. Why? Because we\'re all descended from a common ancestor. Life on Earth is connected.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Humans, chimpanzees, and bananas all share the same basic cellular machinery. We all use DNA. We all use the same genetic code. We all have mitochondria. Why? Because we're all descended from a common ancestor. Life on Earth is connected.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can explain evolution by natural selection and describe evidence for common ancestry among living organisms.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Evolution and Natural Selection</span>
+              <span class="choice-meta">~13 min — how species change over time</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">One Tree of Life: How All Organisms Are Related</span>
+              <span class="choice-meta">~11 min — shared ancestry explained</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Explore</span>
+              <span class="choice-desc">Interactive Tree of Life: Trace Your Ancestors</span>
+              <span class="choice-meta">~10 min — connect organisms through evolution</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Explore ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 2-3 sentences: What is evolution? Give three pieces of evidence that humans and chimpanzees share a common ancestor.',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. If all life shares a common ancestor, why are we so different?',
+            '2. What do humans and fish have in common genetically? Why?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Draw a Family Tree',
+          prompt: 'Draw a simple evolutionary tree showing the relationship between: humans, chimpanzees, dogs, fish, and birds. Show which ones share more recent common ancestors. Label each branch point with "millions of years ago."',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'The fossil record': {
+      title: 'The Fossil Record',
+      hook: 'Fossils are like a time machine. Paleontologists dig up rocks with ancient organisms inside. By looking at layers, they can see how life changed over millions of years. From simple to complex. From fish to amphibians to reptiles to mammals.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Fossils are like a time machine. Paleontologists dig up rocks with ancient organisms inside. By looking at layers, they can see how life changed over millions of years. From simple to complex. From fish to amphibians to reptiles to mammals.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can analyze the fossil record to show evidence of evolution and explain how fossils form.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — The Fossil Record</span>
+              <span class="choice-meta">~12 min — radiometric dating, transitional fossils</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">How Fossils Tell the Story of Evolution</span>
+              <span class="choice-meta">~10 min — fossil formation, dating methods</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Explore</span>
+              <span class="choice-desc">Interactive Fossil Timeline: Horse Evolution</span>
+              <span class="choice-meta">~10 min — see how horses changed over time</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Explore ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 2-3 sentences: What is a fossil? How do fossils show evidence of evolution? Give one example of a fossil record that shows change over time.',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. How do paleontologists know which fossils are older? What methods do they use?',
+            '2. If you find a fossil of a fish with leg-like fins, what might that tell you about evolution?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Build a Timeline',
+          prompt: 'Create a timeline showing the evolution of one organism (horses, whales, or humans). Draw or describe: the oldest fossils at the bottom, newer ones going up. Label what changed (size, teeth, limbs, etc.). Write how long this evolution took.',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'Evidence of evolution: anatomy': {
+      title: 'Evidence of Evolution: Anatomy',
+      hook: 'A human arm, a whale flipper, a bat wing, and a dog paw all have the same bones in the same order. Why? Because they\'re modified versions of the same ancestral limb. This is called homologous structures. It\'s evidence of common ancestry.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">A human arm, a whale flipper, a bat wing, and a dog paw all have the same bones in the same order. Why? Because they're modified versions of the same ancestral limb. This is called homologous structures. It's evidence of common ancestry.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can use comparative anatomy (homologous and vestigial structures) as evidence for evolution.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Homologous and Vestigial Structures</span>
+              <span class="choice-meta">~12 min — anatomy as evolutionary evidence</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">Same Bones, Different Jobs: How Evolution Repurposes</span>
+              <span class="choice-meta">~10 min — homologous structures explained</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Explore</span>
+              <span class="choice-desc">Interactive: Compare Limb Structures</span>
+              <span class="choice-meta">~10 min — see the similarities in different animals</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Explore ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 2-3 sentences: What are homologous structures? Give an example (human arm, whale flipper, bat wing, etc.). What do they tell us about evolution?',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. A whale is a mammal that lives in water. How is a whale flipper similar to a human arm? Why are they similar?',
+            '2. Humans have tailbones. Apes have tails. What does this tell you about our evolutionary history?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Bone Sketch',
+          prompt: 'Draw 4 limbs side-by-side: human arm, whale flipper, bat wing, dog leg. Highlight which bones are the same across all four. Explain: Why do different animals have the same bones if they use them for different purposes?',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'Activity: How can we use skeletons and fossils to understand whale evolution?': {
+      title: 'Activity: Whale Evolution Through Skeletons',
+      hook: 'Whales are mammals with lungs and bones. But modern whales have no hind limbs, just a spine with vestigial pelvic bones. Fossils show the transition: ancient whales had four legs. Over time, hind limbs shrunk. This is evolution in action.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Whales are mammals with lungs and bones. But modern whales have no hind limbs, just a spine with vestigial pelvic bones. Fossils show the transition: ancient whales had four legs. Over time, hind limbs shrunk. This is evolution in action.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can analyze fossil and anatomical evidence to trace evolutionary change in a lineage (whales as an example).</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy Activity — Evolution of Whales</span>
+              <span class="choice-meta">~12 min — fossil evidence, transitional forms</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">From Land to Sea: The Whale\'s Journey Through Deep Time</span>
+              <span class="choice-meta">~10 min — detailed whale evolution story</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Do It</span>
+              <span class="choice-desc">Analyze Whale Fossils and Skeletons</span>
+              <span class="choice-meta">~15 min — compare ancient and modern whales</span>
+              <a class="choice-link" href="#">Do below ↓</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 3-4 sentences: Describe the evolution of whales from land mammals to ocean animals. What fossil and anatomical evidence shows this transition?',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. Modern whales have vestigial pelvic bones (leftover hip bones from ancient whales). Why would they keep bones they don\'t use?',
+            '2. What would the fossil record of a whale\'s ancestor look like? What would it show?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Evolutionary Timeline',
+          prompt: 'Create a 5-stage timeline showing whale evolution from land to sea. At each stage, draw or describe: body shape, limbs, habitats. Label what changed from the previous stage. Include dates (millions of years ago).',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'Evidence of evolution: embryology': {
+      title: 'Evidence of Evolution: Embryology',
+      hook: 'Chicken embryos, pig embryos, and human embryos all look almost identical in early stages. All have gill slits (humans don\'t use them). All have tails (we reabsorb them). This shows we share a common ancestor. Our development still echoes our evolutionary past.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Chicken embryos, pig embryos, and human embryos all look almost identical in early stages. All have gill slits (humans don't use them). All have tails (we reabsorb them). This shows we share a common ancestor. Our development still echoes our evolutionary past.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can use embryological similarities as evidence for evolution and common ancestry.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Embryology and Evolution</span>
+              <span class="choice-meta">~12 min — comparing early development</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">Writing in Our Genes: What Embryos Reveal About Evolution</span>
+              <span class="choice-meta">~10 min — embryonic evidence</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Explore</span>
+              <span class="choice-desc">Interactive: Compare Embryos Side-by-Side</span>
+              <span class="choice-meta">~10 min — see similarities in development</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution" target="_blank" rel="noopener">Explore ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 2-3 sentences: What are embryological similarities? Give two examples of structures that human embryos develop but don\'t keep as adults. What does this tell us about evolution?',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. Why would humans, chickens, and fish have similar structures in their embryos if we\'re so different as adults?',
+            '2. Human embryos have tail buds that disappear. Where does the tail go? Why don\'t we keep it?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Compare Embryos',
+          prompt: 'Draw early embryos of 4 different animals (human, fish, bird, mammal) side-by-side. Label which parts look similar. Then draw what each looks like as an adult. Write: Why do they start similar but end up different?',
+          id: 'check-creative'
+        }
+      ]
+    }
+  };
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  async function loadLesson() {
+    if (!recordId) {
+      document.getElementById('content-main').innerHTML = '<p>No lesson found. <a href="index.html">Go back</a></p>';
+      return;
+    }
+
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`);
+      if (!res.ok) throw new Error('Record not found');
+      const record = await res.json();
+      const itemName = record.fields['Item name'] || '';
+
+      let lesson = null;
+      for (const [key, data] of Object.entries(lessonData)) {
+        if (itemName.includes(key)) {
+          lesson = data;
+          break;
+        }
+      }
+
+      if (!lesson) {
+        if (itemName.includes('Unit test')) {
+          renderKhanTest();
+          return;
+        }
+        document.getElementById('content-main').innerHTML = '<p>Lesson not found.</p>';
+        return;
+      }
+
+      document.getElementById('lesson-title').textContent = lesson.title;
+      document.getElementById('lesson-content').innerHTML = lesson.content;
+
+      const checksHtml = lesson.checks.map((check, idx) => `
+        <div class="check-option">
+          <div class="check-option-title">Option ${idx + 1}: ${check.type}</div>
+          <div class="check-option-desc">
+            ${check.questions ? check.questions.map(q => `<p style="margin-bottom:6px;">${q}</p>`).join('') : check.prompt}
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('check-options').innerHTML = checksHtml;
+
+      if (recordId) {
+        document.getElementById('done-area').innerHTML = `
+          <textarea id="notes-content" class="rh-input" placeholder="Share your answer from the check above..." style="min-height:120px; margin-bottom:12px;"></textarea>
+          <button class="btn btn-success" onclick="markDone()">✓ Mark This Done</button>
+        `;
+      }
+
+    } catch (e) {
+      console.error(e);
+      document.getElementById('content-main').innerHTML = '<p>Error loading lesson.</p>';
+    }
+  }
+
+  function renderKhanTest() {
+    document.getElementById('lesson-content').innerHTML = `
+      <div class="content-section">
+        <div class="content-section-header">
+          <span class="content-section-icon">🎯</span>
+          <span class="content-section-title">Khan Academy Unit Test</span>
+        </div>
+        <p style="margin-bottom:16px; font-size:0.95rem;">You've finished all the lessons for this unit. Now it's time to show what you know on the Khan Academy unit test.</p>
+        <p style="margin-bottom:16px; font-size:0.9rem; color:var(--text-dim);">The test has 10 questions. Take your time and do your best. You can take it more than once if you want to improve your score.</p>
+        <a href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:evolution/test/x0c5bb03129646fd6:evolution-unit-test" target="_blank" class="btn btn-success" style="display:inline-block; margin-bottom:20px;">
+          Go to Khan Academy Unit Test ↗
+        </a>
+      </div>
+    `;
+
+    document.getElementById('check-section').style.display = 'none';
+
+    document.getElementById('done-area').innerHTML = `
+      <textarea id="notes-content" class="rh-input" placeholder="Once you've completed the Khan Academy unit test, let us know how it went (optional notes here)" style="min-height:80px; margin-bottom:12px;"></textarea>
+      <button class="btn btn-success" onclick="markDone()">✓ Mark Unit Test Complete</button>
+    `;
+  }
+
+  window.markDone = async function () {
+    const notes = document.getElementById('notes-content')?.value.trim() || '';
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: { Status: 'Done', 'Completion date': TODAY, 'Student notes': notes } }),
+      });
+      if (!res.ok) throw new Error('Save failed');
+      showToast('Done! Great work. ✓');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+    } catch (e) {
+      console.error(e);
+      showToast('Error saving — try from the main list.');
+    }
+  };
+
+  loadLesson();
+</script>
+</body>
+</html>

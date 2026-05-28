@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matter & Energy in Ecosystems — CrasherLMS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .back-btn { display:inline-flex; align-items:center; gap:6px; color:var(--text-muted); font-size:0.85rem; font-weight:500; margin-bottom:20px; transition:color .15s; }
+    .back-btn:hover { color:var(--text); }
+    .content-title { font-size:1.4rem; font-weight:700; margin-bottom:4px; }
+    .content-meta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:24px; }
+    .content-section { margin-bottom:28px; }
+    .content-section-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .content-section-icon { font-size:1.2rem; }
+    .content-section-title { font-size:1rem; font-weight:600; }
+    .choice-list { list-style:none; padding:0; }
+    .choice-item { padding:14px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px; }
+    .choice-type { display:inline-block; font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
+    .choice-desc { display:block; font-size:0.95rem; font-weight:500; margin-bottom:6px; }
+    .choice-meta { display:block; font-size:0.8rem; color:var(--text-dim); margin-bottom:8px; }
+    .choice-link { display:inline-block; font-size:0.85rem; color:var(--accent); text-decoration:none; }
+    .choice-link:hover { text-decoration:underline; }
+    .check-section { margin-top:20px; padding:16px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); }
+    .check-option { padding:12px; background:var(--bg-secondary); border-left:3px solid var(--accent); margin-bottom:12px; }
+    .check-option-title { font-weight:600; margin-bottom:6px; font-size:0.95rem; }
+    .check-option-desc { font-size:0.85rem; color:var(--text-dim); line-height:1.4; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">CrasherLMS</span>
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Today</span>
+    </a>
+    <a href="rabbit-hole.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Rabbit Hole</span>
+    </a>
+    <a href="big-picture.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Big Picture</span>
+    </a>
+  </div>
+</nav>
+
+<main class="page" id="content-main">
+  <a href="index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Today's List
+  </a>
+
+  <div class="content-meta">
+    <span class="subject-badge" style="background:#14391f; color:#86EFAC;">Science</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">MS-LS2-4, MS-LS2-5</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">Unit 4 — Matter & Energy in Ecosystems</span>
+  </div>
+
+  <div class="content-title" id="lesson-title">Matter & Energy in Ecosystems</div>
+
+  <div id="lesson-content"></div>
+
+  <div class="content-section" id="check-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">Show What You Know — Pick One</span>
+    </div>
+    <div id="check-options"></div>
+  </div>
+
+  <div class="content-section" id="mark-done-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">Mark This Done</span>
+    </div>
+    <p style="margin-bottom:12px; font-size:0.875rem; color:var(--text-muted);">Once you've completed your chosen check above, submit it here.</p>
+    <div id="done-area"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const recordId = params.get('recordId');
+  const TODAY = new Date().toISOString().split('T')[0];
+
+  const lessonData = {
+    'Photosynthesis in ecosystems': {
+      title: 'Photosynthesis in Ecosystems',
+      hook: 'Every ecosystem starts with one thing: photosynthesis. Plants turn sunlight into sugars. Herbivores eat those plants. Predators eat the herbivores. The whole food web is powered by the sun captured by green plants. No plants, no life.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Every ecosystem starts with one thing: photosynthesis. Plants turn sunlight into sugars. Herbivores eat those plants. Predators eat the herbivores. The whole food web is powered by the sun captured by green plants. No plants, no life.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can explain photosynthesis as the foundation of energy flow in ecosystems and describe producers in food chains.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Photosynthesis in Ecosystems</span>
+              <span class="choice-meta">~12 min — producers and energy flow</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-ecosystems/x0c5bb03129646fd6:unit-5-phenomenon-based-activities" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">How Plants Feed the Entire World</span>
+              <span class="choice-meta">~10 min — producers, energy, food</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-ecosystems/x0c5bb03129646fd6:unit-5-phenomenon-based-activities" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Explore</span>
+              <span class="choice-desc">Interactive Food Chain Builder</span>
+              <span class="choice-meta">~10 min — see how plants start the chain</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-ecosystems/x0c5bb03129646fd6:unit-5-phenomenon-based-activities" target="_blank" rel="noopener">Explore ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 2-3 sentences: Why is photosynthesis so important in ecosystems? What would happen if all the plants disappeared?',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. In a food chain, plants are called "producers." Why are they called that? What do they produce?',
+            '2. If a forest has less sunlight (trees get cut down, more shade), how would that affect the herbivore population?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Draw a Chain',
+          prompt: 'Draw a 4-step food chain that includes photosynthesis. Start with: Sun → Plant (draws/labels how sunlight is used) → Herbivore → Predator. Label each stage and draw arrows showing energy flow.',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'Matter and energy in foodwebs': {
+      title: 'Matter and Energy in Food Webs',
+      hook: 'A cow eats grass. A person eats the cow. But only about 10% of the energy from the grass makes it into the cow, and only 10% of the cow energy makes it into you. Energy is lost at every level. That\'s why it\'s harder to be a predator than a plant.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">A cow eats grass. A person eats the cow. But only about 10% of the energy from the grass makes it into the cow, and only 10% of the cow energy makes it into you. Energy is lost at every level. That's why it's harder to be a predator than a plant.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can trace matter and energy through food webs and explain energy loss at each trophic level.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Energy Flow in Food Webs</span>
+              <span class="choice-meta">~13 min — trophic levels, energy loss, pyramids</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-ecosystems/x0c5bb03129646fd6:unit-5-phenomenon-based-activities" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">Why There Are Fewer Lions Than Zebras</span>
+              <span class="choice-meta">~10 min — the 10% rule explained</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-ecosystems/x0c5bb03129646fd6:unit-5-phenomenon-based-activities" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Interactive</span>
+              <span class="choice-desc">Energy Pyramid: See Energy Loss at Each Level</span>
+              <span class="choice-meta">~10 min — adjust population, see energy changes</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-ecosystems/x0c5bb03129646fd6:unit-5-phenomenon-based-activities" target="_blank" rel="noopener">Explore ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 2-3 sentences: Why is there less energy (and fewer organisms) at each level of a food chain? What happens to the energy that is "lost"?',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. If you trace energy from the sun through grass → deer → wolf, at what stage is most of the energy lost?',
+            '2. A field can support 1,000 rabbits OR 10 wolves (if fed only on rabbits). Why do you think that is?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Make an Energy Pyramid',
+          prompt: 'Draw an energy pyramid for a real ecosystem (forest, ocean, grassland). Base should be plants. Each level up has about 10% the energy of the level below. Label each level and draw/write how much energy is at each. Write a sentence: Why is the shape a pyramid, not a rectangle?',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'Activity: What happens when a food web is disturbed?': {
+      title: 'Activity: What Happens When a Food Web Is Disturbed?',
+      hook: 'Remove one piece and the whole web collapses — or adjusts. When wolves disappeared from Yellowstone, elk populations exploded. When wolves came back, everything changed. Ecosystems are fragile networks. Small changes ripple everywhere.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Remove one piece and the whole web collapses — or adjusts. When wolves disappeared from Yellowstone, elk populations exploded. When wolves came back, everything changed. Ecosystems are fragile networks. Small changes ripple everywhere.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can predict and explain how removing or adding organisms to a food web affects other populations and energy flow.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy Activity — Ecological Disruption</span>
+              <span class="choice-meta">~12 min — Yellowstone wolves, invasive species, collapse</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-ecosystems/x0c5bb03129646fd6:unit-5-phenomenon-based-activities" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">Case Study: How Bringing Back Wolves Fixed a Broken Ecosystem</span>
+              <span class="choice-meta">~10 min — real example of web disruption and restoration</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-ecosystems/x0c5bb03129646fd6:unit-5-phenomenon-based-activities" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Do It</span>
+              <span class="choice-desc">Simulate Food Web Disruption</span>
+              <span class="choice-meta">~15 min — remove organisms, predict cascade effects</span>
+              <a class="choice-link" href="#">Do below ↓</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 3-4 sentences: Using the Yellowstone wolves example (or another real case), explain what happened to the food web when one organism was removed, and what happened when it was reintroduced.',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. If all the bees disappeared from an ecosystem, what would happen to flowering plants? What would happen to animals that eat those plants?',
+            '2. Invasive species (non-native animals brought in) can sometimes destroy ecosystems. Why is their introduction so disruptive?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Model & Predict',
+          prompt: 'Create a simple food web on paper or digitally (at least 6 organisms). Now, "remove" one organism (cross it out). Draw arrows to show what happens next: What populations increase? What decrease? Why? Write your predictions and reasoning for each change.',
+          id: 'check-creative'
+        }
+      ]
+    }
+  };
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  async function loadLesson() {
+    if (!recordId) {
+      document.getElementById('content-main').innerHTML = '<p>No lesson found. <a href="index.html">Go back</a></p>';
+      return;
+    }
+
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`);
+      if (!res.ok) throw new Error('Record not found');
+      const record = await res.json();
+      const itemName = record.fields['Item name'] || '';
+
+      let lesson = null;
+      for (const [key, data] of Object.entries(lessonData)) {
+        if (itemName.includes(key)) {
+          lesson = data;
+          break;
+        }
+      }
+
+      if (!lesson) {
+        if (itemName.includes('Unit test')) {
+          renderKhanTest();
+          return;
+        }
+        document.getElementById('content-main').innerHTML = '<p>Lesson not found.</p>';
+        return;
+      }
+
+      document.getElementById('lesson-title').textContent = lesson.title;
+      document.getElementById('lesson-content').innerHTML = lesson.content;
+
+      const checksHtml = lesson.checks.map((check, idx) => `
+        <div class="check-option">
+          <div class="check-option-title">Option ${idx + 1}: ${check.type}</div>
+          <div class="check-option-desc">
+            ${check.questions ? check.questions.map(q => `<p style="margin-bottom:6px;">${q}</p>`).join('') : check.prompt}
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('check-options').innerHTML = checksHtml;
+
+      if (recordId) {
+        document.getElementById('done-area').innerHTML = `
+          <textarea id="notes-content" class="rh-input" placeholder="Share your answer from the check above..." style="min-height:120px; margin-bottom:12px;"></textarea>
+          <button class="btn btn-success" onclick="markDone()">✓ Mark This Done</button>
+        `;
+      }
+
+    } catch (e) {
+      console.error(e);
+      document.getElementById('content-main').innerHTML = '<p>Error loading lesson.</p>';
+    }
+  }
+
+  function renderKhanTest() {
+    document.getElementById('lesson-content').innerHTML = `
+      <div class="content-section">
+        <div class="content-section-header">
+          <span class="content-section-icon">🎯</span>
+          <span class="content-section-title">Khan Academy Unit Test</span>
+        </div>
+        <p style="margin-bottom:16px; font-size:0.95rem;">You've finished all the lessons for this unit. Now it's time to show what you know on the Khan Academy unit test.</p>
+        <p style="margin-bottom:16px; font-size:0.9rem; color:var(--text-dim);">The test has 10 questions. Take your time and do your best. You can take it more than once if you want to improve your score.</p>
+        <a href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:matter-and-energy-in-ecosystems/x0c5bb03129646fd6:unit-5-phenomenon-based-activities/test/x0c5bb03129646fd6:matter-and-energy-in-ecosystems-unit-test" target="_blank" class="btn btn-success" style="display:inline-block; margin-bottom:20px;">
+          Go to Khan Academy Unit Test ↗
+        </a>
+      </div>
+    `;
+
+    document.getElementById('check-section').style.display = 'none';
+
+    document.getElementById('done-area').innerHTML = `
+      <textarea id="notes-content" class="rh-input" placeholder="Once you've completed the Khan Academy unit test, let us know how it went (optional notes here)" style="min-height:80px; margin-bottom:12px;"></textarea>
+      <button class="btn btn-success" onclick="markDone()">✓ Mark Unit Test Complete</button>
+    `;
+  }
+
+  window.markDone = async function () {
+    const notes = document.getElementById('notes-content')?.value.trim() || '';
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: { Status: 'Done', 'Completion date': TODAY, 'Student notes': notes } }),
+      });
+      if (!res.ok) throw new Error('Save failed');
+      showToast('Done! Great work. ✓');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+    } catch (e) {
+      console.error(e);
+      showToast('Error saving — try from the main list.');
+    }
+  };
+
+  loadLesson();
+</script>
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactions in Ecosystems — CrasherLMS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .back-btn { display:inline-flex; align-items:center; gap:6px; color:var(--text-muted); font-size:0.85rem; font-weight:500; margin-bottom:20px; transition:color .15s; }
+    .back-btn:hover { color:var(--text); }
+    .content-title { font-size:1.4rem; font-weight:700; margin-bottom:4px; }
+    .content-meta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:24px; }
+    .content-section { margin-bottom:28px; }
+    .content-section-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .content-section-icon { font-size:1.2rem; }
+    .content-section-title { font-size:1rem; font-weight:600; }
+    .choice-list { list-style:none; padding:0; }
+    .choice-item { padding:14px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px; }
+    .choice-type { display:inline-block; font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
+    .choice-desc { display:block; font-size:0.95rem; font-weight:500; margin-bottom:6px; }
+    .choice-meta { display:block; font-size:0.8rem; color:var(--text-dim); margin-bottom:8px; }
+    .choice-link { display:inline-block; font-size:0.85rem; color:var(--accent); text-decoration:none; }
+    .choice-link:hover { text-decoration:underline; }
+    .check-section { margin-top:20px; padding:16px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); }
+    .check-option { padding:12px; background:var(--bg-secondary); border-left:3px solid var(--accent); margin-bottom:12px; }
+    .check-option-title { font-weight:600; margin-bottom:6px; font-size:0.95rem; }
+    .check-option-desc { font-size:0.85rem; color:var(--text-dim); line-height:1.4; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">CrasherLMS</span>
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Today</span>
+    </a>
+    <a href="rabbit-hole.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Rabbit Hole</span>
+    </a>
+    <a href="big-picture.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Big Picture</span>
+    </a>
+  </div>
+</nav>
+
+<main class="page" id="content-main">
+  <a href="index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Today's List
+  </a>
+
+  <div class="content-meta">
+    <span class="subject-badge" style="background:#14391f; color:#86EFAC;">Science</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">MS-LS2-1, MS-LS2-2, MS-LS2-3</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">Unit 3 — Interactions in Ecosystems</span>
+  </div>
+
+  <div class="content-title" id="lesson-title">Interactions in Ecosystems</div>
+
+  <div id="lesson-content"></div>
+
+  <div class="content-section" id="check-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">Show What You Know — Pick One</span>
+    </div>
+    <div id="check-options"></div>
+  </div>
+
+  <div class="content-section" id="mark-done-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">Mark This Done</span>
+    </div>
+    <p style="margin-bottom:12px; font-size:0.875rem; color:var(--text-muted);">Once you've completed your chosen check above, submit it here.</p>
+    <div id="done-area"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const recordId = params.get('recordId');
+  const TODAY = new Date().toISOString().split('T')[0];
+
+  const lessonData = {
+    'Populations, communities, and ecosystems': {
+      title: 'Populations, Communities, and Ecosystems',
+      hook: 'A lone wolf can\'t survive. Wolves live in packs — a population. Packs hunt deer, which eat grass, which needs bears to spread seeds. All together, they form a community in an ecosystem. Everything is connected.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">A lone wolf can't survive. Wolves live in packs — a population. Packs hunt deer, which eat grass, which needs bears to spread seeds. All together, they form a community in an ecosystem. Everything is connected.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can define and give examples of populations, communities, and ecosystems, and explain how they are related.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Populations, Communities, and Ecosystems</span>
+              <span class="choice-meta">~12 min — see how each level nests inside the next</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:interactions-in-ecosystems/x0c5bb03129646fd6:ecological-interactions" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">From Individual to Ecosystem: Levels of Organization</span>
+              <span class="choice-meta">~10 min — definitions with real examples</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:interactions-in-ecosystems/x0c5bb03129646fd6:ecological-interactions" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Observe</span>
+              <span class="choice-desc">Identify Populations in Your Neighborhood</span>
+              <span class="choice-meta">~10 min — look around and spot examples</span>
+              <a class="choice-link" href="#">Explore below ↓</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 3-4 sentences: Define population, community, and ecosystem in your own words. Give one example of how they nest inside each other (like: all the squirrels in the park is a population, the squirrels + birds + trees is a community).',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. If you\'re studying all the rabbits in a meadow, what term describes what you\'re studying: population, community, or ecosystem?',
+            '2. Why can\'t an ecosystem exist with just one population? Give an example.'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Draw an Example',
+          prompt: 'Draw a simple ecosystem (a pond, forest, or garden). Label at least: one population (e.g., "frogs"), a community (e.g., "frogs + fish + plants"), and the whole ecosystem. Draw arrows showing one interaction between organisms.',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'Resources and population growth': {
+      title: 'Resources and Population Growth',
+      hook: 'Rabbits can make a LOT of babies. But a meadow only has so much grass. At first, rabbit population explodes. Then it crashes. Why? Because resources run out. Population size depends on how much food, water, and space are available.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Rabbits can make a LOT of babies. But a meadow only has so much grass. At first, rabbit population explodes. Then it crashes. Why? Because resources run out. Population size depends on how much food, water, and space are available.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can explain how available resources (food, water, space) limit population size and describe carrying capacity.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Resources and Population Growth</span>
+              <span class="choice-meta">~12 min — carrying capacity explained</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:interactions-in-ecosystems/x0c5bb03129646fd6:ecological-interactions" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">Limiting Factors: What Stops a Population from Growing Forever?</span>
+              <span class="choice-meta">~10 min — food, space, water, and competition</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:interactions-in-ecosystems/x0c5bb03129646fd6:ecological-interactions" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Interactive</span>
+              <span class="choice-desc">Graph Population Growth with Different Resources</span>
+              <span class="choice-meta">~10 min — see how change affects populations</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:interactions-in-ecosystems/x0c5bb03129646fd6:ecological-interactions" target="_blank" rel="noopener">Explore ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 2-3 sentences: What is carrying capacity? Give an example of a limiting factor (something that stops a population from growing). How would removing that factor change the population?',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. A forest has enough oak trees to feed 100 squirrels, but 500 squirrels live there. What will happen to the squirrel population over time?',
+            '2. If humans brought food into the forest and left it for squirrels, what would happen to the carrying capacity for squirrels?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Design a Scenario',
+          prompt: 'Imagine you\'re designing a zoo habitat for zebras. You have a field 200 meters long and 100 meters wide. Zebras need grass to eat and water to drink. How many zebras could you support? What would happen if you doubled the number of zebras? Draw a simple diagram showing your thinking.',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'Ecological interactions': {
+      title: 'Ecological Interactions',
+      hook: 'A fish eats a smaller fish. A bird eats seeds. A bee pollinates a flower. A tick sucks blood from a dog. These aren\'t random — they\'re relationships shaped by evolution. Every organism has a role in the web of life.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">A fish eats a smaller fish. A bird eats seeds. A bee pollinates a flower. A tick sucks blood from a dog. These aren't random — they're relationships shaped by evolution. Every organism has a role in the web of life.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can identify and describe ecological interactions (predation, competition, symbiosis) and their effects on populations.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Predation, Competition, and Symbiosis</span>
+              <span class="choice-meta">~13 min — all three types with examples</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:interactions-in-ecosystems/x0c5bb03129646fd6:ecological-interactions" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">Predator and Prey: A Dance of Survival</span>
+              <span class="choice-meta">~10 min — how they affect each other</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:interactions-in-ecosystems/x0c5bb03129646fd6:ecological-interactions" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Explore</span>
+              <span class="choice-desc">Nature Clips: Real Interactions in Action</span>
+              <span class="choice-meta">~8 min — hunting, competing, cooperating</span>
+              <a class="choice-link" href="https://www.youtube.com/results?search_query=predator+prey+nature+documentary" target="_blank" rel="noopener">Search YouTube ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 3-4 sentences: Explain the three types of ecological interactions (predation, competition, symbiosis). Give one real example of each.',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. If there are more wolves (predators) in a forest, what happens to the deer (prey) population? Why?',
+            '2. Clownfish live inside sea anemones. The anemone protects the clownfish; the clownfish cleans parasites off the anemone. What type of interaction is this?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Teach It Back',
+          prompt: 'Explain to a younger sibling or parent the relationships in a food chain (plants, herbivores, predators). Use at least 3 organisms and explain what each one does, what eats it, and how they\'re connected. Act it out if you can!',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'Activity: How do limited resources impact populations that live near us?': {
+      title: 'Activity: How Do Limited Resources Impact Populations Near Us?',
+      hook: 'Parks, gardens, and neighborhoods are ecosystems too. When developers cut down trees, bird populations drop. When people put out bird feeders, squirrel populations can explode. Small decisions create big ecological ripples. Let\'s investigate.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Parks, gardens, and neighborhoods are ecosystems too. When developers cut down trees, bird populations drop. When people put out bird feeders, squirrel populations can explode. Small decisions create big ecological ripples. Let's investigate.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can observe, document, and analyze how resource availability affects animal populations in my local environment.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy Activity — Local Ecosystems & Resources</span>
+              <span class="choice-meta">~10 min — how to observe populations nearby</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:interactions-in-ecosystems" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">Observing Urban Ecology: How Humans Change Ecosystems</span>
+              <span class="choice-meta">~10 min — cities as ecosystems</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:interactions-in-ecosystems" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Do It</span>
+              <span class="choice-desc">Observe and Record: Local Population Study</span>
+              <span class="choice-meta">~15 min — count organisms, note resources</span>
+              <a class="choice-link" href="#">Do below ↓</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 3-4 sentences: Pick one population in your neighborhood (birds, squirrels, insects, etc.). What resources do they need? What are limiting factors for them in your area? How might humans be affecting them?',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. If your neighborhood has a park and developers want to build a parking lot there, how would that affect bird and insect populations? Why?',
+            '2. Some people say feeding stray cats helps them. How might this affect other animal populations in the neighborhood?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Observe & Document',
+          prompt: 'Spend 15 minutes observing a local area (yard, park, street). Count at least 3 different animal populations you see (birds, insects, squirrels, etc.). Note what resources each one is using (food, water, shelter). Draw or photograph your observations. Write: Which populations seemed limited by resources? What evidence did you see?',
+          id: 'check-creative'
+        }
+      ]
+    }
+  };
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  async function loadLesson() {
+    if (!recordId) {
+      document.getElementById('content-main').innerHTML = '<p>No lesson found. <a href="index.html">Go back</a></p>';
+      return;
+    }
+
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`);
+      if (!res.ok) throw new Error('Record not found');
+      const record = await res.json();
+      const itemName = record.fields['Item name'] || '';
+
+      let lesson = null;
+      for (const [key, data] of Object.entries(lessonData)) {
+        if (itemName.includes(key)) {
+          lesson = data;
+          break;
+        }
+      }
+
+      if (!lesson) {
+        if (itemName.includes('Unit test')) {
+          renderKhanTest();
+          return;
+        }
+        document.getElementById('content-main').innerHTML = '<p>Lesson not found.</p>';
+        return;
+      }
+
+      document.getElementById('lesson-title').textContent = lesson.title;
+      document.getElementById('lesson-content').innerHTML = lesson.content;
+
+      const checksHtml = lesson.checks.map((check, idx) => `
+        <div class="check-option">
+          <div class="check-option-title">Option ${idx + 1}: ${check.type}</div>
+          <div class="check-option-desc">
+            ${check.questions ? check.questions.map(q => `<p style="margin-bottom:6px;">${q}</p>`).join('') : check.prompt}
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('check-options').innerHTML = checksHtml;
+
+      if (recordId) {
+        document.getElementById('done-area').innerHTML = `
+          <textarea id="notes-content" class="rh-input" placeholder="Share your answer from the check above..." style="min-height:120px; margin-bottom:12px;"></textarea>
+          <button class="btn btn-success" onclick="markDone()">✓ Mark This Done</button>
+        `;
+      }
+
+    } catch (e) {
+      console.error(e);
+      document.getElementById('content-main').innerHTML = '<p>Error loading lesson.</p>';
+    }
+  }
+
+  function renderKhanTest() {
+    document.getElementById('lesson-content').innerHTML = `
+      <div class="content-section">
+        <div class="content-section-header">
+          <span class="content-section-icon">🎯</span>
+          <span class="content-section-title">Khan Academy Unit Test</span>
+        </div>
+        <p style="margin-bottom:16px; font-size:0.95rem;">You've finished all the lessons for this unit. Now it's time to show what you know on the Khan Academy unit test.</p>
+        <p style="margin-bottom:16px; font-size:0.9rem; color:var(--text-dim);">The test has 10 questions. Take your time and do your best. You can take it more than once if you want to improve your score.</p>
+        <a href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:interactions-in-ecosystems/x0c5bb03129646fd6:ecological-interactions/test/x0c5bb03129646fd6:interactions-in-ecosystems-unit-test" target="_blank" class="btn btn-success" style="display:inline-block; margin-bottom:20px;">
+          Go to Khan Academy Unit Test ↗
+        </a>
+      </div>
+    `;
+
+    document.getElementById('check-section').style.display = 'none';
+
+    document.getElementById('done-area').innerHTML = `
+      <textarea id="notes-content" class="rh-input" placeholder="Once you've completed the Khan Academy unit test, let us know how it went (optional notes here)" style="min-height:80px; margin-bottom:12px;"></textarea>
+      <button class="btn btn-success" onclick="markDone()">✓ Mark Unit Test Complete</button>
+    `;
+  }
+
+  window.markDone = async function () {
+    const notes = document.getElementById('notes-content')?.value.trim() || '';
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: { Status: 'Done', 'Completion date': TODAY, 'Student notes': notes } }),
+      });
+      if (!res.ok) throw new Error('Save failed');
+      showToast('Done! Great work. ✓');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+    } catch (e) {
+      console.error(e);
+      showToast('Error saving — try from the main list.');
+    }
+  };
+
+  loadLesson();
+</script>
+</body>
+</html>

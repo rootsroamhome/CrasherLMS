@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Natural & Artificial Selection — CrasherLMS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .back-btn { display:inline-flex; align-items:center; gap:6px; color:var(--text-muted); font-size:0.85rem; font-weight:500; margin-bottom:20px; transition:color .15s; }
+    .back-btn:hover { color:var(--text); }
+    .content-title { font-size:1.4rem; font-weight:700; margin-bottom:4px; }
+    .content-meta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:24px; }
+    .content-section { margin-bottom:28px; }
+    .content-section-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .content-section-icon { font-size:1.2rem; }
+    .content-section-title { font-size:1rem; font-weight:600; }
+    .choice-list { list-style:none; padding:0; }
+    .choice-item { padding:14px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px; }
+    .choice-type { display:inline-block; font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
+    .choice-desc { display:block; font-size:0.95rem; font-weight:500; margin-bottom:6px; }
+    .choice-meta { display:block; font-size:0.8rem; color:var(--text-dim); margin-bottom:8px; }
+    .choice-link { display:inline-block; font-size:0.85rem; color:var(--accent); text-decoration:none; }
+    .choice-link:hover { text-decoration:underline; }
+    .check-section { margin-top:20px; padding:16px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); }
+    .check-option { padding:12px; background:var(--bg-secondary); border-left:3px solid var(--accent); margin-bottom:12px; }
+    .check-option-title { font-weight:600; margin-bottom:6px; font-size:0.95rem; }
+    .check-option-desc { font-size:0.85rem; color:var(--text-dim); line-height:1.4; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">CrasherLMS</span>
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Today</span>
+    </a>
+    <a href="rabbit-hole.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Rabbit Hole</span>
+    </a>
+    <a href="big-picture.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Big Picture</span>
+    </a>
+  </div>
+</nav>
+
+<main class="page" id="content-main">
+  <a href="index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Today's List
+  </a>
+
+  <div class="content-meta">
+    <span class="subject-badge" style="background:#14391f; color:#86EFAC;">Science</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">MS-LS4-4, MS-LS4-6</span>
+    <span style="font-size:0.75rem; color:var(--text-dim);">Unit 8 — Natural & Artificial Selection</span>
+  </div>
+
+  <div class="content-title" id="lesson-title">Natural & Artificial Selection</div>
+
+  <div id="lesson-content"></div>
+
+  <div class="content-section" id="check-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">Show What You Know — Pick One</span>
+    </div>
+    <div id="check-options"></div>
+  </div>
+
+  <div class="content-section" id="mark-done-section">
+    <div class="content-section-header">
+      <span class="content-section-icon">✓</span>
+      <span class="content-section-title">Mark This Done</span>
+    </div>
+    <p style="margin-bottom:12px; font-size:0.875rem; color:var(--text-muted);">Once you've completed your chosen check above, submit it here.</p>
+    <div id="done-area"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const recordId = params.get('recordId');
+  const TODAY = new Date().toISOString().split('T')[0];
+
+  const lessonData = {
+    'Natural selection': {
+      title: 'Natural Selection',
+      hook: 'In a population of moths, some are light-colored, some dark. Birds can see light moths on dark trees, so they eat them. Dark moths survive and have more babies. Over generations, the population gets darker. That\'s natural selection. Survival of the fittest.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">In a population of moths, some are light-colored, some dark. Birds can see light moths on dark trees, so they eat them. Dark moths survive and have more babies. Over generations, the population gets darker. That's natural selection. Survival of the fittest.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can explain natural selection and describe how it leads to adaptation and evolution.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Natural Selection</span>
+              <span class="choice-meta">~13 min — variation, inheritance, selection</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:natural-and-artificial-selection/x0c5bb03129646fd6:artificial-selection" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">Darwin and the Peppered Moth: Natural Selection in Action</span>
+              <span class="choice-meta">~11 min — classic example explained</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:natural-and-artificial-selection/x0c5bb03129646fd6:artificial-selection" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Interactive</span>
+              <span class="choice-desc">Simulate Natural Selection with Rabbits</span>
+              <span class="choice-meta">~12 min — see evolution happen in real time</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:natural-and-artificial-selection/x0c5bb03129646fd6:artificial-selection" target="_blank" rel="noopener">Explore ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 2-3 sentences: What is natural selection? Give one example and explain how it leads to change in a population over time.',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. In a rabbit population, some rabbits are fast, some are slow. Foxes eat rabbits. Which rabbits survive to have babies?',
+            '2. If fast rabbits have more babies, what will happen to the rabbit population over many generations?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Teach It Back',
+          prompt: 'Explain natural selection to someone who\'s never heard of it. Use the peppered moth, rabbits, or another example. Include: where variation comes from, why some organisms survive, and how this changes the population.',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'Adaptation and environmental change': {
+      title: 'Adaptation and Environmental Change',
+      hook: 'Arctic foxes have white fur. Desert foxes have tan fur. Both are adapted to their environment. But what if climate changes? If the Arctic warms and snow melts, white fur becomes a disadvantage. Adaptations that worked for one environment might not work if the environment changes.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Arctic foxes have white fur. Desert foxes have tan fur. Both are adapted to their environment. But what if climate changes? If the Arctic warms and snow melts, white fur becomes a disadvantage. Adaptations that worked for one environment might not work if the environment changes.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can explain how adaptations help organisms survive and describe what happens when environments change.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Adaptations and Natural Selection</span>
+              <span class="choice-meta">~12 min — how traits help organisms survive</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:natural-and-artificial-selection/x0c5bb03129646fd6:artificial-selection" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">How Organisms Fit Their Environment: Structural and Behavioral Adaptations</span>
+              <span class="choice-meta">~10 min — teeth, camouflage, migration</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:natural-and-artificial-selection/x0c5bb03129646fd6:artificial-selection" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Explore</span>
+              <span class="choice-desc">Case Studies: Adaptations Around the World</span>
+              <span class="choice-meta">~10 min — camels, penguins, snakes</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:natural-and-artificial-selection/x0c5bb03129646fd6:artificial-selection" target="_blank" rel="noopener">Explore ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 2-3 sentences: What is an adaptation? Give two examples of adaptations and explain how they help organisms survive in their environment.',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. A polar bear has white fur, thick fat, and a powerful swim. Which of these adaptations help it survive in the Arctic?',
+            '2. If the Arctic suddenly became warm and ice-free, would the polar bear\'s white fur still be an advantage? Why or why not?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Adapt an Animal',
+          prompt: 'Pick an animal and imagine its environment is changing drastically (desert becomes forest, forest becomes frozen tundra, etc.). Draw: the original animal with its adaptations, then redraw it with NEW adaptations that would help it survive in the new environment. Explain each adaptation.',
+          id: 'check-creative'
+        }
+      ]
+    },
+    'Artificial selection': {
+      title: 'Artificial Selection',
+      hook: 'Dogs aren\'t naturally different from wolves. Humans chose which wolves to breed — keeping the friendliest, the fluffiest, the smallest. After thousands of years of artificial selection, we got poodles, chihuahuas, and golden retrievers. We proved that selection can change species.',
+      content: `
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">🎬</span>
+            <span class="content-section-title">Hook</span>
+          </div>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">Dogs aren't naturally different from wolves. Humans chose which wolves to breed — keeping the friendliest, the fluffiest, the smallest. After thousands of years of artificial selection, we got poodles, chihuahuas, and golden retrievers. We proved that selection can change species.</p>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">✅</span>
+            <span class="content-section-title">I Can…</span>
+          </div>
+          <h2>I can explain artificial selection and compare it to natural selection.</h2>
+        </div>
+
+        <div class="content-section">
+          <div class="content-section-header">
+            <span class="content-section-icon">📚</span>
+            <span class="content-section-title">Learn It — Pick at least one way</span>
+          </div>
+          <ul class="choice-list">
+            <li class="choice-item">
+              <span class="choice-type">Watch</span>
+              <span class="choice-desc">Khan Academy — Artificial Selection</span>
+              <span class="choice-meta">~12 min — selective breeding, humans choosing traits</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:natural-and-artificial-selection/x0c5bb03129646fd6:artificial-selection" target="_blank" rel="noopener">Watch ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Read</span>
+              <span class="choice-desc">How Humans Created Dog Breeds: Artificial Selection in Action</span>
+              <span class="choice-meta">~10 min — wolves to dogs, crops</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:natural-and-artificial-selection/x0c5bb03129646fd6:artificial-selection" target="_blank" rel="noopener">Read ↗</a>
+            </li>
+            <li class="choice-item">
+              <span class="choice-type">Interactive</span>
+              <span class="choice-desc">Create Your Own Breed: Simulate Artificial Selection</span>
+              <span class="choice-meta">~12 min — breed creatures by choosing traits</span>
+              <a class="choice-link" href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:natural-and-artificial-selection/x0c5bb03129646fd6:artificial-selection" target="_blank" rel="noopener">Explore ↗</a>
+            </li>
+          </ul>
+        </div>
+      `,
+      checks: [
+        {
+          type: 'Summary',
+          prompt: 'Write 2-3 sentences: What is artificial selection? How is it different from natural selection? Give one example (dogs, plants, cattle, etc.).',
+          id: 'check-summary'
+        },
+        {
+          type: 'Questions',
+          questions: [
+            '1. Why can humans create new dog breeds in just a few hundred years, while natural selection takes millions of years?',
+            '2. Is artificial selection still evolution? Why or why not?'
+          ],
+          id: 'check-questions'
+        },
+        {
+          type: 'Creative: Design a Creature',
+          prompt: 'Imagine you\'re a farmer/breeder. You want to create a new dog breed for a specific job (hunting, companionship, herding, etc.). Write or draw: What traits would you select for? How would you breed dogs to emphasize those traits? What would your ideal dog look like after 10 generations?',
+          id: 'check-creative'
+        }
+      ]
+    }
+  };
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  async function loadLesson() {
+    if (!recordId) {
+      document.getElementById('content-main').innerHTML = '<p>No lesson found. <a href="index.html">Go back</a></p>';
+      return;
+    }
+
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`);
+      if (!res.ok) throw new Error('Record not found');
+      const record = await res.json();
+      const itemName = record.fields['Item name'] || '';
+
+      let lesson = null;
+      for (const [key, data] of Object.entries(lessonData)) {
+        if (itemName.includes(key)) {
+          lesson = data;
+          break;
+        }
+      }
+
+      if (!lesson) {
+        if (itemName.includes('Unit test')) {
+          renderKhanTest();
+          return;
+        }
+        document.getElementById('content-main').innerHTML = '<p>Lesson not found.</p>';
+        return;
+      }
+
+      document.getElementById('lesson-title').textContent = lesson.title;
+      document.getElementById('lesson-content').innerHTML = lesson.content;
+
+      const checksHtml = lesson.checks.map((check, idx) => `
+        <div class="check-option">
+          <div class="check-option-title">Option ${idx + 1}: ${check.type}</div>
+          <div class="check-option-desc">
+            ${check.questions ? check.questions.map(q => `<p style="margin-bottom:6px;">${q}</p>`).join('') : check.prompt}
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('check-options').innerHTML = checksHtml;
+
+      if (recordId) {
+        document.getElementById('done-area').innerHTML = `
+          <textarea id="notes-content" class="rh-input" placeholder="Share your answer from the check above..." style="min-height:120px; margin-bottom:12px;"></textarea>
+          <button class="btn btn-success" onclick="markDone()">✓ Mark This Done</button>
+        `;
+      }
+
+    } catch (e) {
+      console.error(e);
+      document.getElementById('content-main').innerHTML = '<p>Error loading lesson.</p>';
+    }
+  }
+
+  function renderKhanTest() {
+    document.getElementById('lesson-content').innerHTML = `
+      <div class="content-section">
+        <div class="content-section-header">
+          <span class="content-section-icon">🎯</span>
+          <span class="content-section-title">Khan Academy Unit Test</span>
+        </div>
+        <p style="margin-bottom:16px; font-size:0.95rem;">You've finished all the lessons for this unit. Now it's time to show what you know on the Khan Academy unit test.</p>
+        <p style="margin-bottom:16px; font-size:0.9rem; color:var(--text-dim);">The test has 10 questions. Take your time and do your best. You can take it more than once if you want to improve your score.</p>
+        <a href="https://www.khanacademy.org/science/ms-biology/x0c5bb03129646fd6:natural-and-artificial-selection/x0c5bb03129646fd6:artificial-selection/test/x0c5bb03129646fd6:natural-and-artificial-selection-unit-test" target="_blank" class="btn btn-success" style="display:inline-block; margin-bottom:20px;">
+          Go to Khan Academy Unit Test ↗
+        </a>
+      </div>
+    `;
+
+    document.getElementById('check-section').style.display = 'none';
+
+    document.getElementById('done-area').innerHTML = `
+      <textarea id="notes-content" class="rh-input" placeholder="Once you've completed the Khan Academy unit test, let us know how it went (optional notes here)" style="min-height:80px; margin-bottom:12px;"></textarea>
+      <button class="btn btn-success" onclick="markDone()">✓ Mark Unit Test Complete</button>
+    `;
+  }
+
+  window.markDone = async function () {
+    const notes = document.getElementById('notes-content')?.value.trim() || '';
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: { Status: 'Done', 'Completion date': TODAY, 'Student notes': notes } }),
+      });
+      if (!res.ok) throw new Error('Save failed');
+      showToast('Done! Great work. ✓');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+    } catch (e) {
+      console.error(e);
+      showToast('Error saving — try from the main list.');
+    }
+  };
+
+  loadLesson();
+</script>
+</body>
+</html>
