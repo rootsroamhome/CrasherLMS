@@ -305,14 +305,20 @@ async function loadTodos() {
 
     container.innerHTML = '';
 
-    if (mode !== 'today') {
+    if (mode === 'today') {
+      const banner = document.createElement('div');
+      banner.className = `view-banner today-banner`;
+      banner.innerHTML = `<strong>Hey Crasher —</strong> ${getDailyFact(viewDate)}`;
+      container.appendChild(banner);
+    } else if (mode === 'past') {
       const banner = document.createElement('div');
       banner.className = `view-banner ${mode}`;
-      if (mode === 'past') {
-        banner.textContent = 'Past date — read-only view';
-      } else {
-        banner.innerHTML = `<strong>Hey Crasher —</strong> ${getDailyFact(viewDate)}`;
-      }
+      banner.textContent = 'Past date — read-only view';
+      container.appendChild(banner);
+    } else {
+      const banner = document.createElement('div');
+      banner.className = `view-banner ${mode}`;
+      banner.textContent = 'Preview — this day isn\'t active yet';
       container.appendChild(banner);
     }
 
