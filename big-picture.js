@@ -49,6 +49,8 @@ function el(tag, cls, html) {
 
 function renderUnits(todos) {
   const units = {};
+  const unitsBySubject = {};
+
   for (const r of todos) {
     const unit    = r.fields['Unit'] || 'Uncategorized';
     const subject = r.fields['Subject'] || 'Unknown';
@@ -59,21 +61,38 @@ function renderUnits(todos) {
 
   if (Object.keys(units).length === 0) return el('p', 'empty-msg', 'No units yet — add items in Airtable to see progress here.');
 
-  const grid = el('div', 'unit-grid');
+  // Group units by subject
   for (const [name, data] of Object.entries(units)) {
-    const pct    = data.total > 0 ? Math.round((data.done / data.total) * 100) : 0;
-    const color  = subjectColor(data.subject).accent;
-    const status = pct === 100 ? '✓ Complete' : pct > 0 ? 'In Progress' : 'Not Started';
-    const card   = el('div', 'unit-card');
-    card.innerHTML = `
-      <div style="font-size:0.7rem; color:${color}; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">${data.subject}</div>
-      <div class="unit-name">${name}</div>
-      <div class="unit-progress-bar"><div class="unit-progress-fill" style="width:${pct}%; background:${color};"></div></div>
-      <div class="unit-count">${data.done}/${data.total} done · ${status}</div>
-    `;
-    grid.appendChild(card);
+    const subject = data.subject;
+    if (!unitsBySubject[subject]) unitsBySubject[subject] = [];
+    unitsBySubject[subject].push({ name, data });
   }
-  return grid;
+
+  const container = document.createDocumentFragment();
+
+  // Render each subject section
+  for (const [subject, unitList] of Object.entries(unitsBySubject)) {
+    const color = subjectColor(subject).accent;
+    const section = el('div', 'subject-section');
+    section.innerHTML = `<div class="subject-section-title" style="color:${color};">📚 ${subject}</div>`;
+
+    const grid = el('div', 'unit-grid');
+    for (const { name, data } of unitList) {
+      const pct    = data.total > 0 ? Math.round((data.done / data.total) * 100) : 0;
+      const status = pct === 100 ? '✓ Complete' : pct > 0 ? 'In Progress' : 'Not Started';
+      const card   = el('div', 'unit-card');
+      card.innerHTML = `
+        <div class="unit-name">${name}</div>
+        <div class="unit-progress-bar"><div class="unit-progress-fill" style="width:${pct}%; background:${color};"></div></div>
+        <div class="unit-count">${data.done}/${data.total} done · ${status}</div>
+      `;
+      grid.appendChild(card);
+    }
+    section.appendChild(grid);
+    container.appendChild(section);
+  }
+
+  return container;
 }
 
 function renderStandards(standards) {
