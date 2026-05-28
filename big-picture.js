@@ -52,6 +52,7 @@ function renderUnits(todos) {
   const unitsBySubject = {};
 
   for (const r of todos) {
+    if (r.fields['Unit'] === 'Self-Study') continue;
     const unit    = r.fields['Unit'] || 'Uncategorized';
     const subject = r.fields['Subject'] || 'Unknown';
     if (!units[unit]) units[unit] = { subject, total: 0, done: 0 };
@@ -132,7 +133,7 @@ function renderStandards(standards) {
 
 function renderRecent(todos) {
   const recent = todos
-    .filter(r => r.fields['Status'] === 'Done' && r.fields['Completion date'] >= SEVEN_DAYS_AGO)
+    .filter(r => r.fields['Unit'] !== 'Self-Study' && r.fields['Status'] === 'Done' && r.fields['Completion date'] >= SEVEN_DAYS_AGO)
     .sort((a, b) => (b.fields['Completion date'] || '').localeCompare(a.fields['Completion date'] || ''));
 
   if (recent.length === 0) return el('p', 'empty-msg', 'Nothing completed in the last 7 days yet.');
@@ -153,7 +154,7 @@ function renderRecent(todos) {
 }
 
 function renderStuck(todos) {
-  const stuck = todos.filter(r => r.fields['Status'] !== 'Done' && (r.fields['Days carried'] || 0) >= 3);
+  const stuck = todos.filter(r => r.fields['Unit'] !== 'Self-Study' && r.fields['Status'] !== 'Done' && (r.fields['Days carried'] || 0) >= 3);
   if (stuck.length === 0) return el('p', 'empty-msg', 'Nothing stuck — great!');
 
   const list = el('div');
@@ -197,8 +198,8 @@ async function load() {
       airtableGetAll(TABLES.standards),
     ]);
 
-    const thisWeek      = todos.filter(r => r.fields['Completion date'] >= SEVEN_DAYS_AGO && r.fields['Status'] === 'Done');
-    const stuck         = todos.filter(r => r.fields['Status'] !== 'Done' && (r.fields['Days carried'] || 0) >= 3);
+    const thisWeek      = todos.filter(r => r.fields['Unit'] !== 'Self-Study' && r.fields['Completion date'] >= SEVEN_DAYS_AGO && r.fields['Status'] === 'Done');
+    const stuck         = todos.filter(r => r.fields['Unit'] !== 'Self-Study' && r.fields['Status'] !== 'Done' && (r.fields['Days carried'] || 0) >= 3);
     const standardsDone = standards.filter(r => r.fields['Completed'] === true);
 
     document.getElementById('stat-done').textContent      = thisWeek.length;
