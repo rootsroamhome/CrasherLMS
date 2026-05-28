@@ -63,12 +63,14 @@ button { font-family: var(--font); cursor: pointer; }
 
 .nav-brand {
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   color: var(--accent);
   margin-right: auto;
   letter-spacing: -0.02em;
   display: inline-flex;
   align-items: center;
+  padding-bottom: 2px;
+  border-bottom: 2px solid var(--accent);
 }
 
 .nav-link {
@@ -112,12 +114,12 @@ button { font-family: var(--font); cursor: pointer; }
 
 /* ---- Cards ---- */
 .card {
-  background: var(--card);
+  background: linear-gradient(135deg, #FFFFFF 0%, #FAFBFC 100%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
   margin-bottom: 12px;
-  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -134,7 +136,7 @@ button { font-family: var(--font); cursor: pointer; }
   background: var(--card-accent, var(--border));
 }
 
-.card:hover { background: var(--card-hover); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); transform: translateY(-1px); }
+.card:hover { background: linear-gradient(135deg, #F1F5F9 0%, #F5F8FA 100%); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); transform: translateY(-2px); }
 
 .card-clickable {
   cursor: pointer;
@@ -142,6 +144,7 @@ button { font-family: var(--font); cursor: pointer; }
 
 .card-clickable:active {
   transform: scale(0.98);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* ---- Subject badge ---- */
@@ -150,18 +153,17 @@ button { font-family: var(--font); cursor: pointer; }
   align-items: center;
   gap: 5px;
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 4px 10px;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
   border-radius: 20px;
   margin-bottom: 8px;
-  font-weight: 800;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
 }
 
-.subject-badge:hover { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
+.subject-badge:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18); transform: translateY(-1px); }
 
 /* ---- Todo card layout ---- */
 .todo-card {
@@ -210,21 +212,22 @@ button { font-family: var(--font); cursor: pointer; }
   font-size: 0.8rem;
   font-weight: 600;
   border: none;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12); }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); }
 .btn:active { transform: translateY(0); }
-.btn:focus { outline: 2px solid rgba(242, 149, 89, 0.4); outline-offset: 2px; }
+.btn:focus { outline: 2px solid rgba(242, 149, 89, 0.5); outline-offset: 2px; }
 
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-success { background: var(--success); color: #fff; font-weight: 700; }
+.btn-primary { background: linear-gradient(135deg, #F5A973 0%, var(--accent) 100%); color: #fff; }
+.btn-success { background: linear-gradient(135deg, #5FBE9D 0%, var(--success) 100%); color: #fff; font-weight: 700; box-shadow: 0 2px 6px rgba(73, 160, 120, 0.2); }
+.btn-success:hover { box-shadow: 0 6px 16px rgba(73, 160, 120, 0.3); }
 .btn-ghost {
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text-muted);
 }
-.btn-ghost:hover { border-color: var(--accent); color: var(--text); background: rgba(242, 149, 89, 0.05); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--text); background: rgba(242, 149, 89, 0.08); }
 
 /* ---- Mark-done form ---- */
 .done-form {
@@ -288,19 +291,19 @@ button { font-family: var(--font); cursor: pointer; }
   border: 3px solid #E2E8F0;
   border-top-color: var(--accent);
   border-radius: 50%;
-  animation: spin 0.8s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+  animation: spin 0.75s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
   margin: 0 auto 12px;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin { 0% { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 /* ---- Completion animation ---- */
 .card.completing {
-  animation: fadeOut 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: fadeOut 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 @keyframes fadeOut {
   0% { opacity: 1; transform: translateX(0) scale(1); max-height: 300px; }
-  50% { opacity: 1; transform: translateX(10px) scale(0.98); }
-  100% { opacity: 0; transform: translateX(40px) scale(0.95); max-height: 0; padding: 0; margin: 0; }
+  60% { opacity: 1; transform: translateX(12px) scale(0.97); }
+  100% { opacity: 0; transform: translateX(50px) scale(0.9); max-height: 0; padding: 0; margin: 0; }
 }
 
 /* ---- Section divider ---- */
