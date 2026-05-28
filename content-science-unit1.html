@@ -58,7 +58,7 @@
   </a>
 
   <div class="content-meta">
-    <span class="subject-badge" style="background:#14391f; color:#86EFAC;">Science</span>
+    <span class="subject-badge" style="background:#14391f; color:#FFFFFF;">Science</span>
     <span style="font-size:0.75rem; color:var(--text-dim);">MS-LS1-4, MS-LS1-5, MS-LS3-2</span>
     <span style="font-size:0.75rem; color:var(--text-dim);">Unit 1 — Organism Growth & Reproduction</span>
   </div>
@@ -105,7 +105,7 @@
             <span class="content-section-icon">🎬</span>
             <span class="content-section-title">Hook</span>
           </div>
-          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">${this.hook}</p>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">{{hook}}</p>
         </div>
 
         <div class="content-section">
@@ -173,7 +173,7 @@
             <span class="content-section-icon">🎬</span>
             <span class="content-section-title">Hook</span>
           </div>
-          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">${this.hook}</p>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">{{hook}}</p>
         </div>
 
         <div class="content-section">
@@ -241,7 +241,7 @@
             <span class="content-section-icon">🎬</span>
             <span class="content-section-title">Hook</span>
           </div>
-          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">${this.hook}</p>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">{{hook}}</p>
         </div>
 
         <div class="content-section">
@@ -309,7 +309,7 @@
             <span class="content-section-icon">🎬</span>
             <span class="content-section-title">Hook</span>
           </div>
-          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">${this.hook}</p>
+          <p style="margin-bottom:14px; font-size:0.9rem; color:var(--text-muted);">{{hook}}</p>
         </div>
 
         <div class="content-section">
@@ -410,7 +410,7 @@
 
       // Render lesson
       document.getElementById('lesson-title').textContent = lesson.title;
-      document.getElementById('lesson-content').innerHTML = lesson.content;
+      document.getElementById('lesson-content').innerHTML = lesson.content.replace(/\{\{hook\}\}/g, lesson.hook);
 
       // Render checks
       const checksHtml = lesson.checks.map((check, idx) => `

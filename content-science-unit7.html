@@ -58,7 +58,7 @@
   </a>
 
   <div class="content-meta">
-    <span class="subject-badge" style="background:#14391f; color:#86EFAC;">Science</span>
+    <span class="subject-badge" style="background:#14391f; color:#FFFFFF;">Science</span>
     <span style="font-size:0.75rem; color:var(--text-dim);">MS-LS4-2, MS-LS4-3</span>
     <span style="font-size:0.75rem; color:var(--text-dim);">Unit 7 — Evolution</span>
   </div>
@@ -472,7 +472,7 @@
       }
 
       document.getElementById('lesson-title').textContent = lesson.title;
-      document.getElementById('lesson-content').innerHTML = lesson.content;
+      document.getElementById('lesson-content').innerHTML = lesson.content.replace(/\{\{hook\}\}/g, lesson.hook);
 
       const checksHtml = lesson.checks.map((check, idx) => `
         <div class="check-option">
