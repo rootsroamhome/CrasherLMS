@@ -217,12 +217,10 @@ async function load() {
     ]);
 
     const thisWeek      = todos.filter(r => r.fields['Completion date'] >= SEVEN_DAYS_AGO && r.fields['Status'] === 'Done');
-    const pending       = todos.filter(r => r.fields['Status'] === 'Not Started');
     const stuck         = todos.filter(r => r.fields['Status'] !== 'Done' && (r.fields['Days carried'] || 0) >= 3);
     const standardsDone = standards.filter(r => r.fields['Completed'] === true);
 
     document.getElementById('stat-done').textContent      = thisWeek.length;
-    document.getElementById('stat-pending').textContent   = pending.length;
     document.getElementById('stat-stuck').textContent     = stuck.length;
     document.getElementById('stat-standards').textContent = `${standardsDone.length}/${standards.length}`;
 
