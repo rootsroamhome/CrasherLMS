@@ -425,6 +425,24 @@ button { font-family: var(--font); cursor: pointer; }
 }
 .choice-link:hover { text-decoration: underline; }
 
+/* ---- Lesson hook media link ---- */
+.hook-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  padding: 7px 12px;
+  background: rgba(242, 149, 89, 0.08);
+  border: 1px solid rgba(242, 149, 89, 0.25);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.hook-link:hover { background: rgba(242, 149, 89, 0.15); border-color: var(--accent); text-decoration: none; }
+
 /* ---- Rabbit Hole page ---- */
 .rh-card {
   margin-bottom: 16px;
