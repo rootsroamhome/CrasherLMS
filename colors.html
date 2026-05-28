@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HomeSkewl Colors</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui; padding: 40px; background: #f5f5f5; }
+    h1 { text-align: center; margin-bottom: 60px; font-size: 2.5rem; }
+
+    .palettes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; max-width: 1000px; margin: 0 auto; }
+
+    .palette { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .palette h2 { font-size: 1.3rem; margin-bottom: 20px; }
+
+    .colors { display: flex; gap: 15px; flex-wrap: wrap; }
+    .color-box { flex: 1; min-width: 100px; aspect-ratio: 1; border-radius: 8px; display: flex; align-items: flex-end; justify-content: center; padding: 10px; color: white; font-size: 0.75rem; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+    .color-label { text-align: center; font-size: 0.85rem; margin-top: 8px; color: #333; }
+  </style>
+</head>
+<body>
+
+<h1>HomeSkewl Color Palettes</h1>
+
+<div class="palettes">
+  <div class="palette">
+    <h2>🎯 Professional</h2>
+    <div class="colors">
+      <div>
+        <div class="color-box" style="background: #0a0e27;">BG</div>
+        <div class="color-label">#0a0e27</div>
+      </div>
+      <div>
+        <div class="color-box" style="background: #7c3aed;">Primary</div>
+        <div class="color-label">#7c3aed</div>
+      </div>
+      <div>
+        <div class="color-box" style="background: #10b981;">Success</div>
+        <div class="color-label">#10b981</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <h2>🎉 Fun</h2>
+    <div class="colors">
+      <div>
+        <div class="color-box" style="background: #1a1d2e;">BG</div>
+        <div class="color-label">#1a1d2e</div>
+      </div>
+      <div>
+        <div class="color-box" style="background: #ff6b6b;">Primary</div>
+        <div class="color-label">#ff6b6b</div>
+      </div>
+      <div>
+        <div class="color-box" style="background: #ffd700;">Success</div>
+        <div class="color-label">#ffd700</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <h2>🏔️ Outdoorsy</h2>
+    <div class="colors">
+      <div>
+        <div class="color-box" style="background: #1a2332;">BG</div>
+        <div class="color-label">#1a2332</div>
+      </div>
+      <div>
+        <div class="color-box" style="background: #4ade80;">Primary</div>
+        <div class="color-label">#4ade80</div>
+      </div>
+      <div>
+        <div class="color-box" style="background: #f59e0b;">Success</div>
+        <div class="color-label">#f59e0b</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <h2>⭐ My Pick</h2>
+    <div class="colors">
+      <div>
+        <div class="color-box" style="background: #0f1419;">BG</div>
+        <div class="color-label">#0f1419</div>
+      </div>
+      <div>
+        <div class="color-box" style="background: #ec4899;">Primary</div>
+        <div class="color-label">#ec4899</div>
+      </div>
+      <div>
+        <div class="color-box" style="background: #06b6d4;">Success</div>
+        <div class="color-label">#06b6d4</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
