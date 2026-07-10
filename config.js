@@ -21,12 +21,13 @@ const TABLES = {
   schedule:  'Schedule',
 };
 
-// Subject color map — used by all pages
+// Subject color map — used by all pages. Bold editorial palette on cream.
 const SUBJECT_COLORS = {
-  Math:            { bg: '#1e3a5f', accent: '#3B82F6', label: '#FFFFFF' },
-  Science:         { bg: '#14391f', accent: '#22C55E', label: '#FFFFFF' },
-  'Social Science':{ bg: '#431407', accent: '#F97316', label: '#FFFFFF' },
-  ELA:             { bg: '#2e1065', accent: '#A855F7', label: '#FFFFFF' },
-  Health:          { bg: '#500724', accent: '#EC4899', label: '#FFFFFF' },
-  'Rabbit Hole':   { bg: '#0d3330', accent: '#14B8A6', label: '#FFFFFF' },
+  Science:         { bg: '#2E9AA6', accent: '#2E9AA6', label: '#FBF7EC' },
+  Math:            { bg: '#E8503A', accent: '#E8503A', label: '#FBF7EC' },
+  ELA:             { bg: '#D99A2B', accent: '#C6871B', label: '#1A1A1A' },
+  'Self-Study':    { bg: '#7C7C57', accent: '#7C7C57', label: '#FBF7EC' },
+  'Rabbit Hole':   { bg: '#8B5C9E', accent: '#8B5C9E', label: '#FBF7EC' },
+  'Social Science':{ bg: '#7C7C57', accent: '#7C7C57', label: '#FBF7EC' },
+  Health:          { bg: '#C64B7A', accent: '#C64B7A', label: '#FBF7EC' },
 };

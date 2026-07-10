@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Today's List — HomeSkewl</title>
+  <title>This Week — HomeSkewl</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<!-- Navigation -->
 <nav class="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-brand"><span class="dot"></span>HomeSkewl</a>
-    <a href="index.html" class="nav-link active">
+    <a href="index.html" class="nav-link">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>Today</span>
     </a>
-    <a href="this-week.html" class="nav-link">
+    <a href="this-week.html" class="nav-link active">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg>
       <span>This Week</span>
     </a>
@@ -35,38 +34,18 @@
   </div>
 </nav>
 
-<!-- Page -->
 <main class="page">
-  <div class="page-header">
-    <div class="date-nav">
-      <button class="btn btn-ghost" id="prev-day">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-        Prev
-      </button>
-      <div class="date-nav-center">
-        <div class="date-nav-label" id="nav-title">Today's List</div>
-        <div class="date-nav-sub" id="nav-date"></div>
-        <button class="btn btn-today" id="back-today" style="display:none">Back to Today</button>
-      </div>
-      <button class="btn btn-ghost" id="next-day">
-        Next
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-    </div>
+  <div style="position:relative;">
+    <div class="hero-title">Your call<span style="color:var(--coral)">.</span></div>
+    <p class="hero-sub">Every Monday you pick your lane. Go deep on one thing you choose (<em class="serif">Self-Study</em>), or chase whatever&rsquo;s interesting and make stuff (<em class="serif">Rabbit Holes</em>). There&rsquo;s no wrong pick — just pick.</p>
   </div>
 
-  <div id="todo-list">
-    <div class="loading">
-      <div class="spinner"></div>
-      Loading your list…
-    </div>
-  </div>
+  <div id="chooser"></div>
+  <div id="track-content"></div>
 </main>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
-
 <script src="config.js"></script>
-<script src="index.js"></script>
+<script src="this-week.js"></script>
 </body>
 </html>

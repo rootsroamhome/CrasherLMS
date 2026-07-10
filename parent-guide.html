@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Today's List — HomeSkewl</title>
+  <title>Parents’ Guide — HomeSkewl</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<!-- Navigation -->
 <nav class="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-brand"><span class="dot"></span>HomeSkewl</a>
-    <a href="index.html" class="nav-link active">
+    <a href="index.html" class="nav-link">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>Today</span>
     </a>
@@ -24,7 +23,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       <span>Big Picture</span>
     </a>
-    <a href="parent-guide.html" class="nav-link">
+    <a href="parent-guide.html" class="nav-link active">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span>Parents</span>
     </a>
@@ -35,38 +34,18 @@
   </div>
 </nav>
 
-<!-- Page -->
 <main class="page">
-  <div class="page-header">
-    <div class="date-nav">
-      <button class="btn btn-ghost" id="prev-day">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-        Prev
-      </button>
-      <div class="date-nav-center">
-        <div class="date-nav-label" id="nav-title">Today's List</div>
-        <div class="date-nav-sub" id="nav-date"></div>
-        <button class="btn btn-today" id="back-today" style="display:none">Back to Today</button>
-      </div>
-      <button class="btn btn-ghost" id="next-day">
-        Next
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-    </div>
-  </div>
+  <div class="hero-title">Parents&rsquo; Guide</div>
+  <p class="hero-sub" id="week-range">The week ahead — what&rsquo;s planned, where to lean in, and how to make it real.</p>
 
-  <div id="todo-list">
-    <div class="loading">
-      <div class="spinner"></div>
-      Loading your list…
-    </div>
+  <div id="content">
+    <div class="loading"><div class="spinner"></div>Loading the week…</div>
   </div>
 </main>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
-
 <script src="config.js"></script>
-<script src="index.js"></script>
+<script src="curriculum.js"></script>
+<script src="parent-guide.js"></script>
 </body>
 </html>
