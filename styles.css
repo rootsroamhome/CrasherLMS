@@ -12,21 +12,21 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Editorial palette */
-  --cream:        #FBF7EC;
-  --cream-2:      #F4EEDD;
+  /* Editorial palette — light warm ground so the color tiles pop */
+  --cream:        #FDFBF4;
+  --cream-2:      #F6F1E2;
   --ink:          #1A1A1A;
   --ink-soft:     #4A4642;
   --ink-dim:      #8A857C;
-  --paper:        #FFFDF7;
-  --line:         #E6DFCD;
+  --paper:        #FFFFFF;
+  --line:         #EAE3D2;
 
-  /* Brand accents */
+  /* Brand accents — d.school-leaning, brighter */
   --coral:        #E8503A;
-  --teal:         #2E9AA6;
-  --mustard:      #D99A2B;
-  --plum:         #8B5C9E;
-  --olive:        #7C7C57;
+  --teal:         #1F8E9B;
+  --mustard:      #E0A93B;
+  --plum:         #8B4FA6;
+  --olive:        #6F6F45;
 
   /* Semantic */
   --bg:           var(--cream);
@@ -59,9 +59,9 @@ body {
   min-height: 100vh;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  /* subtle halftone dot texture on the ground */
-  background-image: radial-gradient(rgba(26,26,26,0.035) 1px, transparent 1px);
-  background-size: 22px 22px;
+  /* very subtle halftone dot texture on the ground */
+  background-image: radial-gradient(rgba(26,26,26,0.025) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -231,11 +231,11 @@ button { font-family: var(--sans); cursor: pointer; }
   content: '';
   position: absolute; inset: 0;
   pointer-events: none; z-index: 0;
-  background-image: radial-gradient(circle, rgba(26,26,26,0.13) 1.4px, transparent 1.6px);
+  background-image: radial-gradient(circle, rgba(26,26,26,0.16) 1.5px, transparent 1.7px);
   background-size: 11px 11px;
-  -webkit-mask-image: radial-gradient(130% 120% at 116% -12%, #000 0%, transparent 56%);
-          mask-image: radial-gradient(130% 120% at 116% -12%, #000 0%, transparent 56%);
-  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(130% 120% at 116% -12%, #000 0%, transparent 58%);
+          mask-image: radial-gradient(130% 120% at 116% -12%, #000 0%, transparent 58%);
+  opacity: 0.6;
 }
 .tile > * { position: relative; z-index: 1; }
 .tile-dot {
@@ -435,6 +435,29 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
   margin-bottom: 20px;
 }
 
+/* Lesson hero photo (real photography) with a diagonal ribbon bar */
+.lesson-photo {
+  position: relative;
+  height: 210px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 22px;
+  background: var(--tile, var(--cream-2));
+  box-shadow: 0 8px 22px rgba(26,26,26,0.10);
+}
+.lesson-photo img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: saturate(1.06) contrast(1.02);
+}
+.photo-ribbon {
+  position: absolute; top: 24px; left: -72px; z-index: 2;
+  transform: rotate(-24deg);
+  background: var(--ink); color: var(--cream);
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase;
+  padding: 7px 84px; white-space: nowrap;
+  box-shadow: 0 5px 16px rgba(26,26,26,0.3);
+}
+
 .content-section {
   background: var(--card);
   border: 1px solid rgba(26,26,26,0.08);
@@ -538,8 +561,8 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
 }
 .track-choice > * { position: relative; z-index: 1; }
 .track-choice:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(26,26,26,0.11); }
-.track-choice.selfstudy { background: #E4E1D2; }
-.track-choice.rabbithole { background: #E7DDEE; }
+.track-choice.selfstudy { background: #DAD2AC; }
+.track-choice.rabbithole { background: #DDC1EE; }
 .track-choice .track-eyebrow { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-soft); }
 .track-choice .track-name { font-family: var(--serif); font-size: 1.9rem; font-weight: 600; line-height: 1; margin: 4px 0 8px; }
 .track-choice .track-desc { font-size: 0.86rem; color: var(--ink-soft); line-height: 1.45; }

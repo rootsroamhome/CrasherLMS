@@ -19,11 +19,24 @@ function subjectStyle(subject) {
   return (typeof SUBJECT_COLORS !== 'undefined' && SUBJECT_COLORS[subject]) || { bg: '#1A1A1A', label: '#FBF7EC', accent: '#1A1A1A' };
 }
 
-function findLesson(itemName) {
-  for (const [key, data] of Object.entries(LESSONS)) {
-    if (itemName.includes(key)) return data;
+function findLessonKey(itemName) {
+  for (const key of Object.keys(LESSONS)) {
+    if (itemName.includes(key)) return key;
   }
   return null;
+}
+
+function photoHtml(key, subject) {
+  const kw = (typeof LESSON_PHOTOS !== 'undefined') && LESSON_PHOTOS[key];
+  if (!kw) return '';
+  const seed = Math.abs([...key].reduce((a, c) => a + c.charCodeAt(0), 0)) % 1000;
+  const src = `https://loremflickr.com/900/380/${encodeURIComponent(kw)}?lock=${seed}`;
+  const tag = (subject || '').toUpperCase();
+  const tile = subjectStyle(subject).tile || 'var(--cream-2)';
+  return `<div class="lesson-photo" style="--tile:${tile};">
+    <img src="${src}" alt="" loading="lazy" onerror="this.style.display='none'" />
+    <span class="photo-ribbon">${tag} · ${tag} · ${tag} · ${tag}</span>
+  </div>`;
 }
 
 function learnItHtml(lesson) {
@@ -131,7 +144,8 @@ async function loadLesson() {
     const unit     = record.fields['Unit'] || '';
     const stdCode  = record.fields['Standard code'] || '';
 
-    const lesson = findLesson(itemName);
+    const lessonKey = findLessonKey(itemName);
+    const lesson = lessonKey ? LESSONS[lessonKey] : null;
     if (!lesson) {
       document.getElementById('lesson-title').textContent = itemName || 'Lesson';
       document.getElementById('lesson-content').innerHTML =
@@ -144,7 +158,7 @@ async function loadLesson() {
         ${(lesson.standards || stdCode) ? `<span style="font-size:0.76rem; font-weight:700; color:var(--text-dim);">${lesson.standards || stdCode}</span>` : ''}
         ${(lesson.unit || unit) ? `<span style="font-size:0.76rem; color:var(--text-dim);">${lesson.unit || unit}</span>` : ''}`;
       document.getElementById('lesson-title').textContent = lesson.title;
-      document.getElementById('lesson-content').innerHTML = learnItHtml(lesson);
+      document.getElementById('lesson-content').innerHTML = photoHtml(lessonKey, subject) + learnItHtml(lesson);
       const isQuiz = !!lesson.quiz;
       document.getElementById('check-options').innerHTML = isQuiz ? quizHtml(lesson) : choicesHtml(lesson);
       document.querySelector('#check-section .content-section-title').textContent =

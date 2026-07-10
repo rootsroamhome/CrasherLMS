@@ -27,12 +27,12 @@ const TABLES = {
 //   tile   — soft color-fill for the whole tile background (dark text reads on it)
 //   label  — text color used on the saturated bg
 const SUBJECT_COLORS = {
-  Science:         { bg: '#2E9AA6', accent: '#2E9AA6', tile: '#C7E6EA', label: '#FBF7EC' },
-  Math:            { bg: '#E8503A', accent: '#E8503A', tile: '#F8D5CC', label: '#FBF7EC' },
-  ELA:             { bg: '#C6871B', accent: '#C6871B', tile: '#F4E4BD', label: '#1A1A1A' },
-  'Humanities':    { bg: '#C6871B', accent: '#C6871B', tile: '#F4E4BD', label: '#1A1A1A' },
-  'Self-Study':    { bg: '#7C7C57', accent: '#7C7C57', tile: '#E4E1D2', label: '#FBF7EC' },
-  'Rabbit Hole':   { bg: '#8B5C9E', accent: '#8B5C9E', tile: '#E7DDEE', label: '#FBF7EC' },
-  'Social Science':{ bg: '#7C7C57', accent: '#7C7C57', tile: '#E0DACB', label: '#FBF7EC' },
-  Health:          { bg: '#C64B7A', accent: '#C64B7A', tile: '#F6D6E0', label: '#FBF7EC' },
+  Science:         { bg: '#1F8E9B', accent: '#1F8E9B', tile: '#A3DFE6', label: '#FBF7EC' },
+  Math:            { bg: '#E8503A', accent: '#E8503A', tile: '#F6A490', label: '#1A1A1A' },
+  ELA:             { bg: '#C6871B', accent: '#C6871B', tile: '#F5D982', label: '#1A1A1A' },
+  'Humanities':    { bg: '#C1682E', accent: '#C1682E', tile: '#F0C4A0', label: '#1A1A1A' },
+  'Self-Study':    { bg: '#6F6F45', accent: '#6F6F45', tile: '#DAD2AC', label: '#FBF7EC' },
+  'Rabbit Hole':   { bg: '#8B4FA6', accent: '#8B4FA6', tile: '#DDC1EE', label: '#FBF7EC' },
+  'Social Science':{ bg: '#C1682E', accent: '#C1682E', tile: '#F0C4A0', label: '#1A1A1A' },
+  Health:          { bg: '#C64B7A', accent: '#C64B7A', tile: '#F6B8CE', label: '#1A1A1A' },
 };

@@ -823,4 +823,26 @@ const LESSONS = {
 
 };
 
-if (typeof module !== 'undefined') module.exports = { LESSONS };
+// Real photo keywords per lesson (loremflickr pulls a matching Flickr photo).
+// Single common tags so they reliably resolve; the banner degrades to a color
+// block if an image ever fails to load.
+const LESSON_PHOTOS = {
+  'Atoms & Molecules': 'chemistry', 'States of Matter': 'ice', 'Thermal Energy & Changes of State': 'steam',
+  'Natural & Synthetic Materials': 'factory', 'Signs of a Chemical Reaction': 'chemistry', 'Conservation of Mass': 'laboratory',
+  'Endothermic & Exothermic': 'fire', 'Batteries — Chemistry to Electricity': 'battery', 'The Rock Cycle': 'rocks',
+  'The Water Cycle & Earth': 'waterfall', 'Uneven Distribution of Resources': 'mine', 'Geologic Time': 'canyon',
+  'Reading Rock Strata': 'cliff', 'Plate Tectonics': 'volcano', 'Cascadia': 'coast',
+  'Forecasting Natural Hazards': 'wildfire', 'Earthquake Engineering': 'skyscraper', 'Human Impact & Solutions': 'forest',
+  'Kinetic & Potential Energy': 'rollercoaster', 'Energy Transformations': 'lightbulb', 'Electricity & Circuits': 'circuit',
+  'E-Bike Engineering Challenge': 'bicycle',
+  'Why Civilizations Started by Rivers': 'river', 'Cracking Ancient Writing': 'hieroglyphics', "Hammurabi's Code": 'babylon',
+  'Ancient World Showcase': 'ruins', 'What Myths Are For': 'mythology', "The Hero's Journey": 'mountain',
+  'Gilgamesh': 'ancient', 'Write Your Own Myth': 'storytelling', 'What Makes an Empire': 'ruins',
+  'Rome: Rise': 'colosseum', 'Why Empires Fall': 'colosseum', 'Empire Showcase': 'castle',
+  'The Silk Road': 'camel', 'Ideas That Spread': 'temple', 'The Black Death': 'medieval',
+  'Research & Report': 'library', 'Pick Your Novel': 'books', 'Novel — Characters & Conflict': 'book',
+  'Novel & Its World': 'map', 'Book Talk': 'books', 'How Arguments Work': 'debate',
+  'Pick a Fight': 'microphone', 'Being a Citizen': 'capitol', 'Make Your Case': 'podium',
+};
+
+if (typeof module !== 'undefined') module.exports = { LESSONS, LESSON_PHOTOS };
