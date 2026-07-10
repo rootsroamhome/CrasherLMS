@@ -27,6 +27,8 @@ function findLessonKey(itemName) {
 }
 
 function photoHtml(key, subject) {
+  // Photos paused for now (sourcing being reworked). Re-enable by removing this line.
+  return '';
   const kw = (typeof LESSON_PHOTOS !== 'undefined') && LESSON_PHOTOS[key];
   if (!kw) return '';
   const seed = Math.abs([...key].reduce((a, c) => a + c.charCodeAt(0), 0)) % 1000;
@@ -83,12 +85,7 @@ function quizHtml(lesson) {
   return `
     ${qs}
     <button class="btn btn-primary" id="check-quiz" onclick="checkQuiz()">Check my answers</button>
-    <div id="quiz-result"></div>
-    <div style="margin-top:22px; padding-top:18px; border-top:2px dashed var(--line);">
-      <div class="content-section-title" style="margin-bottom:8px;">✍️ One more — in your own words</div>
-      <p style="margin-bottom:10px;">${lesson.short || ''}</p>
-      <textarea id="short-answer" class="rh-input" placeholder="Type your answer here…" style="min-height:90px;"></textarea>
-    </div>`;
+    <div id="quiz-result"></div>`;
 }
 
 window.selectOpt = function (qi, oi) {
@@ -121,11 +118,19 @@ function choicesHtml(lesson) {
       <div class="check-option-desc">${o.prompt}</div>
     </div>`).join('');
   return `
-    <p style="margin-bottom:14px; color:var(--text-muted);">Pick <strong>one</strong> way to show it, do it, then write your answer (or where it lives) below.</p>
-    ${opts}
-    <div style="margin-top:18px;">
-      <textarea id="short-answer" class="rh-input" placeholder="Your answer, or where your work lives (Drive link, notebook, told a parent)…" style="min-height:110px;"></textarea>
-    </div>`;
+    <p style="margin-bottom:14px; color:var(--text-muted);">Pick <strong>one</strong> way to show it and do it — then record it in the <strong>Mark This Done</strong> box below.</p>
+    ${opts}`;
+}
+
+function doneAreaHtml(lesson, isQuiz) {
+  const prompt = isQuiz
+    ? (lesson && lesson.short ? lesson.short : 'Answer in your own words:')
+    : 'Write your answer, or where your work lives (a link, your notebook, or "told a parent"):';
+  return `
+    <div class="done-reminder">👉 When you finish, tap <strong>Mark This Done</strong>. If you don't, it rolls over to tomorrow.</div>
+    <label for="short-answer" style="display:block; font-weight:600; margin:14px 0 8px; color:var(--text-muted);">${prompt}</label>
+    <textarea id="short-answer" class="rh-input" placeholder="Type your answer here…" style="min-height:110px;"></textarea>
+    <button class="btn btn-success" style="margin-top:12px;" onclick="markDone()">✓ Mark This Done</button>`;
 }
 
 async function loadLesson() {
@@ -165,8 +170,7 @@ async function loadLesson() {
         isQuiz ? 'Show It — quick quiz + your own words' : 'Show It — pick one way';
     }
 
-    document.getElementById('done-area').innerHTML = `
-      <button class="btn btn-success" onclick="markDone()">✓ Mark This Done</button>`;
+    document.getElementById('done-area').innerHTML = doneAreaHtml(lesson, !!(lesson && lesson.quiz));
 
   } catch (e) {
     console.error(e);

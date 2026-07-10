@@ -12,18 +12,18 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Editorial palette — light warm ground so the color tiles pop */
-  --cream:        #FDFBF4;
-  --cream-2:      #F6F1E2;
+  /* Editorial palette — very light warm ground so the color tiles pop */
+  --cream:        #FEFCF7;
+  --cream-2:      #F8F4E9;
   --ink:          #1A1A1A;
   --ink-soft:     #4A4642;
   --ink-dim:      #8A857C;
   --paper:        #FFFFFF;
-  --line:         #EAE3D2;
+  --line:         #EEE8DA;
 
   /* Brand accents — d.school-leaning, brighter */
-  --coral:        #E8503A;
-  --teal:         #1F8E9B;
+  --coral:        #F0533F;
+  --teal:         #17A0AE;
   --mustard:      #E0A93B;
   --plum:         #8B4FA6;
   --olive:        #6F6F45;
@@ -59,9 +59,9 @@ body {
   min-height: 100vh;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  /* very subtle halftone dot texture on the ground */
-  background-image: radial-gradient(rgba(26,26,26,0.025) 1px, transparent 1px);
-  background-size: 24px 24px;
+  /* barely-there halftone dot texture on the ground */
+  background-image: radial-gradient(rgba(26,26,26,0.02) 1px, transparent 1px);
+  background-size: 26px 26px;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -188,12 +188,13 @@ button { font-family: var(--sans); cursor: pointer; }
   padding: 5px 0;
   pointer-events: none;
 }
-/* seamless scrolling ticker text (content is a uniform repeated phrase) */
+/* ticker text — STATIC by default, scrolls slowly only on hover/interaction */
 .ribbon-track {
   display: inline-block;
   white-space: nowrap;
   will-change: transform;
-  animation: ticker 9s linear infinite;
+  animation: ticker 40s linear infinite;
+  animation-play-state: paused;
 }
 @keyframes ticker { to { transform: translateX(-50%); } }
 
@@ -235,15 +236,26 @@ button { font-family: var(--sans); cursor: pointer; }
   border-color: transparent;
   padding: 24px 26px 20px 44px;
 }
+/* All-over fine grain for print texture */
+.tile::before {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 0;
+  background-image: radial-gradient(circle, rgba(26,26,26,0.06) 0.7px, transparent 0.9px);
+  background-size: 5px 5px;
+  opacity: 0.75;
+}
+/* Bold halftone dot gradient, dense in the bottom-right, fading up-left
+   (keeps the top-left title area clean) */
 .tile::after {
   content: '';
   position: absolute; inset: 0;
   pointer-events: none; z-index: 0;
-  background-image: radial-gradient(circle, rgba(26,26,26,0.16) 1.5px, transparent 1.7px);
-  background-size: 11px 11px;
-  -webkit-mask-image: radial-gradient(130% 120% at 116% -12%, #000 0%, transparent 58%);
-          mask-image: radial-gradient(130% 120% at 116% -12%, #000 0%, transparent 58%);
-  opacity: 0.6;
+  background-image: radial-gradient(circle, rgba(26,26,26,0.16) 1.7px, transparent 2px);
+  background-size: 10px 10px;
+  -webkit-mask-image: radial-gradient(125% 120% at 106% 112%, #000 0%, #000 16%, transparent 64%);
+          mask-image: radial-gradient(125% 120% at 106% 112%, #000 0%, #000 16%, transparent 64%);
+  opacity: 1;
 }
 .tile > * { position: relative; z-index: 1; }
 .tile-dot {
@@ -266,6 +278,54 @@ button { font-family: var(--sans); cursor: pointer; }
   text-transform: uppercase; color: var(--ink-soft);
 }
 .tile-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; }
+
+/* ---- Randomized texture variants (assigned per tile in JS) ---- */
+/* corner the halftone concentrates in */
+.tile.tex-a::after { -webkit-mask-image: radial-gradient(120% 120% at 106% 112%, #000 0%, #000 16%, transparent 64%); mask-image: radial-gradient(120% 120% at 106% 112%, #000 0%, #000 16%, transparent 64%); }
+.tile.tex-b::after { -webkit-mask-image: radial-gradient(120% 120% at -8% 112%, #000 0%, #000 16%, transparent 62%);  mask-image: radial-gradient(120% 120% at -8% 112%, #000 0%, #000 16%, transparent 62%); }
+.tile.tex-c::after { -webkit-mask-image: radial-gradient(130% 120% at 108% -10%, #000 0%, #000 14%, transparent 60%); mask-image: radial-gradient(130% 120% at 108% -10%, #000 0%, #000 14%, transparent 60%); }
+.tile.tex-d::after { -webkit-mask-image: radial-gradient(150% 100% at 50% 120%, #000 0%, #000 12%, transparent 58%);   mask-image: radial-gradient(150% 100% at 50% 120%, #000 0%, #000 12%, transparent 58%); }
+/* occasional colored dots instead of dark */
+.tile.dots-pink::after { background-image: radial-gradient(circle, rgba(214,87,132,0.55) 1.8px, transparent 2.1px); }
+.tile.dots-blue::after { background-image: radial-gradient(circle, rgba(23,160,174,0.55) 1.8px, transparent 2.1px); }
+
+/* ---- Black tile variant (d.school-style) ---- */
+.tile.black { background: #1A1A1A; }
+.tile.black .todo-title { color: var(--cream); }
+.tile.black .todo-ican { color: #C9C3B5; }
+.tile.black .carried-label { color: #F79E8C; }
+.tile.black .tile-tag { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.28); color: #EDE7D8; }
+.tile.black .tile-side { color: var(--card-accent); }
+.tile.black .tile-dot { background: var(--card-accent); }
+.tile.black::before { background-image: radial-gradient(circle, rgba(255,255,255,0.06) 0.7px, transparent 0.9px); }
+.tile.black::after  { background-image: radial-gradient(circle, rgba(255,255,255,0.20) 1.7px, transparent 2px); }
+.tile.black.dots-pink::after { background-image: radial-gradient(circle, rgba(247,158,140,0.5) 1.8px, transparent 2.1px); }
+.tile.black.dots-blue::after { background-image: radial-gradient(circle, rgba(143,214,225,0.5) 1.8px, transparent 2.1px); }
+.tile.black .btn-ghost { color: var(--cream); border-color: rgba(255,255,255,0.4); }
+.tile.black .btn-ghost:hover { background: var(--cream); color: var(--ink); }
+.tile.black .circle-arrow { border-color: rgba(255,255,255,0.5); background: transparent; color: var(--cream); }
+.tile.black:hover .circle-arrow { background: var(--cream); color: var(--ink); }
+.tile.black .timer { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.25); }
+.tile.black .timer-display { color: var(--cream); }
+.tile.black .timer-label { color: #B7B1A3; }
+
+/* ---- Gallery grid for the day's tiles ---- */
+#todo-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+#todo-list > .section-label,
+#todo-list > .view-banner,
+#todo-list > .empty-state,
+#todo-list > .loading { grid-column: 1 / -1; margin-top: 0; }
+.todo-card { margin-bottom: 0; }
+.todo-card.wide { grid-column: 1 / -1; }
+@media (max-width: 640px) {
+  #todo-list { grid-template-columns: 1fr; }
+  .todo-card.wide { grid-column: auto; }
+}
 
 /* ---- Subject badge ---- */
 .subject-badge {
@@ -381,6 +441,23 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
 }
 .done-form-row { display: flex; gap: 9px; }
 
+/* "don't forget to mark done" reminder */
+.done-reminder {
+  background: #FFF3D6;
+  border: 1px solid #E9C86A;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  color: #7A5A12;
+  line-height: 1.5;
+}
+.tip-banner {
+  background: #EAF6F7;
+  border-color: #B7DEE2;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
 /* =========================================================
    Empty state / loading
    ========================================================= */
@@ -466,7 +543,10 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
   padding: 8px 0; white-space: nowrap;
   box-shadow: 0 5px 16px rgba(26,26,26,0.3);
 }
-.photo-ribbon .ribbon-track { animation-duration: 16s; }
+.photo-ribbon .ribbon-track { animation-duration: 34s; }
+/* run the ticker only while hovering the block it lives on */
+.track-choice:hover .ribbon-track,
+.lesson-photo:hover .ribbon-track { animation-play-state: running; }
 
 .content-section {
   background: var(--card);
@@ -791,56 +871,37 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
    Dynamic interactions (d.school-style motion)
    ========================================================= */
 
-/* Staggered entrance for the day's tiles */
-@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-.todo-card { animation: rise 0.5s both cubic-bezier(0.2, 0.7, 0.2, 1); }
-.todo-card:nth-child(1)  { animation-delay: 0.00s; }
-.todo-card:nth-child(2)  { animation-delay: 0.05s; }
-.todo-card:nth-child(3)  { animation-delay: 0.10s; }
-.todo-card:nth-child(4)  { animation-delay: 0.15s; }
-.todo-card:nth-child(5)  { animation-delay: 0.20s; }
-.todo-card:nth-child(6)  { animation-delay: 0.25s; }
-.todo-card:nth-child(7)  { animation-delay: 0.30s; }
-.todo-card:nth-child(8)  { animation-delay: 0.35s; }
-.todo-card:nth-child(n+9){ animation-delay: 0.40s; }
+/* NOTE: no auto/entrance animation — motion happens ONLY on hover, and slowly. */
 
-/* Card hover: lift a touch more + the circular arrow slides right and fills */
-.tile { transition: transform 0.22s cubic-bezier(0.2,0.7,0.2,1), box-shadow 0.22s ease; }
-.card .circle-arrow { transition: transform 0.2s ease, background 0.18s ease, color 0.18s ease; }
-.card .circle-arrow svg { transition: transform 0.22s cubic-bezier(0.2,0.7,0.2,1); }
+/* Card hover: slow lift + the circular arrow slides right and fills */
+.tile { transition: transform 0.45s cubic-bezier(0.2,0.7,0.2,1), box-shadow 0.45s ease; }
+.card .circle-arrow { transition: transform 0.45s cubic-bezier(0.2,0.7,0.2,1), background 0.4s ease, color 0.4s ease; }
+.card .circle-arrow svg { transition: transform 0.45s cubic-bezier(0.2,0.7,0.2,1); }
 .card:hover .circle-arrow { background: var(--ink); color: var(--cream); transform: scale(1.08); }
 .card:hover .circle-arrow svg { transform: translateX(4px); }
 
-/* The vertical side label nudges up on hover */
-.tile .tile-side { transition: transform 0.25s ease, letter-spacing 0.25s ease; }
-.tile:hover .tile-side { transform: translateY(-4px); letter-spacing: 0.22em; }
+/* The vertical side label — slow spin-up on hover (the effect they liked) */
+.tile .tile-side { transition: transform 0.5s cubic-bezier(0.2,0.7,0.2,1), letter-spacing 0.5s ease; }
+.tile:hover .tile-side { transform: rotate(180deg) translateY(-5px); letter-spacing: 0.26em; }
 
-/* Halftone drifts subtly on hover for a living texture */
-.tile::after { transition: background-position 0.6s ease; }
-.tile:hover::after { background-position: 6px 6px; }
+/* Halftone drifts slowly on hover for a living texture */
+.tile::after { transition: background-position 0.9s ease; }
+.tile:hover::after { background-position: 7px 7px; }
 
 /* Ghost buttons: the icon slides on hover */
-.btn svg { transition: transform 0.2s ease; }
-.btn:hover svg { transform: translateX(2px); }
+.btn svg { transition: transform 0.4s ease; }
+.btn:hover svg { transform: translateX(3px); }
 
-/* Lesson hero photo zooms slowly on hover; ribbon speeds up */
-.lesson-photo img { transition: transform 0.6s cubic-bezier(0.2,0.7,0.2,1); }
-.lesson-photo:hover img { transform: scale(1.06); }
-.lesson-photo:hover .ribbon-track { animation-duration: 7s; }
+/* Lesson hero photo zooms slowly on hover */
+.lesson-photo img { transition: transform 0.9s cubic-bezier(0.2,0.7,0.2,1); }
+.lesson-photo:hover img { transform: scale(1.04); }
 
-/* Unit + stat cards lift on hover */
-.unit-card, .stat-card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+/* Unit + stat cards lift slowly on hover */
+.unit-card, .stat-card { transition: transform 0.4s ease, box-shadow 0.4s ease; }
 .unit-card:hover, .stat-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(26,26,26,0.12); }
 
-/* Content sections rise in */
-.content-section { animation: rise 0.5s both cubic-bezier(0.2,0.7,0.2,1); }
-
 /* Brand dot gives a little life on hover */
-.nav-brand:hover .dot { transform: scale(1.25); transition: transform 0.2s ease; }
-
-/* Stat numbers count-pop on load */
-@keyframes pop { 0% { transform: scale(0.7); opacity: 0; } 70% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
-.stat-number { animation: pop 0.5s both cubic-bezier(0.34,1.56,0.64,1); }
+.nav-brand:hover .dot { transform: scale(1.25); transition: transform 0.35s ease; }
 
 /* Respect users who prefer less motion */
 @media (prefers-reduced-motion: reduce) {
@@ -851,6 +912,112 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
   }
   .ribbon-track { animation: none !important; }
 }
+
+/* =========================================================
+   Rivers Unit — self-paced progression
+   ========================================================= */
+.u-head { margin-bottom: 24px; }
+.u-progress { display: flex; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
+.u-progress-bar { flex: 1; min-width: 140px; height: 12px; background: var(--cream-2); border: 2px solid var(--ink); border-radius: 20px; overflow: hidden; }
+.u-progress-fill { height: 100%; background: var(--teal); border-radius: 20px; transition: width 0.4s ease; }
+.u-progress-label { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+
+.unit-map { grid-template-columns: 1fr; gap: 6px; margin-top: 16px; display: grid; }
+.map-item { display: flex; align-items: center; gap: 10px; text-align: left; padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--paper); font-size: 0.85rem; color: var(--text); cursor: pointer; }
+.map-item:hover:not([disabled]) { border-color: var(--ink); }
+.map-item[disabled] { opacity: 0.5; cursor: default; }
+.map-item.current { border-color: var(--coral); border-width: 2px; }
+.map-item.done .map-title { color: var(--text-dim); }
+.map-icon { width: 20px; text-align: center; font-weight: 800; color: var(--teal); }
+.map-item.current .map-icon { color: var(--coral); }
+.map-n { font-weight: 800; color: var(--text-dim); min-width: 18px; }
+.map-title { flex: 1; }
+
+.u-card { animation: none; }
+.u-sec { font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin: 22px 0 10px; }
+.u-block { margin-bottom: 4px; }
+.u-eyebrow { display: inline-block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--coral); margin-bottom: 6px; }
+.u-focus { font-size: 0.9rem; color: var(--text-muted); font-style: italic; margin: 6px 0 10px; }
+
+.u-hook {
+  background: var(--cream-2); border: 2px solid var(--ink); border-radius: 16px;
+  padding: 18px 20px; margin: 6px 0 20px;
+}
+.u-hook p { font-family: var(--serif); font-size: 1.12rem; line-height: 1.45; color: var(--ink); }
+
+.u-video { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 14px; overflow: hidden; border: 2px solid var(--ink); margin-bottom: 4px; }
+.u-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.u-read p, .u-prose p { font-size: 0.98rem; line-height: 1.65; color: var(--text); margin-bottom: 10px; }
+.u-read ul, .u-prose ul, .u-build ol, .u-build ul { margin: 8px 0 10px 20px; }
+.u-read li, .u-prose li, .u-build li { font-size: 0.96rem; line-height: 1.55; margin-bottom: 6px; }
+.u-read b, .u-prose b { color: var(--ink); }
+.u-prose blockquote, .u-read blockquote {
+  font-family: var(--serif); font-size: 1.15rem; font-style: italic; line-height: 1.4;
+  border-left: 5px solid var(--coral); padding: 6px 0 6px 16px; margin: 12px 0; color: var(--ink);
+}
+
+.u-prompt { display: block; font-size: 0.92rem; font-weight: 600; color: var(--text-muted); margin-bottom: 14px; }
+.u-ans { margin-top: 8px; }
+textarea.u-ans { min-height: 84px; }
+
+.u-build { background: var(--paper); border: 2px solid var(--ink); border-radius: 16px; padding: 18px 20px; box-shadow: 0 6px 18px rgba(26,26,26,0.05); }
+
+.u-deeper { background: #EAF6F7; border: 1.5px solid #B7DEE2; border-radius: 14px; padding: 12px 16px; margin: 14px 0; }
+.u-deeper p { font-size: 0.92rem; color: var(--ink-soft); }
+
+.u-next { margin: 22px 0 4px; font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--text-muted); }
+
+.u-markdone { font-size: 0.95rem; padding: 12px 20px; }
+.u-reviewing { margin-top: 18px; padding: 12px 16px; background: var(--cream-2); border-radius: 12px; font-size: 0.88rem; color: var(--text-muted); }
+.u-reviewing a { color: var(--coral); font-weight: 700; }
+
+/* Flip flashcards */
+.flip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 6px; }
+.flip-card { perspective: 900px; background: none; border: none; padding: 0; height: 100px; cursor: pointer; }
+.flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.2,0.7,0.2,1); transform-style: preserve-3d; }
+.flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+.flip-front, .flip-back { position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 10px; border: 2px solid var(--ink); }
+.flip-front { background: #8FD6E1; font-family: var(--serif); font-weight: 600; font-size: 1.05rem; color: var(--ink); }
+.flip-back { background: var(--paper); transform: rotateY(180deg); font-size: 0.82rem; line-height: 1.35; color: var(--text-muted); }
+
+/* Frayer cards */
+.frayer { border: 2px solid var(--ink); border-radius: 16px; overflow: hidden; margin-bottom: 14px; box-shadow: 0 6px 18px rgba(26,26,26,0.05); }
+.frayer-term { background: var(--ink); color: var(--cream); font-family: var(--serif); font-weight: 600; font-size: 1.2rem; padding: 10px 16px; text-align: center; }
+.frayer-grid { display: grid; grid-template-columns: 1fr 1fr; }
+.frayer-q { padding: 13px 15px; border-top: 1.5px solid var(--line); background: var(--paper); }
+.frayer-q:nth-child(even) { border-left: 1.5px solid var(--line); }
+.frayer-q > span { font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); display: block; margin-bottom: 5px; }
+.frayer-q p { font-size: 0.88rem; line-height: 1.45; color: var(--text); }
+.frayer-q ul { margin: 0 0 0 16px; }
+.frayer-q li { font-size: 0.85rem; line-height: 1.4; margin-bottom: 3px; color: var(--text); }
+
+/* KWL recap */
+.recap-box { background: var(--cream-2); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 15px; margin-bottom: 10px; }
+.recap-box > span { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); }
+.recap-box p { font-size: 0.95rem; color: var(--text); margin-top: 4px; line-height: 1.5; }
+
+/* Vocab self-sort */
+.sort-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1.5px solid var(--line); }
+.sort-word { font-weight: 600; font-size: 0.95rem; }
+.sort-btns { display: flex; gap: 8px; flex-shrink: 0; }
+.sort-b { font-size: 0.76rem; font-weight: 700; padding: 6px 12px; border-radius: 20px; border: 1.5px solid var(--line); background: var(--paper); cursor: pointer; }
+.sort-b.on-got { background: var(--success); color: var(--cream); border-color: var(--success); }
+.sort-b.on-fuzzy { background: var(--mustard); color: var(--ink); border-color: var(--mustard); }
+
+/* Rubric */
+.rubric-row { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1.5px solid var(--line); font-size: 0.92rem; cursor: pointer; }
+.rubric-row input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--success); flex-shrink: 0; }
+
+/* Matching game */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+.match-col { display: flex; flex-direction: column; gap: 9px; }
+.mcard { background: var(--paper); border: 2px solid var(--ink); border-radius: 12px; padding: 11px 13px; font-size: 0.9rem; line-height: 1.4; text-align: left; cursor: pointer; color: var(--text); }
+.mcard.sel { background: #F6E4BE; }
+.mcard.matched { background: #D9EFE0; border-color: var(--success); color: #1f6b45; cursor: default; }
+.mcard.wrong { animation: sh 0.32s; }
+@keyframes sh { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+.match-status { margin-top: 10px; font-weight: 700; font-size: 0.9rem; color: var(--success); }
 
 /* =========================================================
    Responsive

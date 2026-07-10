@@ -209,9 +209,10 @@ function buildCard(rec, mode) {
 
   const isDone = f['Status'] === 'Done';
 
-  // Timed items (Read / Khan) get a native focus timer in today mode
+  // Timed items (Read / Khan) get a native focus timer — on today AND upcoming
+  // day previews (not on read-only past days)
   const timerMatch = (f['Item name'] || '').match(/(\d+)\s*minutes/i);
-  const timerMin = (mode === 'today' && timerMatch) ? parseInt(timerMatch[1], 10) : null;
+  const timerMin = (mode !== 'past' && timerMatch) ? parseInt(timerMatch[1], 10) : null;
   const timerHtml = timerMin ? `
     <div class="timer" data-min="${timerMin}">
       <div>
@@ -232,6 +233,15 @@ function buildCard(rec, mode) {
   card.dataset.recordId = rec.id;
   card.style.setProperty('--card-accent', colors.accent);
   card.style.setProperty('--tile', colors.tile || colors.bg);
+
+  // Stable-but-varied look per item: texture corner, occasional colored dots,
+  // an occasional black card, and mixed sizes — a "gallery wall" feel.
+  const hash = [...rec.id].reduce((a, c) => a + c.charCodeAt(0), 0);
+  card.classList.add(['tex-a', 'tex-b', 'tex-c', 'tex-d'][hash % 4]);
+  if (hash % 5 === 0) card.classList.add('dots-pink');
+  else if (hash % 5 === 2) card.classList.add('dots-blue');
+  if (hash % 6 === 0) card.classList.add('black');
+  if (timerMin || hash % 3 === 0) card.classList.add('wide');
 
   const openLessonBtn = href !== '#' ? `
     <a href="${href}" class="btn btn-ghost" onclick="event.stopPropagation()">
@@ -423,6 +433,11 @@ async function loadTodos() {
       banner.className = `view-banner today-banner`;
       banner.innerHTML = `<strong>Hey Crasher —</strong> ${getDailyFact(viewDate)}`;
       container.appendChild(banner);
+
+      const tip = document.createElement('div');
+      tip.className = 'view-banner tip-banner';
+      tip.innerHTML = '✓ Tap <strong>Mark Done</strong> on each thing as you finish it — anything you leave undone rolls over to tomorrow.';
+      container.appendChild(tip);
     } else if (mode === 'past') {
       const banner = document.createElement('div');
       banner.className = `view-banner ${mode}`;
