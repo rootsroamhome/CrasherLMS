@@ -98,6 +98,42 @@ const scienceSeq = [
   { review: U[6] },
 ];
 
+// ── Humanities lesson sequence (integrated ELA + World History) ─────────────
+const H = {
+  1: 'Humanities 1 — Reading the Ancient World',
+  2: "Humanities 2 — Myths, Legends & the Hero's Journey",
+  3: 'Humanities 3 — Empires & Power',
+  4: 'Humanities 4 — A Connected World',
+  5: 'Humanities 5 — Turning Points',
+  6: 'Humanities 6 — Your Voice',
+};
+const humanitiesSeq = [
+  { key: 'Why Civilizations Started by Rivers', unit: H[1], std: 'RI.7.2' },
+  { key: 'Cracking Ancient Writing', unit: H[1], std: 'RI.7.1' },
+  { key: "Hammurabi's Code", unit: H[1], std: 'RI.7.1' },
+  { key: 'Ancient World Showcase', unit: H[1], std: 'W.7.2' },
+  { key: 'What Myths Are For', unit: H[2], std: 'RL.7.2' },
+  { key: "The Hero's Journey", unit: H[2], std: 'RL.7.3' },
+  { key: 'Gilgamesh', unit: H[2], std: 'RL.7.1' },
+  { key: 'Write Your Own Myth', unit: H[2], std: 'W.7.3' },
+  { key: 'What Makes an Empire', unit: H[3], std: 'RI.7.2' },
+  { key: 'Rome: Rise', unit: H[3], std: 'RI.7.3' },
+  { key: 'Why Empires Fall', unit: H[3], std: 'W.7.1' },
+  { key: 'Empire Showcase', unit: H[3], std: 'W.7.2' },
+  { key: 'The Silk Road', unit: H[4], std: 'RI.7.1' },
+  { key: 'Ideas That Spread', unit: H[4], std: 'RI.7.3' },
+  { key: 'The Black Death', unit: H[4], std: 'RI.7.3' },
+  { key: 'Research & Report', unit: H[4], std: 'W.7.7' },
+  { key: 'Pick Your Novel', unit: H[5], std: 'RL.7.1' },
+  { key: 'Novel — Characters & Conflict', unit: H[5], std: 'RL.7.3' },
+  { key: 'Novel & Its World', unit: H[5], std: 'RL.7.9' },
+  { key: 'Book Talk', unit: H[5], std: 'SL.7.4' },
+  { key: 'How Arguments Work', unit: H[6], std: 'RI.7.8' },
+  { key: 'Pick a Fight', unit: H[6], std: 'W.7.1' },
+  { key: 'Being a Citizen', unit: H[6], std: 'RI.7.2' },
+  { key: 'Make Your Case', unit: H[6], std: 'SL.7.4' },
+];
+
 // ── Practical math (dropped onto certain Wednesdays) ─────────────────────────
 const practicalMath = [
   'Practical Math — budget a dream ebike build (unit prices, totals, staying under a cap)',
@@ -129,8 +165,8 @@ for (const date of schoolDays) {
   }));
 }
 
-// Weekly choice pointer (Mondays) + science + practical math
-let sciIdx = 0, pmIdx = 0, monthTag = '';
+// Weekly choice pointer (Mondays) + humanities (Mon/Wed) + science (Tue/Thu) + practical math
+let sciIdx = 0, humIdx = 0, pmIdx = 0, monthTag = '';
 for (const w of weeks) {
   if (w.mon) {
     records.push(base({
@@ -139,6 +175,25 @@ for (const w of weeks) {
       'I Can statement': 'Choose my track for the week and get going',
       'Content page link': 'this-week.html',
       'Scheduled date': w.mon,
+    }));
+  }
+
+  // Humanities needs a Mon (Learn) and a Wed (Show)
+  if (w.mon && w.wed && humIdx < humanitiesSeq.length) {
+    const h = humanitiesSeq[humIdx++];
+    records.push(base({
+      'Item name': `${h.key} — Learn It`,
+      Subject: 'Humanities', Unit: h.unit, 'Standard code': h.std,
+      'I Can statement': "Read and explore this week's topic your way.",
+      'Content page link': 'lesson.html',
+      'Scheduled date': w.mon,
+    }));
+    records.push(base({
+      'Item name': `${h.key} — Show It`,
+      Subject: 'Humanities', Unit: h.unit, 'Standard code': h.std,
+      'I Can statement': 'Show what you learned — build it, write it, present it, or take the quiz.',
+      'Content page link': 'lesson.html',
+      'Scheduled date': w.wed,
     }));
   }
 
@@ -209,6 +264,23 @@ const standards = [
   ['MS-PS3-5', U[6], 'I can argue from evidence that energy is transferred and transformed, never destroyed.'],
   ['MS-ETS1-1', U[6], 'I can define an engineering design problem with clear criteria and constraints.'],
 ].map(([code, unit, ican]) => ({ 'Standard code': code, Subject: 'Science', Unit: unit, 'I Can statement': ican, Completed: false }));
+
+const humStandards = [
+  ['RI.7.2', H[1], 'I can determine the central idea of an informational text and cite details that support it.'],
+  ['World History: Early Civilizations', H[1], 'I can explain how geography shaped where and how early civilizations grew.'],
+  ['RL.7.2', H[2], 'I can identify the theme of a story or myth and trace how it develops.'],
+  ['World Cultures: Belief Systems', H[2], 'I can explain how cultures use myths and stories to express beliefs and explain the world.'],
+  ['W.7.1', H[3], 'I can write and support an argument with a clear claim, evidence, reasoning, and a counterclaim.'],
+  ['World History: Empires', H[3], 'I can analyze the causes and effects of the rise and fall of empires.'],
+  ['W.7.7', H[4], 'I can conduct short research using multiple sources and report what I find.'],
+  ['World History: Trade & Diffusion', H[4], 'I can explain how trade networks spread goods, ideas, and diseases between cultures.'],
+  ['RL.7.3', H[5], 'I can analyze how characters, setting, and conflict drive a novel.'],
+  ['Historical Thinking', H[5], 'I can tell historical fact from fiction and connect a story to the real events behind it.'],
+  ['SL.7.4', H[6], 'I can present a claim clearly and answer questions about it.'],
+  ['Civics & Economics', H[6], 'I can explain how civic decisions and laws are made and how people can influence them.'],
+].map(([code, unit, ican]) => ({ 'Standard code': code, Subject: 'Humanities', Unit: unit, 'I Can statement': ican, Completed: false }));
+
+standards.push(...humStandards);
 
 // ── Airtable ops ─────────────────────────────────────────────────────────────
 async function fetchAllIds(table) {

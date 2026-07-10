@@ -58,7 +58,9 @@ Stored in `.env.local` (gitignored). Read them with: `cat .env.local`
 - Airtable was **wiped and rebuilt 2026-07-10** by `populate-7th-grade.mjs`: 381 To-Do Items + 15 Standards. The old summer/Life-Science records are gone.
 - School calendar: **Mon–Thu, 2026-08-31 → 2027-06-11**, holidays/breaks skipped (143 school days, 37 weeks). Holiday list is hard-coded in the populate script — edit there.
 - Science = Oregon 7th grade NGSS sequence (Life Science was completed over summer, so this year is Physical + Earth/Space + a capstone energy/ebike unit). 28 Learn/Show + review weeks fill the first ~28 weeks; the rest are flex.
-- Subjects in use: `Science`, `Math`, `ELA`, `Self-Study`, `Rabbit Hole`. (`Self-Study` was added to the Airtable single-select via `typecast:true`.)
+- Subjects in use: `Science`, `Math`, `ELA` (daily independent reading — always his choice), `Humanities` (integrated ELA + world-history units), `Self-Study`, `Rabbit Hole`. (New single-select options were added to Airtable via `typecast:true`.)
+- **Humanities** = integrated ELA + Oregon world-history, 6 units × 4 lessons, scheduled Mon (Learn) / Wed (Show); science is Tue/Thu. Standards in the tracker carry both CCSS ELA (RI/RL/W/SL) and Oregon SS codes. One choice-novel unit (Humanities 5). "Show It" leans on products (build a model, make a diagram, make a Canva presentation) via `showIt` options in `lessons.js`.
+- Weekly rhythm: Math + independent Reading daily; Humanities Mon/Wed; Science Tue/Thu; the Self-Study⇄Rabbit-Hole pick on Mon.
 - `repopulate-todos.mjs` is the OLD summer loader — do not run it; use `populate-7th-grade.mjs` to reset the year.
 
 ## Key Behaviors

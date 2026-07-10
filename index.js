@@ -135,8 +135,8 @@ dateJump.addEventListener('change', (e) => {
 });
 document.getElementById('pick-date').addEventListener('click', () => {
   dateJump.value = viewDate;
-  if (dateJump.showPicker) dateJump.showPicker();
-  else dateJump.focus();
+  try { dateJump.showPicker(); }
+  catch (e) { dateJump.focus(); dateJump.click(); }
 });
 
 // ── Silly facts (rotate daily) ──

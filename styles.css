@@ -707,10 +707,12 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
   gap: 6px;
 }
 .date-jump-wrap { position: relative; display: inline-flex; }
-/* native date input sits invisibly over its trigger button */
+/* native date input: tiny anchor at the button's corner so the OS calendar
+   pops up beside it — it must NOT overlay the button or it eats the click */
 .date-jump {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  opacity: 0; cursor: pointer; border: none;
+  position: absolute; left: 10px; bottom: 0;
+  width: 1px; height: 1px; padding: 0; margin: 0; border: 0;
+  opacity: 0;
 }
 .week-nav {
   display: flex; align-items: center; gap: 10px;

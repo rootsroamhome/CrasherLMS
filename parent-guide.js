@@ -116,7 +116,8 @@ function renderWeekNav() {
   jump.onchange = (e) => { if (e.target.value) { curMon = mondayOf(e.target.value); load(); } };
   document.getElementById('pick-week').onclick = () => {
     jump.value = curMon;
-    if (jump.showPicker) jump.showPicker(); else jump.focus();
+    try { jump.showPicker(); }
+    catch (e) { jump.focus(); jump.click(); }
   };
 }
 
