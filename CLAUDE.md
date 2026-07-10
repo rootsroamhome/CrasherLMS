@@ -35,17 +35,11 @@ Stored in `.env.local` (gitignored). Read them with: `cat .env.local`
 
 → See [`docs/airtable.md`](docs/airtable.md) for full schema and field names.
 
-## Current Broken State (as of 2026-05-27) — MUST FIX FIRST
-**Symptom:** All pages show "Couldn't load your list / NOT_FOUND" or "Couldn't load data / NOT_FOUND"  
-**Cause:** Netlify env vars `AIRTABLE_API_KEY` and `AIRTABLE_BASE_ID` are set but have wrong/typo'd values.  
-**Fix:** Go to Netlify → Projects → CrasherLMS → Project configuration → Environment variables. Delete both and re-add:
-
-| Key | Value |
-|-----|-------|
-| `AIRTABLE_BASE_ID` | value from `.env.local` |
-| `AIRTABLE_API_KEY` | value from `.env.local` |
-
-Then trigger **Deploy project** in Netlify. Direct API calls with these values return data correctly (verified).
+## Fixed: NOT_FOUND bug (was misdiagnosed as env var typo, 2026-05-27 → fixed 2026-07-10)
+**Symptom:** All pages showed "Couldn't load your list / NOT_FOUND" or "Couldn't load data / NOT_FOUND"  
+**Real cause:** `netlify/functions/airtable.js` stripped the wrong path prefix. The browser calls `/api/airtable/*`, which `netlify.toml` rewrites (status 200) to the function — but Netlify does **not** rewrite `event.path` inside the function; it still holds the original request path (`/api/airtable/To-Do%20Items`), not the destination path (`/.netlify/functions/airtable/To-Do%20Items`). The function was stripping `/.netlify/functions/airtable`, which never matched, so the full un-stripped path got appended to the Airtable URL and Airtable correctly 404'd it.  
+**Fix:** `subPath` extraction now strips either prefix (`/api/airtable` or `/.netlify/functions/airtable`), verified locally via `netlify dev` and confirmed with real data loading in-browser.  
+**Note:** an earlier commit (`d3b1990`) worked around this by pointing `config.js` `apiBase` directly at `/.netlify/functions/airtable`, bypassing the redirect. Both routes work now; `apiBase` could be switched back to `/api/airtable` if desired. The old advice to re-check Netlify dashboard env vars for typos was a red herring — if NOT_FOUND ever reappears, check the code path first, not the dashboard.
 
 ## Data State
 - **197 summer schedule records** already in Airtable (populated 2026-05-27 via `populate-schedule.mjs`). **Do not run that script again** — it will duplicate everything.

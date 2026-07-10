@@ -30,7 +30,9 @@ The function is at `netlify/functions/airtable.js`. It reads `event.path` and `e
 
 ## Diagnosing Errors
 
-**"NOT_FOUND"** → Netlify env vars are set but wrong (typo). The API key has a dot in it — common copy-paste failure. Re-enter both values exactly from `.env.local`.
+**"NOT_FOUND"** → As of 2026-07-10 this was a code bug, not a dashboard config issue: `netlify/functions/airtable.js` was stripping the wrong path prefix from `event.path` (see CLAUDE.md for details), so requests hit a malformed Airtable URL. Fixed in code. If it recurs, check the function's prefix-stripping logic before touching env vars — `event.path` reflects the *original* request path, not the redirect destination.
+
+Only if the fix above is already in place and NOT_FOUND still appears: Netlify env vars may genuinely be wrong (typo). The API key has a dot in it — common copy-paste failure. Re-enter both values exactly from `.env.local`.
 
 **"Missing AIRTABLE_API_KEY..."** → Netlify env vars not set at all.
 

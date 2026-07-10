@@ -3,3 +3,6 @@ node_modules/
 *.log
 .env.local
 populate-schedule.mjs
+
+# Local Netlify folder
+.netlify

@@ -20,9 +20,12 @@ exports.handler = async (event) => {
     };
   }
 
-  // Strip the function path prefix to get the table/record path
-  // e.g. /.netlify/functions/airtable/To-Do%20Items  →  /To-Do%20Items
-  const subPath = event.path.replace('/.netlify/functions/airtable', '') || '/';
+  // event.path is the ORIGINAL request path (e.g. /api/airtable/To-Do%20Items),
+  // not the redirect destination — Netlify does not rewrite event.path for
+  // status-200 redirects to functions. Strip whichever prefix the request
+  // actually arrived with to get the table/record path.
+  // e.g. /api/airtable/To-Do%20Items  →  /To-Do%20Items
+  const subPath = event.path.replace(/^\/(api\/airtable|\.netlify\/functions\/airtable)/, '') || '/';
   const query   = event.rawQuery ? `?${event.rawQuery}` : '';
   const url     = `https://api.airtable.com/v0/${BASE_ID}${subPath}${query}`;
 
