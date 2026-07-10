@@ -177,10 +177,10 @@ const CURRICULUM = {
       number: 6,
       subject: 'Science',
       strand: 'Physical Science · capstone',
-      unit: 'Unit 6 — Energy, Electricity & the E-Bike',
+      unit: 'Unit 6 — Energy & Electricity',
       standards: ['MS-PS3-1', 'MS-PS3-2', 'MS-PS3-5', 'MS-ETS1-1'],
-      bigIdea: 'Energy changes form but is never lost. Follow it from the battery, through the motor, into motion — and you understand the machine he loves better than most adults who ride one.',
-      hotspots: 'Energy "used up" vs. "transformed" is the classic misconception. Keep bringing it back to the ebike: chemical → electrical → kinetic → heat. This is the reward unit — lean into projects over worksheets.',
+      bigIdea: 'Energy changes form but is never lost. Follow it from a battery, through a motor, into motion — and you understand how the machines all around you actually work. The unit wraps with a hands-on design challenge.',
+      hotspots: 'Energy "used up" vs. "transformed" is the classic misconception — keep tracing it through real devices (chemical → electrical → kinetic → heat). This is the hands-on capstone unit; lean into building over worksheets.',
       activities: [
         {
           tier: 'Small',

@@ -65,7 +65,7 @@ const U = {
   3: "Unit 3 — Earth's Systems",
   4: 'Unit 4 — History of Earth',
   5: 'Unit 5 — Human Impacts & Natural Hazards',
-  6: 'Unit 6 — Energy, Electricity & the E-Bike',
+  6: 'Unit 6 — Energy & Electricity',
 };
 const scienceSeq = [
   { key: 'Atoms & Molecules', unit: U[1], std: 'MS-PS1-1' },

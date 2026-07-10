@@ -3,16 +3,16 @@
  *
  * Keyed by a phrase in the To-Do item name (lesson.html matches it).
  *
- * Each lesson has:
- *   hook     — a curiosity grabber (may contain a link)
- *   learnIt  — 2–3 ways in: a Read, an interactive Explore, and/or a Watch
- *   quiz     — auto-checked multiple choice ({ q, options[], answer index })
- *   short    — one short written prompt submitted with the quiz score
+ * Each lesson has a hook + learnIt (a Read, an interactive Explore, and/or a
+ * Watch), and ONE of two "Show It" styles so days feel varied:
+ *   quiz + short — auto-checked multiple choice ({q, options[], answer}) + a
+ *                  written prompt.
+ *   showIt       — open-ended "pick one" options (summarize / teach it / make
+ *                  something / design it); he writes a response, no auto-grade.
  *
- * Resource strategy: reading + interactives are emphasized (no Khan science,
- * which he doesn't like). Video links use YouTube title-search so they always
- * resolve. Reads use CK-12 / BBC Bitesize / Britannica Kids search pages.
- * Interactives use PhET sims (direct) and USGS live tools.
+ * Reading + interactives are emphasized (no Khan science). Video links use
+ * YouTube title-search so they always resolve; reads use CK-12 / BBC Bitesize /
+ * Britannica Kids search; interactives use PhET sims and USGS live tools.
  */
 
 const yt       = (q) => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
@@ -54,12 +54,11 @@ const LESSONS = {
       { type: 'Explore', desc: 'PhET — States of Matter (heat the particles, watch them change)', meta: '~12 min · interactive', link: phet('states-of-matter-basics') },
       { type: 'Watch', desc: 'Solids, liquids & gases — the particle view', meta: '~6 min', link: yt('states of matter particle model explained') },
     ],
-    quiz: [
-      { q: 'In which state are particles most spread out and moving fastest?', options: ['Solid', 'Liquid', 'Gas', 'They are all the same'], answer: 2 },
-      { q: 'Temperature is basically a measure of…', options: ['How fast particles move', 'How heavy something is', 'What color it is', 'How big it is'], answer: 0 },
-      { q: 'A solid keeps its shape because its particles are…', options: ['Flying around freely', 'Locked in place, only vibrating', 'Disappearing', 'Melting'], answer: 1 },
+    showIt: [
+      { type: 'Draw it', prompt: 'Draw the particles in a solid, a liquid, and a gas. Show the spacing AND the motion (use arrows). One sentence each on what the particles are doing.' },
+      { type: 'Answer these', prompt: '(1) You heat a solid until it melts, then boils — what happens to the particles at each step? (2) Why does a gas fill its whole container but a solid keeps its shape?' },
+      { type: 'Teach it', prompt: 'Explain to a parent (or the camera) what temperature really is, in terms of particles.' },
     ],
-    short: 'Describe what happens to the particles as you heat ice → water → steam.',
   },
 
   'Thermal Energy & Changes of State': {
@@ -84,18 +83,17 @@ const LESSONS = {
     title: 'Natural vs. Synthetic Materials',
     unit: 'Unit 1 — Structure & Properties of Matter',
     standards: 'MS-PS1-3',
-    hook: 'The lithium in an ebike battery starts as rock in the ground. Getting from a dusty mineral to a rechargeable cell is a chain of chemistry — and every synthetic material you own began as a natural resource somewhere.',
+    hook: 'Nearly everything you own started as something dug, pumped, or grown — then transformed by chemistry. Plastic was oil. Glass was sand. A battery was rock. Synthetic materials are natural resources in disguise.',
     learnIt: [
       { type: 'Read', desc: 'CK-12 — Natural resources & synthetic materials', meta: '~8 min', link: ck12('natural and synthetic materials') },
-      { type: 'Read', desc: 'Britannica Kids — Lithium (where battery metal comes from)', meta: '~6 min', link: brit('lithium') },
-      { type: 'Do', desc: 'Trace one thing you own (a battery, plastic, nylon) back to its raw natural resource', meta: '~10 min', link: '#' },
+      { type: 'Read', desc: 'Britannica Kids — Plastics (from oil to everyday stuff)', meta: '~6 min', link: brit('plastic') },
+      { type: 'Watch', desc: 'How everyday materials are made', meta: '~6 min', link: yt('how plastic is made from oil explained') },
     ],
-    quiz: [
-      { q: 'A synthetic material is one that is…', options: ['Found ready-made in nature', 'Made by people from natural resources', 'Always alive', 'Always a metal'], answer: 1 },
-      { q: 'The lithium in a battery originally comes from…', options: ['Plants', 'The air', 'Rock and minerals in the ground', 'Rainwater'], answer: 2 },
-      { q: 'Which of these is a synthetic material?', options: ['Plastic', 'Wood', 'Cotton', 'Stone'], answer: 0 },
+    showIt: [
+      { type: 'Trace it', prompt: 'Pick one synthetic thing you use daily (a plastic bottle, a phone screen, a battery). Trace it back: what natural resource did it start as, and what had to happen to it?' },
+      { type: 'Diagram it', prompt: 'Make a simple flow diagram: natural resource → processing → synthetic product.' },
+      { type: 'Sort it', prompt: 'Find 5 objects near you and sort them into "mostly natural" and "mostly synthetic." Explain two of your calls.' },
     ],
-    short: 'Pick something you use every day and trace it back to the natural resource it started as.',
   },
 
   /* ===================== UNIT 2 — CHEMICAL REACTIONS ===================== */
@@ -128,12 +126,11 @@ const LESSONS = {
       { type: 'Explore', desc: 'PhET — Balancing Chemical Equations (atoms in = atoms out)', meta: '~12 min · interactive', link: phet('balancing-chemical-equations') },
       { type: 'Do', desc: 'Weigh baking soda + vinegar in a sealed zip bag — before vs. after', meta: '~15 min', link: '#' },
     ],
-    quiz: [
-      { q: 'In a chemical reaction, the total mass…', options: ['Stays the same', 'Always increases', 'Always decreases', 'Disappears'], answer: 0 },
-      { q: 'Fizz baking soda + vinegar in an OPEN cup and it weighs less after because…', options: ['Mass was destroyed', 'Gas escaped into the air', 'Atoms vanished', 'It turned into energy'], answer: 1 },
-      { q: 'In a reaction, atoms are…', options: ['Created from nothing', 'Destroyed', 'Rearranged, never created or destroyed', 'Turned into pure energy'], answer: 2 },
+    showIt: [
+      { type: 'Do + explain', prompt: 'Run the sealed-bag experiment (or watch it). Write what the scale showed and explain WHY, using atoms.' },
+      { type: 'Answer this', prompt: 'You fizz baking soda + vinegar in an OPEN cup and it weighs less afterward. Where did the mass go? Is that a problem for conservation of mass? Explain.' },
+      { type: 'Teach it', prompt: 'State the law of conservation of mass and explain to someone why it MUST be true if atoms only rearrange.' },
     ],
-    short: 'Explain why mass stays the same in a sealed bag but seems to drop in an open cup.',
   },
 
   'Endothermic & Exothermic': {
@@ -146,19 +143,18 @@ const LESSONS = {
       { type: 'Explore', desc: 'PhET — Energy Forms & Changes', meta: '~10 min · interactive', link: phet('energy-forms-and-changes') },
       { type: 'Watch', desc: 'SciShow — How do hand warmers work?', meta: '~5 min', link: yt('SciShow how do hand warmers work') },
     ],
-    quiz: [
-      { q: 'An exothermic reaction…', options: ['Releases heat (gets warm)', 'Absorbs heat (gets cold)', 'Makes no heat', 'Only freezes'], answer: 0 },
-      { q: 'An instant cold pack is…', options: ['Exothermic', 'Endothermic — it absorbs heat', 'Neither', 'A physical change only'], answer: 1 },
-      { q: 'A hand warmer uses a reaction that…', options: ['Releases thermal energy', 'Absorbs thermal energy', 'Makes light', 'Makes sound'], answer: 0 },
+    showIt: [
+      { type: 'Design it', prompt: 'Design (on paper) a device that gets warm OR cold using a chemical reaction. What is it for? Which type of reaction (endo/exo)? How would you make it hotter or colder?' },
+      { type: 'Compare', prompt: 'Explain the difference between endothermic and exothermic, with a real example of each you\'ve actually seen.' },
+      { type: 'Make something', prompt: 'Draw a labeled diagram of a hand warmer OR a cold pack showing where the heat goes (in or out).' },
     ],
-    short: 'Describe a device that uses a chemical reaction to get hot or cold — what is it for, and how would you make it hotter or colder?',
   },
 
   'Batteries — Chemistry to Electricity': {
-    title: 'Batteries — Chemistry You Can Ride',
+    title: 'Batteries — Chemistry You Can Hold',
     unit: 'Unit 2 — Chemical Reactions',
     standards: 'MS-PS1-2',
-    hook: 'A battery is a chemical reaction on a leash. The reaction WANTS to happen, but the only path is through your circuit — so the electrons do work on the way, spinning a motor or lighting a screen. Your ebike is chemistry with wheels.',
+    hook: 'A battery is a chemical reaction on a leash. The reaction WANTS to happen, but the only path is through your circuit — so the electrons do work on the way, spinning a motor or lighting a screen. (Yes, that includes the pack on your bike.)',
     learnIt: [
       { type: 'Read', desc: 'Britannica Kids — How a battery works', meta: '~7 min', link: brit('battery') },
       { type: 'Explore', desc: 'PhET — Circuit Construction Kit (build a battery + bulb)', meta: '~15 min · interactive', link: phet('circuit-construction-kit-dc-virtual-lab') },
@@ -167,7 +163,7 @@ const LESSONS = {
     quiz: [
       { q: 'A battery turns ___ energy into electrical energy.', options: ['Chemical', 'Nuclear', 'Sound', 'Light'], answer: 0 },
       { q: 'Electrons only flow when the battery is connected in a…', options: ['Broken wire', 'Complete circuit', 'Block of glass', 'Magnet'], answer: 1 },
-      { q: 'An ebike battery gets long range because it…', options: ['Is one giant AA', 'Uses no chemistry', 'Combines many cells for more stored energy', 'Never needs charging'], answer: 2 },
+      { q: 'A bigger battery pack stores more energy because it…', options: ['Is one giant cell', 'Uses no chemistry', 'Combines many cells together', 'Never needs charging'], answer: 2 },
     ],
     short: 'Explain how a battery turns a chemical reaction into electricity. Use the words "electrons" and "circuit".',
   },
@@ -181,15 +177,14 @@ const LESSONS = {
     hook: 'The rock in your driveway might have been a volcano, then a beach, then a mountain, then mud, over hundreds of millions of years — and it isn\'t done. Earth has no landfill. It recycles everything, slowly.',
     learnIt: [
       { type: 'Read', desc: 'Britannica Kids — The rock cycle & rock types', meta: '~8 min', link: brit('rock cycle') },
-      { type: 'Explore', desc: 'CK-12 — Rock cycle (interactive PLIX / practice)', meta: '~10 min', link: ck12('rock cycle') },
+      { type: 'Explore', desc: 'CK-12 — Rock cycle (interactive practice)', meta: '~10 min', link: ck12('rock cycle') },
       { type: 'Do', desc: 'Model it with crayon shavings (sediment → press → heat → melt)', meta: '~15 min', link: '#' },
     ],
-    quiz: [
-      { q: 'The three main rock types are igneous, sedimentary, and…', options: ['Metamorphic', 'Plastic', 'Crystal', 'Liquid'], answer: 0 },
-      { q: 'The rock cycle is powered by…', options: ['Electricity', "Earth's internal heat and the sun", 'The moon only', 'Nothing — rocks never change'], answer: 1 },
-      { q: 'Sediment that gets squeezed and cemented over time becomes…', options: ['Sedimentary rock', 'Igneous rock', 'Lava', 'Metal'], answer: 0 },
+    showIt: [
+      { type: 'Draw it', prompt: 'Draw the rock cycle as a LOOP (not a line). Start at igneous and get all the way back to igneous. Label each arrow with the process (heat, pressure, weathering, melting…).' },
+      { type: 'Do it', prompt: 'Do the crayon-shaving model and photograph/describe your three "rocks." Which real rock type does each represent?' },
+      { type: 'Explain', prompt: 'Explain how a sedimentary rock could become an igneous rock. What has to happen, and where?' },
     ],
-    short: 'Explain how an igneous rock could eventually become a sedimentary rock. What has to happen?',
   },
 
   'The Water Cycle & Earth': {
@@ -214,18 +209,17 @@ const LESSONS = {
     title: 'Why Resources Aren\'t Spread Evenly',
     unit: "Unit 3 — Earth's Systems",
     standards: 'MS-ESS3-1',
-    hook: 'Most of the world\'s lithium sits under a few salt flats in South America. Most cobalt is in one country. The reason ebikes and phones have supply drama is 100-million-year-old geology deciding where the good stuff ended up.',
+    hook: 'Most of the world\'s lithium sits under a few salt flats in South America. Most cobalt is in one country. The reason phones, EVs, and yes — bikes — have supply drama is 100-million-year-old geology deciding where the good stuff ended up.',
     learnIt: [
       { type: 'Read', desc: 'CK-12 — Distribution of natural resources', meta: '~8 min', link: ck12('distribution of natural resources') },
       { type: 'Explore', desc: 'USGS — Where minerals & energy resources are found', meta: '~10 min', link: usgs('mineral resources') },
       { type: 'Watch', desc: 'SciShow — Where does lithium come from?', meta: '~7 min', link: yt('SciShow where does lithium come from mining') },
     ],
-    quiz: [
-      { q: 'Resources like oil and lithium are found in certain places because of…', options: ['Past geologic processes', 'Random luck', 'A human decision', "Today's weather"], answer: 0 },
-      { q: 'Why do batteries cause "supply drama"?', options: ['Key minerals are concentrated in just a few places', 'They are everywhere', 'Nobody wants them', 'They grow on trees'], answer: 0 },
-      { q: 'A renewable resource is one that…', options: ['Runs out forever', 'Replenishes naturally in a human lifetime', 'Is always a metal', "Can't be used"], answer: 1 },
+    showIt: [
+      { type: 'Connect it', prompt: 'Pick one resource a modern gadget needs (lithium, copper, aluminum, oil). Find out where most of it comes from, and explain WHY it ended up there.' },
+      { type: 'Explain', prompt: 'Explain why a resource like oil or lithium is concentrated in certain places instead of spread out evenly. (Hint: past geologic processes.)' },
+      { type: 'Argue it', prompt: 'Renewable vs. nonrenewable: pick one resource and argue whether we\'re using it faster than Earth can replace it.' },
     ],
-    short: 'Name one resource an ebike needs and explain why it is found in only certain parts of the world.',
   },
 
   /* ===================== UNIT 4 — HISTORY OF EARTH ===================== */
@@ -240,12 +234,11 @@ const LESSONS = {
       { type: 'Explore', desc: 'CK-12 — Geologic time scale (practice + visuals)', meta: '~10 min', link: ck12('geologic time scale') },
       { type: 'Do', desc: 'Build a scale timeline of Earth down a hallway or the driveway', meta: '~20 min', link: '#' },
     ],
-    quiz: [
-      { q: 'About how old is the Earth?', options: ['~6,000 years', '~1 million years', '~4.6 billion years', '~100 billion years'], answer: 2 },
-      { q: "On a 24-hour clock of Earth's history, humans appear…", options: ['At the very start', 'At noon', 'In the last couple of seconds', 'Never'], answer: 2 },
-      { q: '"Deep time" means…', options: ['The deep ocean', 'The huge span of geologic history', 'Nighttime', 'Deep caves'], answer: 1 },
+    showIt: [
+      { type: 'Build + reflect', prompt: 'Make your scale timeline, then write 3 sentences on what surprised you most about WHEN things happened.' },
+      { type: 'Teach it', prompt: 'Explain "deep time" to someone and why it\'s so hard for humans to actually picture.' },
+      { type: 'Make something', prompt: 'Make a "clock of Earth" (24 hours = 4.6 billion years) and mark when life, dinosaurs, and humans appear.' },
     ],
-    short: 'After building your timeline: what surprised you most about WHEN things happened?',
   },
 
   'Reading Rock Strata': {
@@ -294,12 +287,11 @@ const LESSONS = {
       { type: 'Explore', desc: 'USGS — Live earthquakes in the Pacific Northwest', meta: '~10 min · interactive map', link: 'https://earthquake.usgs.gov/earthquakes/map/' },
       { type: 'Watch', desc: 'The 1700 Cascadia earthquake & orphan tsunami', meta: '~10 min', link: yt('Cascadia subduction zone 1700 earthquake tsunami') },
     ],
-    quiz: [
-      { q: 'Cascadia is a ___ zone off the Oregon coast.', options: ['Subduction', 'Desert', 'Rainforest', 'Time'], answer: 0 },
-      { q: 'The last great Cascadia earthquake happened in…', options: ['2011', 'January 1700', '1906', 'It never has'], answer: 1 },
-      { q: 'Scientists pinned down the exact date using…', options: ['A diary', 'A photograph', 'A tsunami recorded in Japan + ghost forests', 'A lucky guess'], answer: 2 },
+    showIt: [
+      { type: 'Explain', prompt: 'Explain what a subduction zone is and why the Cascadia one produces very large earthquakes.' },
+      { type: 'Investigate', prompt: 'How did scientists figure out the EXACT date (January 1700) of an earthquake nobody here recorded? Look up "orphan tsunami" and "ghost forests," then explain it.' },
+      { type: 'Make it useful', prompt: 'Make a short "what our family should have ready" earthquake plan for a Cascadia event.' },
     ],
-    short: 'Explain what a subduction zone is and why the Cascadia one produces very large earthquakes.',
   },
 
   /* ===================== UNIT 5 — HUMAN IMPACTS & NATURAL HAZARDS ===================== */
@@ -332,73 +324,70 @@ const LESSONS = {
       { type: 'Watch', desc: 'How do earthquake-proof buildings work?', meta: '~8 min', link: yt('how do earthquake proof buildings work engineering') },
       { type: 'Do', desc: 'Build a tower and shake-test it (cookie sheet on tennis balls)', meta: '~30 min', link: '#' },
     ],
-    quiz: [
-      { q: 'Earthquake-safe buildings are designed to…', options: ['Bend, sway, and absorb the motion', 'Be perfectly rigid', 'Be as tall as possible', 'Have no foundation'], answer: 0 },
-      { q: 'A wider, lower base makes a structure…', options: ['Less stable', 'More stable when shaken', 'Heavier only', 'Invisible'], answer: 1 },
-      { q: 'Engineers improve designs by…', options: ['Guessing', 'Shaking models and redesigning', 'Never testing', 'Painting them'], answer: 1 },
+    showIt: [
+      { type: 'Design + test', prompt: 'Build a tower, shake-test it, and note what failed first. Redesign it once — what did you change, and did it survive longer?' },
+      { type: 'List it', prompt: 'List 3 design tricks engineers use to help buildings survive earthquakes, and why each one works.' },
+      { type: 'Make something', prompt: 'Draw your best earthquake-safe building and label the features that help it survive.' },
     ],
-    short: 'After your shake test: what failed first, and what did you change to make it survive longer?',
   },
 
   'Human Impact & Solutions': {
     title: 'Human Impact & Designing Solutions',
     unit: 'Unit 5 — Human Impacts & Natural Hazards',
     standards: 'MS-ESS3-2',
-    hook: 'An ebike instead of a car is a tiny climate decision — but multiply it by millions of riders and it\'s a real dent in emissions. Human impact isn\'t only damage; it\'s also every clever fix people design.',
+    hook: 'Swapping a car trip for a bike ride is a tiny climate decision — but multiply it by millions of people and it\'s a real dent in emissions. Human impact isn\'t only damage; it\'s also every clever fix people design.',
     learnIt: [
       { type: 'Read', desc: 'Britannica Kids — Humans & the environment', meta: '~8 min', link: brit('human environment impact') },
       { type: 'Explore', desc: 'iNaturalist — log real observations near you (citizen science)', meta: 'ongoing · interactive', link: 'https://www.inaturalist.org/observations' },
       { type: 'Watch', desc: 'Crash Course — Humans & the environment', meta: '~11 min', link: yt('crash course humans and the environment') },
     ],
-    quiz: [
-      { q: 'Riding an ebike instead of driving mainly reduces…', options: ['Exercise', 'Emissions and pollution', 'Battery use', 'Nothing'], answer: 1 },
-      { q: 'Human impact on the environment can be…', options: ['Only harmful', 'Only good', 'Both harm and helpful solutions', 'Nonexistent'], answer: 2 },
-      { q: 'Restoring a stream or planting native plants is an example of…', options: ['A designed solution', 'Pollution', 'A natural hazard', 'A chemical reaction'], answer: 0 },
+    showIt: [
+      { type: 'Argue it', prompt: 'Pick one way humans reduce their impact (biking, recycling, solar, habitat restoration). Make the case for it with evidence — and name one honest downside.' },
+      { type: 'Explain', prompt: 'Explain one way humans harm an ecosystem AND one designed solution that helps.' },
+      { type: 'Investigate', prompt: 'Walk or look around your neighborhood and find one example of human impact (good or bad). Describe it and propose one improvement.' },
     ],
-    short: 'Describe one way humans harm an ecosystem AND one designed solution that helps.',
   },
 
-  /* ===================== UNIT 6 — ENERGY, ELECTRICITY & THE E-BIKE ===================== */
+  /* ===================== UNIT 6 — ENERGY & ELECTRICITY ===================== */
 
   'Kinetic & Potential Energy': {
     title: 'Kinetic & Potential Energy',
-    unit: 'Unit 6 — Energy, Electricity & the E-Bike',
+    unit: 'Unit 6 — Energy & Electricity',
     standards: 'MS-PS3-1',
-    hook: 'At the top of a hill your ebike is loaded like a slingshot — pure stored (potential) energy. Let go and it converts to motion (kinetic). The heavier and faster you are, the more energy is in play — which is why speed feels so different at the bottom.',
+    hook: 'At the top of a hill, a bike — or a skateboard, or a roller-coaster car — is loaded like a slingshot: pure stored (potential) energy. Let go and it all converts to motion (kinetic). The heavier and faster you are, the more energy is in play.',
     learnIt: [
       { type: 'Read', desc: 'BBC Bitesize — Kinetic & potential (stored) energy', meta: '~8 min', link: bitesize('kinetic and potential energy stores') },
       { type: 'Explore', desc: 'PhET — Energy Skate Park (watch energy trade back and forth)', meta: '~12 min · interactive', link: phet('energy-skate-park-basics') },
       { type: 'Watch', desc: 'Kinetic vs. potential energy', meta: '~6 min', link: yt('kinetic and potential energy explained') },
     ],
     quiz: [
-      { q: 'At the TOP of a hill, your bike has the most…', options: ['Potential energy', 'Kinetic energy', 'No energy', 'Heat energy'], answer: 0 },
+      { q: 'At the TOP of a hill, a coasting bike has the most…', options: ['Potential energy', 'Kinetic energy', 'No energy', 'Heat energy'], answer: 0 },
       { q: 'Kinetic energy depends on…', options: ['Mass and speed', 'Color and size', 'Time of day', 'Height only'], answer: 0 },
       { q: 'Two riders coast down the same hill; the heavier one at the bottom has…', options: ['Less kinetic energy', 'More kinetic energy', 'Exactly the same', 'None'], answer: 1 },
     ],
-    short: 'Explain the difference between potential and kinetic energy using your bike on a hill.',
+    short: 'Explain the difference between potential and kinetic energy using a real example (a hill, a swing, a drawn bow…).',
   },
 
   'Energy Transformations': {
     title: 'Energy Transformations',
-    unit: 'Unit 6 — Energy, Electricity & the E-Bike',
+    unit: 'Unit 6 — Energy & Electricity',
     standards: 'MS-PS3-5',
-    hook: 'Energy is never used up — it just changes clothes. On your ebike: chemical (battery) → electrical (wires) → kinetic (motion) → and always some heat. Follow the energy and you\'ll find it every time, even the part that leaks out as warmth.',
+    hook: 'Energy never gets used up — it just changes clothes. In a flashlight: chemical (battery) → electrical → light + heat. In anything with a motor: electrical → motion → heat. Follow the energy and you\'ll find it every time, even the part that leaks out as warmth.',
     learnIt: [
       { type: 'Read', desc: 'CK-12 — Energy transformation & conservation of energy', meta: '~8 min', link: ck12('conservation of energy transformation') },
       { type: 'Explore', desc: 'PhET — Energy Forms & Changes', meta: '~12 min · interactive', link: phet('energy-forms-and-changes') },
       { type: 'Watch', desc: 'Conservation of energy explained', meta: '~8 min', link: yt('conservation of energy transformations explained') },
     ],
-    quiz: [
-      { q: 'On an ebike, energy goes chemical → electrical → ___ → heat.', options: ['Kinetic (motion)', 'Nuclear', 'Sound only', 'Light only'], answer: 0 },
-      { q: 'Energy is…', options: ['Used up and gone', 'Transformed, never destroyed', 'Created by the motor', 'Made of atoms'], answer: 1 },
-      { q: 'The energy that seems "lost" in a machine usually becomes…', options: ['Heat', 'Nothing', 'More fuel', 'Light only'], answer: 0 },
+    showIt: [
+      { type: 'Trace it', prompt: 'Pick any machine you use (flashlight, blender, phone, e-bike, toaster) and trace its energy through every form it takes — including where energy is "lost" as heat.' },
+      { type: 'Correct it', prompt: 'A friend says a motor "uses up" energy. Explain why that\'s wrong, using the word "transformed."' },
+      { type: 'Make something', prompt: 'Draw an energy-flow arrow diagram for one device, labeling each form (chemical, electrical, kinetic, light, heat…).' },
     ],
-    short: 'Trace the energy of an ebike ride, naming every form it takes — including where energy is lost as heat.',
   },
 
   'Electricity & Circuits': {
     title: 'Electricity & Circuits',
-    unit: 'Unit 6 — Energy, Electricity & the E-Bike',
+    unit: 'Unit 6 — Energy & Electricity',
     standards: 'MS-PS3-2',
     hook: 'Electricity is just electrons taking a lap. Give them a complete loop and a push (voltage) and they\'ll do work — spin a motor, make light, make heat. Break the loop anywhere and everything stops. That\'s a switch.',
     learnIt: [
@@ -406,30 +395,27 @@ const LESSONS = {
       { type: 'Explore', desc: 'PhET — Circuit Construction Kit (build & test real circuits)', meta: '~15 min · interactive', link: phet('circuit-construction-kit-dc-virtual-lab') },
       { type: 'Do', desc: 'Light an LED, then build an electromagnet or homopolar motor', meta: '~30 min', link: '#' },
     ],
-    quiz: [
-      { q: 'Electric current is a flow of…', options: ['Electrons', 'Water', 'Air', 'Light'], answer: 0 },
-      { q: 'To light a bulb you need a…', options: ['Complete circuit', 'Broken wire', 'Single wire end', 'A magnet only'], answer: 0 },
-      { q: 'In a simple series circuit, if one bulb breaks…', options: ['They all go out', 'Nothing happens', 'The others get brighter', 'It catches fire'], answer: 0 },
+    showIt: [
+      { type: 'Build + explain', prompt: 'Build a working circuit (LED, electromagnet, or motor). Draw it and label the source, the path, and the load. What happens when you break the loop?' },
+      { type: 'Answer these', prompt: '(1) What\'s the difference between voltage and current, in plain words? (2) Series vs. parallel — how are string lights wired so one dead bulb doesn\'t kill them all?' },
+      { type: 'Teach it', prompt: 'Explain to a parent how a light switch works, in terms of a circuit being completed or broken.' },
     ],
-    short: 'Describe a circuit you built — the source, the path, and the load — and what happens when you break the loop.',
   },
 
   'E-Bike Engineering Challenge': {
     title: 'The E-Bike Engineering Challenge',
-    unit: 'Unit 6 — Energy, Electricity & the E-Bike',
+    unit: 'Unit 6 — Energy & Electricity',
     standards: 'MS-ETS1-1',
-    hook: 'Real engineering is choosing between things you can\'t all have: more range OR less weight, more speed OR more battery life, cheaper OR tougher. Design your dream build and you\'ll hit every trade-off a real ebike engineer fights. <a class="hook-link" href="https://en.wikipedia.org/wiki/Electric_bicycle" target="_blank" rel="noopener">🔗 Electric bicycle</a>',
+    hook: 'Time to put the whole unit to work on something fun. Real engineering is choosing between things you can\'t all have: more range OR less weight, more speed OR more battery life, cheaper OR tougher. Design your dream build and you\'ll hit every trade-off a real engineer fights. <a class="hook-link" href="https://en.wikipedia.org/wiki/Electric_bicycle" target="_blank" rel="noopener">🔗 Electric bicycle</a>',
     learnIt: [
       { type: 'Read', desc: 'CK-12 — The engineering design process', meta: '~8 min', link: ck12('engineering design process criteria constraints') },
-      { type: 'Watch', desc: 'How ebike motors, controllers & batteries work', meta: '~10 min', link: yt('how ebike motor controller battery works explained') },
-      { type: 'Do', desc: 'Spec your dream ebike build within a set budget', meta: '~30 min', link: '#' },
+      { type: 'Watch', desc: 'How electric motors & controllers actually work', meta: '~10 min', link: yt('how electric motor controller battery works explained') },
+      { type: 'Do', desc: 'Spec your dream build within a set budget', meta: '~30 min', link: '#' },
     ],
-    quiz: [
-      { q: 'Engineering design always involves…', options: ['Trade-offs — you can\'t have everything', 'Perfect solutions', 'No limits at all', 'Only money'], answer: 0 },
-      { q: '"Criteria and constraints" mean…', options: ['What it must do + the limits it must fit', 'Just the price', 'The color', 'The brand name'], answer: 0 },
-      { q: 'More battery range usually costs you…', options: ['More weight and price', 'Nothing', 'Less safety only', 'More speed always'], answer: 0 },
+    showIt: [
+      { type: 'Engineer it', prompt: 'Design your ideal e-bike (or any electric machine) on paper within a budget. List your top 3 requirements — range? speed? weight? price? — and show one real trade-off you had to make.' },
+      { type: 'Defend it', prompt: 'Present your design to a parent and defend one choice where you gave something up to get something better.' },
     ],
-    short: 'Spec your dream ebike within a budget. Name your top requirement and one real trade-off you had to make.',
   },
 
 };

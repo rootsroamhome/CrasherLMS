@@ -101,6 +101,20 @@ window.checkQuiz = function () {
   btn.disabled = true; btn.textContent = 'Checked ✓';
 };
 
+function choicesHtml(lesson) {
+  const opts = (lesson.showIt || []).map((o, i) => `
+    <div class="check-option">
+      <div class="check-option-title">Option ${i + 1}: ${o.type}</div>
+      <div class="check-option-desc">${o.prompt}</div>
+    </div>`).join('');
+  return `
+    <p style="margin-bottom:14px; color:var(--text-muted);">Pick <strong>one</strong> way to show it, do it, then write your answer (or where it lives) below.</p>
+    ${opts}
+    <div style="margin-top:18px;">
+      <textarea id="short-answer" class="rh-input" placeholder="Your answer, or where your work lives (Drive link, notebook, told a parent)…" style="min-height:110px;"></textarea>
+    </div>`;
+}
+
 async function loadLesson() {
   const main = document.getElementById('content-main');
   if (!recordId) {
@@ -131,7 +145,10 @@ async function loadLesson() {
         ${(lesson.unit || unit) ? `<span style="font-size:0.76rem; color:var(--text-dim);">${lesson.unit || unit}</span>` : ''}`;
       document.getElementById('lesson-title').textContent = lesson.title;
       document.getElementById('lesson-content').innerHTML = learnItHtml(lesson);
-      document.getElementById('check-options').innerHTML = quizHtml(lesson);
+      const isQuiz = !!lesson.quiz;
+      document.getElementById('check-options').innerHTML = isQuiz ? quizHtml(lesson) : choicesHtml(lesson);
+      document.querySelector('#check-section .content-section-title').textContent =
+        isQuiz ? 'Show It — quick quiz + your own words' : 'Show It — pick one way';
     }
 
     document.getElementById('done-area').innerHTML = `
