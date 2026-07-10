@@ -174,11 +174,16 @@ function blockHtml(card, b, bi) {
 
 /* ── card + page render ──────────────────────────────────────── */
 
-function cardHtml(card, isCurrent) {
+function cardHtml(card, status) {
   const blocks = card.blocks.map((b, bi) => blockHtml(card, b, bi)).join('');
-  const doneBtn = isCurrent
-    ? `<button class="btn btn-success u-markdone" style="margin-top:8px;">✓ Mark this done${card.n < UNIT.cards.length ? ' — unlock the next' : ''}</button>`
-    : `<div class="u-reviewing">You're reviewing a finished lesson. <a href="#" class="u-jump-current">Back to where you are →</a></div>`;
+  let foot;
+  if (status === 'current') {
+    foot = `<button class="btn btn-success u-markdone" style="margin-top:8px;">✓ Mark this done${card.n < UNIT.cards.length ? ' — unlock the next' : ''}</button>`;
+  } else if (status === 'done') {
+    foot = `<div class="u-reviewing">✓ You finished this one. <a href="#" class="u-unmark">Mark it not done</a> · <a href="#" class="u-jump-current">Back to where you are →</a></div>`;
+  } else {
+    foot = `<div class="u-reviewing u-preview">👀 Preview — you haven't unlocked this yet, so nothing here counts as progress. <a href="#" class="u-jump-current">Back to where you are →</a></div>`;
+  }
   return `
     <div class="u-card" data-cardid="${card.id}">
       <div class="content-meta">
@@ -188,7 +193,7 @@ function cardHtml(card, isCurrent) {
       </div>
       <h1 class="content-title">${esc(card.title)}</h1>
       ${blocks}
-      ${doneBtn}
+      ${foot}
     </div>`;
 }
 
@@ -199,9 +204,9 @@ function mapHtml() {
     const locked = i > curI;
     const status = done ? 'done' : (i === curI ? 'current' : 'locked');
     const icon = done ? '✓' : (i === curI ? '●' : '🔒');
-    return `<button type="button" class="map-item ${status}" ${locked ? 'disabled' : ''} data-cardid="${c.id}">
+    return `<button type="button" class="map-item ${status}" data-cardid="${c.id}">
       <span class="map-icon">${icon}</span><span class="map-n">${c.n}</span><span class="map-title">${esc(c.title)}</span></button>`;
-  }).join('');
+  }).join('') + `<button type="button" class="map-reset" id="map-reset">↺ Reset all progress</button>`;
 }
 
 function render() {
@@ -209,7 +214,7 @@ function render() {
   const curI = currentIndex();
   if (!viewId || !UNIT.cards.find(c => c.id === viewId)) viewId = UNIT.cards[curI].id;
   const viewCard = UNIT.cards.find(c => c.id === viewId);
-  const isCurrent = viewId === UNIT.cards[curI].id;
+  const status = state.done[viewId] ? 'done' : (viewId === UNIT.cards[curI].id ? 'current' : 'locked');
   const doneCount = Object.keys(state.done).filter(k => state.done[k]).length;
   const pct = Math.round((doneCount / UNIT.cards.length) * 100);
 
@@ -224,9 +229,9 @@ function render() {
       </div>
       <div id="unit-map" class="unit-map" style="display:none;">${mapHtml()}</div>
     </div>
-    ${cardHtml(viewCard, isCurrent)}`;
+    ${cardHtml(viewCard, status)}`;
 
-  wire(viewCard, isCurrent);
+  wire(viewCard, status);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -239,11 +244,15 @@ function wire(card, isCurrent) {
     const m = document.getElementById('unit-map');
     m.style.display = m.style.display === 'none' ? 'grid' : 'none';
   };
-  app.querySelectorAll('.map-item:not([disabled])').forEach(el => {
+  app.querySelectorAll('.map-item').forEach(el => {
     el.onclick = () => { viewId = el.dataset.cardid; render(); };
   });
   const jump = app.querySelector('.u-jump-current');
   if (jump) jump.onclick = (e) => { e.preventDefault(); viewId = UNIT.cards[currentIndex()].id; render(); };
+  const unmark = app.querySelector('.u-unmark');
+  if (unmark) unmark.onclick = (e) => { e.preventDefault(); delete state.done[viewId]; save(); render(); };
+  const reset = app.querySelector('#map-reset');
+  if (reset) reset.onclick = () => { if (confirm('Reset all progress and answers for this unit?')) { localStorage.removeItem(LS_KEY); load(); viewId = UNIT.cards[0].id; render(); } };
 
   app.querySelectorAll('textarea.u-ans, input.u-ans[type="text"]').forEach(el => {
     el.oninput = () => { state.ans[el.dataset.aid] = el.value; save(); };

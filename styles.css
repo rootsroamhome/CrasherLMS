@@ -932,6 +932,9 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
 .map-item.current .map-icon { color: var(--coral); }
 .map-n { font-weight: 800; color: var(--text-dim); min-width: 18px; }
 .map-title { flex: 1; }
+.map-reset { margin-top: 8px; align-self: flex-start; font-size: 0.78rem; font-weight: 700; color: var(--text-dim); background: none; border: none; cursor: pointer; padding: 6px 4px; }
+.map-reset:hover { color: var(--coral); }
+.u-preview { background: #F6E4BE; }
 
 .u-card { animation: none; }
 .u-sec { font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin: 22px 0 10px; }
