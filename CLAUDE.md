@@ -14,17 +14,30 @@ Homeschool LMS for one middle-school student (going into 7th grade). Daily to-do
 
 ## File Map
 ```
-index.html / index.js       — Daily to-do list (main page) with date navigation
-rabbit-hole.html / .js      — Student rabbit-hole submissions
-big-picture.html / .js      — Parent dashboard (unit progress, standards tracker)
-content-*.html              — Static lesson content pages
-styles.css                  — Shared dark-mode styles
-config.js                   — CONFIG.apiBase + TABLES + SUBJECT_COLORS constants
+index.html / index.js       — Daily to-do list (main page) w/ date nav + rotating fun facts
+this-week.html / .js         — Weekly Self-Study ⇄ Rabbit Hole choice (pick per week, saved in localStorage)
+lesson.html / lesson.js      — ONE generic science lesson renderer; matches ?recordId item name → LESSONS
+lessons.js                   — All science lesson content (hook / Learn It / Show It), keyed by item-name phrase
+curriculum.js                — Source of truth: units, standards, hot-spots, tiered parent activities
+parent-guide.html / .js      — Parent page: week ahead, time planned, hot-spots, Small/Medium/Large activities
+big-picture.html / .js       — Progress dashboard (unit progress, standards tracker)
+learning-review.html         — AI-scored review of responses (uses netlify/functions/score-response.js)
+rabbit-hole.html / .js        — Legacy standalone rabbit-hole page (kept; superseded by this-week.html)
+content-*.html               — Legacy per-unit science pages from the summer Life Science units (kept as archive)
+styles.css                   — Shared styles. Editorial light theme: Fraunces serif + Inter, cream, ticker ribbons
+config.js                    — CONFIG.apiBase + TABLES + SUBJECT_COLORS constants
 netlify/functions/airtable.js — Serverless proxy; reads AIRTABLE_API_KEY + AIRTABLE_BASE_ID from env
 netlify.toml                — Redirects /api/airtable/* → function; sets publish = "."
-populate-schedule.mjs       — One-time script that loaded 197 summer records (already run, do not re-run)
-setup-airtable.mjs          — One-time table-creation script (already run, do not re-run)
+populate-7th-grade.mjs       — Rebuilds the 2026–27 year (To-Do Items + Standards). Re-run to reset the year.
+populate-schedule.mjs / repopulate-todos.mjs / setup-airtable.mjs — Older one-time scripts (superseded)
 ```
+
+## Adding / editing science lessons
+A science To-Do item links to `lesson.html` and its **Item name** contains a phrase
+(e.g. `Atoms & Molecules — Learn It`). `lesson.js` matches that phrase against a key in
+`lessons.js`. To add a lesson: add an entry to `LESSONS` in `lessons.js`, then schedule
+Learn It / Show It items whose names contain that key in `populate-7th-grade.mjs`.
+Units + parent activities live in `curriculum.js` (the `unit` label must match the item's `Unit`).
 
 ## Airtable Credentials (for direct API calls or MCP)
 Stored in `.env.local` (gitignored). Read them with: `cat .env.local`
@@ -41,10 +54,12 @@ Stored in `.env.local` (gitignored). Read them with: `cat .env.local`
 **Fix:** `subPath` extraction now strips either prefix (`/api/airtable` or `/.netlify/functions/airtable`), verified locally via `netlify dev` and confirmed with real data loading in-browser.  
 **Note:** an earlier commit (`d3b1990`) worked around this by pointing `config.js` `apiBase` directly at `/.netlify/functions/airtable`, bypassing the redirect. Both routes work now; `apiBase` could be switched back to `/api/airtable` if desired. The old advice to re-check Netlify dashboard env vars for typos was a red herring — if NOT_FOUND ever reappears, check the code path first, not the dashboard.
 
-## Data State
-- **197 summer schedule records** already in Airtable (populated 2026-05-27 via `populate-schedule.mjs`). **Do not run that script again** — it will duplicate everything.
-- 3 example records from initial setup also exist (dated 2026-05-15, Subject: Math/Science/Social Science).
-- See [`docs/schedule.md`](docs/schedule.md) for the full schedule structure.
+## Data State (2026–2027 7th grade year)
+- Airtable was **wiped and rebuilt 2026-07-10** by `populate-7th-grade.mjs`: 381 To-Do Items + 15 Standards. The old summer/Life-Science records are gone.
+- School calendar: **Mon–Thu, 2026-08-31 → 2027-06-11**, holidays/breaks skipped (143 school days, 37 weeks). Holiday list is hard-coded in the populate script — edit there.
+- Science = Oregon 7th grade NGSS sequence (Life Science was completed over summer, so this year is Physical + Earth/Space + a capstone energy/ebike unit). 28 Learn/Show + review weeks fill the first ~28 weeks; the rest are flex.
+- Subjects in use: `Science`, `Math`, `ELA`, `Self-Study`, `Rabbit Hole`. (`Self-Study` was added to the Airtable single-select via `typecast:true`.)
+- `repopulate-todos.mjs` is the OLD summer loader — do not run it; use `populate-7th-grade.mjs` to reset the year.
 
 ## Key Behaviors
 - **index.js:** Loads `Not Started` items with `Scheduled date <= today`. Carry-forward increments `Days carried` once per calendar day (localStorage flag). Carry-forward is fire-and-forget (non-blocking).
