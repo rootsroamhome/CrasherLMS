@@ -22,12 +22,17 @@ const TABLES = {
 };
 
 // Subject color map — used by all pages. Bold editorial palette on cream.
+//   bg     — saturated (badge / vertical label / arrow accents)
+//   accent — same saturated tone for --card-accent
+//   tile   — soft color-fill for the whole tile background (dark text reads on it)
+//   label  — text color used on the saturated bg
 const SUBJECT_COLORS = {
-  Science:         { bg: '#2E9AA6', accent: '#2E9AA6', label: '#FBF7EC' },
-  Math:            { bg: '#E8503A', accent: '#E8503A', label: '#FBF7EC' },
-  ELA:             { bg: '#D99A2B', accent: '#C6871B', label: '#1A1A1A' },
-  'Self-Study':    { bg: '#7C7C57', accent: '#7C7C57', label: '#FBF7EC' },
-  'Rabbit Hole':   { bg: '#8B5C9E', accent: '#8B5C9E', label: '#FBF7EC' },
-  'Social Science':{ bg: '#7C7C57', accent: '#7C7C57', label: '#FBF7EC' },
-  Health:          { bg: '#C64B7A', accent: '#C64B7A', label: '#FBF7EC' },
+  Science:         { bg: '#2E9AA6', accent: '#2E9AA6', tile: '#C7E6EA', label: '#FBF7EC' },
+  Math:            { bg: '#E8503A', accent: '#E8503A', tile: '#F8D5CC', label: '#FBF7EC' },
+  ELA:             { bg: '#C6871B', accent: '#C6871B', tile: '#F4E4BD', label: '#1A1A1A' },
+  'Humanities':    { bg: '#C6871B', accent: '#C6871B', tile: '#F4E4BD', label: '#1A1A1A' },
+  'Self-Study':    { bg: '#7C7C57', accent: '#7C7C57', tile: '#E4E1D2', label: '#FBF7EC' },
+  'Rabbit Hole':   { bg: '#8B5C9E', accent: '#8B5C9E', tile: '#E7DDEE', label: '#FBF7EC' },
+  'Social Science':{ bg: '#7C7C57', accent: '#7C7C57', tile: '#E0DACB', label: '#FBF7EC' },
+  Health:          { bg: '#C64B7A', accent: '#C64B7A', tile: '#F6D6E0', label: '#FBF7EC' },
 };

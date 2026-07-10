@@ -225,17 +225,23 @@ function buildCard(rec, mode) {
     </div>` : '';
 
   const card = document.createElement('div');
-  card.className = 'card todo-card';
+  card.className = 'card tile todo-card';
   if (mode === 'today') card.classList.add('card-clickable');
   if (mode === 'past' && isDone) card.classList.add('card-past-done');
   if (mode === 'future') card.classList.add('card-future');
   card.dataset.recordId = rec.id;
   card.style.setProperty('--card-accent', colors.accent);
+  card.style.setProperty('--tile', colors.tile || colors.bg);
 
   const openLessonBtn = href !== '#' ? `
     <a href="${href}" class="btn btn-ghost" onclick="event.stopPropagation()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       Open Lesson
+    </a>` : '';
+
+  const arrowHtml = href !== '#' ? `
+    <a href="${href}" class="circle-arrow" onclick="event.stopPropagation()" aria-label="Open">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </a>` : '';
 
   let actionsHtml = '';
@@ -265,12 +271,19 @@ function buildCard(rec, mode) {
   }
 
   card.innerHTML = `
-    <span class="subject-badge" style="background:${colors.bg}; color:${colors.label};">${subject}</span>
-    ${mode === 'today' && carried > 0 ? `<div class="carried-label">↩ Carried over ${carried} day${carried > 1 ? 's' : ''}</div>` : ''}
-    <div class="todo-title">${f['Item name'] || 'Untitled'}</div>
-    <div class="todo-ican">${f['I Can statement'] || ''}</div>
-    ${timerHtml}
-    ${actionsHtml}
+    <span class="tile-dot"></span>
+    <span class="tile-side">${subject}</span>
+    <div class="tile-main">
+      ${mode === 'today' && carried > 0 ? `<div class="carried-label">↩ Carried over ${carried} day${carried > 1 ? 's' : ''}</div>` : ''}
+      <div class="todo-title">${f['Item name'] || 'Untitled'}</div>
+      <div class="todo-ican">${f['I Can statement'] || ''}</div>
+      ${timerHtml}
+      ${actionsHtml}
+      <div class="tile-foot">
+        <span class="tile-tag">${f['Unit'] || subject}</span>
+        ${arrowHtml}
+      </div>
+    </div>
   `;
 
   if (timerMin) attachTimer(card, timerMin);

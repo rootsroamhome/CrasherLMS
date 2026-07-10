@@ -46,12 +46,18 @@ async function saveToAirtable(itemName, subject, unit, notes) {
   return json;
 }
 
-/* ---- Self-study topic springboards (history-flavored, optional) ---- */
+/* ---- Self-study topic springboards — ANY topic, just sparks ---- */
 const SPRINGBOARDS = [
-  'The rise & fall of Ancient Rome', 'The Mongol Empire', 'Ancient Egypt',
-  'The French Revolution', 'The Cold War & the Space Race', 'Vikings',
-  'Feudal Japan & the samurai', 'The Silk Road', 'WWI: how it started',
-  'The history of the bicycle', 'How electricity got invented', 'Any topic you want',
+  'How something works (engines, batteries, the internet)',
+  'An animal or creature you love',
+  'A moment in history — any era, anywhere',
+  'A sport, game, or how it works',
+  'Space & the universe',
+  'A country or culture',
+  'A mystery or unsolved question',
+  'How something is made',
+  'A person who changed the world',
+  'Anything you\'re curious about',
 ];
 
 function renderChooser() {
@@ -149,7 +155,7 @@ function renderTrack(track) {
 
 window.fillTopic = function (t) {
   const input = document.getElementById('ss-topic');
-  input.value = t === 'Any topic you want' ? '' : t;
+  input.value = t.startsWith('Anything') ? '' : t;
   input.focus();
 };
 

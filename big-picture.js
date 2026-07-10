@@ -78,10 +78,13 @@ function renderUnits(todos) {
     section.innerHTML = `<div class="subject-section-title" style="color:${color};">📚 ${subject}</div>`;
 
     const grid = el('div', 'unit-grid');
+    const tile = subjectColor(subject).tile || 'var(--card)';
     for (const { name, data } of unitList) {
       const pct    = data.total > 0 ? Math.round((data.done / data.total) * 100) : 0;
       const status = pct === 100 ? '✓ Complete' : pct > 0 ? 'In Progress' : 'Not Started';
       const card   = el('div', 'unit-card');
+      card.style.setProperty('--tile', tile);
+      card.style.setProperty('--card-accent', color);
       card.innerHTML = `
         <div class="unit-name">${name}</div>
         <div class="unit-progress-bar"><div class="unit-progress-fill" style="width:${pct}%; background:${color};"></div></div>
