@@ -35,7 +35,7 @@ function photoHtml(key, subject) {
   const tile = subjectStyle(subject).tile || 'var(--cream-2)';
   return `<div class="lesson-photo" style="--tile:${tile};">
     <img src="${src}" alt="" loading="lazy" onerror="this.style.display='none'" />
-    <span class="photo-ribbon">${tag} · ${tag} · ${tag} · ${tag}</span>
+    <span class="photo-ribbon"><span class="ribbon-track">${(tag + '&nbsp;·&nbsp;').repeat(24)}</span></span>
   </div>`;
 }
 

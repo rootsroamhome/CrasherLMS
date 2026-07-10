@@ -65,13 +65,13 @@ function renderChooser() {
   document.getElementById('chooser').innerHTML = `
     <div class="track-grid">
       <div class="track-choice selfstudy ${chosen === 'selfstudy' ? 'chosen' : ''}" onclick="pickTrack('selfstudy')">
-        <span class="ribbon">Go Deep · Go Deep · Go Deep</span>
+        <span class="ribbon"><span class="ribbon-track">${'Go Deep&nbsp;·&nbsp;'.repeat(20)}</span></span>
         <div class="track-eyebrow">Track A</div>
         <div class="track-name serif">Self-Study</div>
         <div class="track-desc">Pick one thing, dig in all week, and report what you found. You choose the topic and how you show it.</div>
       </div>
       <div class="track-choice rabbithole ${chosen === 'rabbithole' ? 'chosen' : ''}" onclick="pickTrack('rabbithole')">
-        <span class="ribbon">Chase It · Chase It · Chase It</span>
+        <span class="ribbon"><span class="ribbon-track">${'Chase It&nbsp;·&nbsp;'.repeat(20)}</span></span>
         <div class="track-eyebrow">Track B</div>
         <div class="track-name serif">Rabbit Holes</div>
         <div class="track-desc">No topic, no rubric. Find weird stuff, make something, share something. Follow your curiosity.</div>

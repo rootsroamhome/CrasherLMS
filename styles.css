@@ -174,7 +174,9 @@ button { font-family: var(--sans); cursor: pointer; }
 .ribbon {
   position: absolute;
   top: 26px;
-  right: -60px;
+  right: -70px;
+  width: 330px;
+  overflow: hidden;
   transform: rotate(-26deg);
   transform-origin: center;
   background: var(--ink);
@@ -183,11 +185,17 @@ button { font-family: var(--sans); cursor: pointer; }
   font-weight: 800;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  padding: 5px 60px;
-  white-space: nowrap;
+  padding: 5px 0;
   pointer-events: none;
-  overflow: hidden;
 }
+/* seamless scrolling ticker text (content is a uniform repeated phrase) */
+.ribbon-track {
+  display: inline-block;
+  white-space: nowrap;
+  will-change: transform;
+  animation: ticker 9s linear infinite;
+}
+@keyframes ticker { to { transform: translateX(-50%); } }
 
 /* Faded oversized serif word behind content */
 .ghost-word {
@@ -450,13 +458,15 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
   filter: saturate(1.06) contrast(1.02);
 }
 .photo-ribbon {
-  position: absolute; top: 24px; left: -72px; z-index: 2;
+  position: absolute; top: 22px; left: -40%; z-index: 2;
+  width: 180%; overflow: hidden;
   transform: rotate(-24deg);
   background: var(--ink); color: var(--cream);
   font-size: 0.68rem; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase;
-  padding: 7px 84px; white-space: nowrap;
+  padding: 8px 0; white-space: nowrap;
   box-shadow: 0 5px 16px rgba(26,26,26,0.3);
 }
+.photo-ribbon .ribbon-track { animation-duration: 16s; }
 
 .content-section {
   background: var(--card);
@@ -776,6 +786,71 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
   background: var(--cream);
 }
 .quiz-locked { pointer-events: none; opacity: 0.95; }
+
+/* =========================================================
+   Dynamic interactions (d.school-style motion)
+   ========================================================= */
+
+/* Staggered entrance for the day's tiles */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.todo-card { animation: rise 0.5s both cubic-bezier(0.2, 0.7, 0.2, 1); }
+.todo-card:nth-child(1)  { animation-delay: 0.00s; }
+.todo-card:nth-child(2)  { animation-delay: 0.05s; }
+.todo-card:nth-child(3)  { animation-delay: 0.10s; }
+.todo-card:nth-child(4)  { animation-delay: 0.15s; }
+.todo-card:nth-child(5)  { animation-delay: 0.20s; }
+.todo-card:nth-child(6)  { animation-delay: 0.25s; }
+.todo-card:nth-child(7)  { animation-delay: 0.30s; }
+.todo-card:nth-child(8)  { animation-delay: 0.35s; }
+.todo-card:nth-child(n+9){ animation-delay: 0.40s; }
+
+/* Card hover: lift a touch more + the circular arrow slides right and fills */
+.tile { transition: transform 0.22s cubic-bezier(0.2,0.7,0.2,1), box-shadow 0.22s ease; }
+.card .circle-arrow { transition: transform 0.2s ease, background 0.18s ease, color 0.18s ease; }
+.card .circle-arrow svg { transition: transform 0.22s cubic-bezier(0.2,0.7,0.2,1); }
+.card:hover .circle-arrow { background: var(--ink); color: var(--cream); transform: scale(1.08); }
+.card:hover .circle-arrow svg { transform: translateX(4px); }
+
+/* The vertical side label nudges up on hover */
+.tile .tile-side { transition: transform 0.25s ease, letter-spacing 0.25s ease; }
+.tile:hover .tile-side { transform: translateY(-4px); letter-spacing: 0.22em; }
+
+/* Halftone drifts subtly on hover for a living texture */
+.tile::after { transition: background-position 0.6s ease; }
+.tile:hover::after { background-position: 6px 6px; }
+
+/* Ghost buttons: the icon slides on hover */
+.btn svg { transition: transform 0.2s ease; }
+.btn:hover svg { transform: translateX(2px); }
+
+/* Lesson hero photo zooms slowly on hover; ribbon speeds up */
+.lesson-photo img { transition: transform 0.6s cubic-bezier(0.2,0.7,0.2,1); }
+.lesson-photo:hover img { transform: scale(1.06); }
+.lesson-photo:hover .ribbon-track { animation-duration: 7s; }
+
+/* Unit + stat cards lift on hover */
+.unit-card, .stat-card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.unit-card:hover, .stat-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(26,26,26,0.12); }
+
+/* Content sections rise in */
+.content-section { animation: rise 0.5s both cubic-bezier(0.2,0.7,0.2,1); }
+
+/* Brand dot gives a little life on hover */
+.nav-brand:hover .dot { transform: scale(1.25); transition: transform 0.2s ease; }
+
+/* Stat numbers count-pop on load */
+@keyframes pop { 0% { transform: scale(0.7); opacity: 0; } 70% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
+.stat-number { animation: pop 0.5s both cubic-bezier(0.34,1.56,0.64,1); }
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .ribbon-track { animation: none !important; }
+}
 
 /* =========================================================
    Responsive
