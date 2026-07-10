@@ -80,32 +80,72 @@ async function earliestDateFrom(dateStr) {
   return json.records?.[0]?.fields?.['Scheduled date'] || null;
 }
 
+let curMon = MON;
+
+function mondayOf(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const dow = d.getDay() || 7;
+  d.setDate(d.getDate() - (dow - 1));
+  return iso(d);
+}
+
+function renderWeekNav() {
+  const thu = addDays(curMon, 3);
+  document.getElementById('week-nav').innerHTML = `
+    <button class="btn btn-ghost" id="prev-week" type="button">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Prev week
+    </button>
+    <div class="week-nav-center">
+      <div class="week-nav-label">Week of ${fmtShort(curMon)}</div>
+      <div class="week-nav-sub">${fmt(curMon)} – ${fmt(thu)}</div>
+      <span class="date-jump-wrap">
+        <button class="btn btn-today cal-btn" id="pick-week" type="button" style="margin-top:6px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Pick a week
+        </button>
+        <input type="date" class="date-jump" id="week-jump" aria-label="Jump to a week" />
+      </span>
+    </div>
+    <button class="btn btn-ghost" id="next-week" type="button">
+      Next week <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>`;
+
+  document.getElementById('prev-week').onclick = () => { curMon = addDays(curMon, -7); load(); };
+  document.getElementById('next-week').onclick = () => { curMon = addDays(curMon, 7); load(); };
+  const jump = document.getElementById('week-jump');
+  jump.onchange = (e) => { if (e.target.value) { curMon = mondayOf(e.target.value); load(); } };
+  document.getElementById('pick-week').onclick = () => {
+    jump.value = curMon;
+    if (jump.showPicker) jump.showPicker(); else jump.focus();
+  };
+}
+
 async function load() {
   const root = document.getElementById('content');
+  root.innerHTML = `<div class="loading"><div class="spinner"></div>Loading the week…</div>`;
 
   try {
-    let mon = MON, sun = SUN, thu = THU, preview = false;
-    let items = await airtableGetAll(TABLES.todos, `AND({Scheduled date} >= "${mon}", {Scheduled date} <= "${sun}")`);
+    let mon = curMon, preview = false;
+    let items = await airtableGetAll(TABLES.todos, `AND({Scheduled date} >= "${mon}", {Scheduled date} <= "${addDays(mon, 6)}")`);
 
-    // Summer / break week: jump forward to the first populated week.
-    if (items.length === 0) {
+    // Empty week (summer / break): jump forward to the first populated week — once.
+    if (items.length === 0 && !load._jumped) {
       const next = await earliestDateFrom(mon);
       if (next) {
-        const d = new Date(next + 'T00:00:00');
-        const dow = d.getDay() || 7;
-        d.setDate(d.getDate() - (dow - 1));
-        mon = iso(d); thu = addDays(mon, 3); sun = addDays(mon, 6); preview = true;
-        items = await airtableGetAll(TABLES.todos, `AND({Scheduled date} >= "${mon}", {Scheduled date} <= "${sun}")`);
+        mon = mondayOf(next); curMon = mon; preview = true; load._jumped = true;
+        items = await airtableGetAll(TABLES.todos, `AND({Scheduled date} >= "${mon}", {Scheduled date} <= "${addDays(mon, 6)}")`);
       }
     }
+    const thu = addDays(mon, 3);
 
+    renderWeekNav();
     document.getElementById('week-range').textContent =
-      `${preview ? 'Previewing the first week — ' : ''}Week of ${fmtShort(mon)}–${fmtShort(thu)}. What's planned, where to lean in, and how to make it real.`;
+      `${preview ? 'Jumping to the first week — ' : ''}Use the arrows or the calendar to look ahead. What's planned, where to lean in, how to make it real.`;
 
     root.innerHTML = '';
 
     if (items.length === 0) {
-      root.innerHTML = `<div class="view-banner">Nothing scheduled yet. The year kicks off ${new Date(CURRICULUM.yearStart + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}.</div>`;
+      root.innerHTML = `<div class="view-banner">Nothing scheduled the week of ${fmtShort(mon)} — likely a break week. Jump to another week above.</div>`;
       return;
     }
 

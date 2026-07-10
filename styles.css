@@ -618,6 +618,88 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
 .status-badge.preview { background: var(--mustard); color: var(--ink); }
 
 /* =========================================================
+   Focus timer (Read / Khan cards)
+   ========================================================= */
+.timer {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.timer-display {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  min-width: 3.4ch;
+}
+.timer.running .timer-display { color: var(--teal); }
+.timer.done .timer-display { color: var(--success); }
+.timer-btns { display: flex; gap: 8px; margin-left: auto; }
+.timer .btn { padding: 7px 14px; }
+.timer-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+
+/* =========================================================
+   Calendar / week navigation
+   ========================================================= */
+.cal-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px;
+}
+.date-jump-wrap { position: relative; display: inline-flex; }
+/* native date input sits invisibly over its trigger button */
+.date-jump {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; cursor: pointer; border: none;
+}
+.week-nav {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 22px; flex-wrap: wrap;
+}
+.week-nav .btn { flex-shrink: 0; }
+.week-nav-center { flex: 1; text-align: center; min-width: 0; }
+.week-nav-label { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; line-height: 1.05; }
+.week-nav-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+/* =========================================================
+   Show It quiz
+   ========================================================= */
+.quiz-q { margin-bottom: 18px; }
+.quiz-q:last-child { margin-bottom: 0; }
+.quiz-q-text { font-weight: 700; font-size: 0.98rem; margin-bottom: 10px; line-height: 1.4; }
+.quiz-opt {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 11px 14px;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.12s;
+  font-size: 0.92rem; line-height: 1.4;
+}
+.quiz-opt:hover { transform: translateX(2px); }
+.quiz-opt input { margin-top: 3px; accent-color: var(--coral); width: 16px; height: 16px; flex-shrink: 0; }
+.quiz-opt.selected { background: #F6E4BE; }
+.quiz-opt.correct { background: #D9EFE0; border-color: var(--success); }
+.quiz-opt.incorrect { background: #FBD9D3; border-color: var(--coral); }
+.quiz-opt.reveal { outline: 2px dashed var(--success); outline-offset: 2px; }
+.quiz-result {
+  font-family: var(--serif); font-weight: 600; font-size: 1.2rem;
+  padding: 12px 14px; border-radius: var(--radius-sm);
+  border: 2px solid var(--ink); margin: 4px 0 14px;
+  background: var(--cream);
+}
+.quiz-locked { pointer-events: none; opacity: 0.95; }
+
+/* =========================================================
    Responsive
    ========================================================= */
 @media (max-width: 768px) {

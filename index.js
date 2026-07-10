@@ -126,6 +126,19 @@ document.getElementById('back-today').addEventListener('click', () => {
   loadTodos();
 });
 
+// Jump to any date via the native calendar
+const dateJump = document.getElementById('date-jump');
+dateJump.addEventListener('change', (e) => {
+  if (!e.target.value) return;
+  viewDate = e.target.value;
+  loadTodos();
+});
+document.getElementById('pick-date').addEventListener('click', () => {
+  dateJump.value = viewDate;
+  if (dateJump.showPicker) dateJump.showPicker();
+  else dateJump.focus();
+});
+
 // ── Silly facts (rotate daily) ──
 
 const SILLY_FACTS = [
@@ -196,6 +209,21 @@ function buildCard(rec, mode) {
 
   const isDone = f['Status'] === 'Done';
 
+  // Timed items (Read / Khan) get a native focus timer in today mode
+  const timerMatch = (f['Item name'] || '').match(/(\d+)\s*minutes/i);
+  const timerMin = (mode === 'today' && timerMatch) ? parseInt(timerMatch[1], 10) : null;
+  const timerHtml = timerMin ? `
+    <div class="timer" data-min="${timerMin}">
+      <div>
+        <div class="timer-label">Focus timer</div>
+        <div class="timer-display">${timerMin}:00</div>
+      </div>
+      <div class="timer-btns">
+        <button class="btn btn-primary timer-start" type="button">▶ Start</button>
+        <button class="btn btn-ghost timer-reset" type="button">↻ Reset</button>
+      </div>
+    </div>` : '';
+
   const card = document.createElement('div');
   card.className = 'card todo-card';
   if (mode === 'today') card.classList.add('card-clickable');
@@ -241,17 +269,65 @@ function buildCard(rec, mode) {
     ${mode === 'today' && carried > 0 ? `<div class="carried-label">↩ Carried over ${carried} day${carried > 1 ? 's' : ''}</div>` : ''}
     <div class="todo-title">${f['Item name'] || 'Untitled'}</div>
     <div class="todo-ican">${f['I Can statement'] || ''}</div>
+    ${timerHtml}
     ${actionsHtml}
   `;
 
+  if (timerMin) attachTimer(card, timerMin);
+
   if (mode === 'today') {
     card.addEventListener('click', (e) => {
-      if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.done-form')) return;
+      if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.done-form') || e.target.closest('.timer')) return;
       window.location.href = href;
     });
   }
 
   return card;
+}
+
+function attachTimer(card, minutes) {
+  const el      = card.querySelector('.timer');
+  const display = el.querySelector('.timer-display');
+  const startBtn = el.querySelector('.timer-start');
+  const resetBtn = el.querySelector('.timer-reset');
+  let remaining = minutes * 60;
+  let ticking = false;
+  let intervalId = null;
+
+  function render() {
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    display.textContent = `${m}:${String(s).padStart(2, '0')}`;
+  }
+  function stop() {
+    clearInterval(intervalId); intervalId = null; ticking = false;
+    el.classList.remove('running');
+    startBtn.textContent = remaining === 0 ? '▶ Start' : '▶ Resume';
+  }
+  function start() {
+    if (ticking) { stop(); startBtn.textContent = '▶ Resume'; return; }
+    if (remaining === 0) remaining = minutes * 60;
+    ticking = true;
+    el.classList.add('running'); el.classList.remove('done');
+    startBtn.textContent = '⏸ Pause';
+    intervalId = setInterval(() => {
+      remaining--;
+      render();
+      if (remaining <= 0) {
+        stop();
+        el.classList.add('done');
+        display.textContent = 'Done! ⏰';
+        startBtn.textContent = '▶ Again';
+        showToast('Time\'s up — nice focus! ✓');
+      }
+    }, 1000);
+  }
+  startBtn.addEventListener('click', start);
+  resetBtn.addEventListener('click', () => {
+    stop(); remaining = minutes * 60; el.classList.remove('done');
+    render(); startBtn.textContent = '▶ Start';
+  });
+  render();
 }
 
 function openDoneForm(recordId) {

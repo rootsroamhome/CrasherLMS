@@ -52,15 +52,54 @@ function learnItHtml(lesson) {
     </div>`;
 }
 
-function checksHtml(lesson) {
-  return (lesson.checks || []).map((check, idx) => `
-    <div class="check-option">
-      <div class="check-option-title">Option ${idx + 1}: ${check.type}</div>
-      <div class="check-option-desc">
-        ${check.questions ? check.questions.map(q => `<p style="margin-bottom:6px;">${q}</p>`).join('') : check.prompt}
-      </div>
+let QUIZ = [];
+let quizScore = null;
+
+function quizHtml(lesson) {
+  QUIZ = lesson.quiz || [];
+  const qs = QUIZ.map((item, qi) => `
+    <div class="quiz-q" data-qi="${qi}">
+      <div class="quiz-q-text">${qi + 1}. ${item.q}</div>
+      ${item.options.map((opt, oi) => `
+        <label class="quiz-opt" data-qi="${qi}" data-oi="${oi}">
+          <input type="radio" name="q${qi}" value="${oi}" onchange="selectOpt(${qi},${oi})" />
+          <span>${opt}</span>
+        </label>`).join('')}
     </div>`).join('');
+
+  return `
+    ${qs}
+    <button class="btn btn-primary" id="check-quiz" onclick="checkQuiz()">Check my answers</button>
+    <div id="quiz-result"></div>
+    <div style="margin-top:22px; padding-top:18px; border-top:2px dashed var(--line);">
+      <div class="content-section-title" style="margin-bottom:8px;">✍️ One more — in your own words</div>
+      <p style="margin-bottom:10px;">${lesson.short || ''}</p>
+      <textarea id="short-answer" class="rh-input" placeholder="Type your answer here…" style="min-height:90px;"></textarea>
+    </div>`;
 }
+
+window.selectOpt = function (qi, oi) {
+  document.querySelectorAll(`.quiz-opt[data-qi="${qi}"]`).forEach(el => el.classList.remove('selected'));
+  document.querySelector(`.quiz-opt[data-qi="${qi}"][data-oi="${oi}"]`).classList.add('selected');
+};
+
+window.checkQuiz = function () {
+  let correct = 0;
+  QUIZ.forEach((item, qi) => {
+    const chosen = document.querySelector(`input[name="q${qi}"]:checked`);
+    const chosenOi = chosen ? parseInt(chosen.value, 10) : null;
+    document.querySelector(`.quiz-opt[data-qi="${qi}"][data-oi="${item.answer}"]`).classList.add('correct');
+    if (chosenOi === item.answer) correct++;
+    else if (chosenOi !== null) document.querySelector(`.quiz-opt[data-qi="${qi}"][data-oi="${chosenOi}"]`).classList.add('incorrect');
+    document.querySelectorAll(`.quiz-q[data-qi="${qi}"] .quiz-opt`).forEach(el => el.classList.add('quiz-locked'));
+  });
+  quizScore = `${correct}/${QUIZ.length}`;
+  const emoji = correct === QUIZ.length ? '🎉' : (correct >= QUIZ.length / 2 ? '👍' : '💪');
+  const msg = correct === QUIZ.length ? 'Perfect score!' : 'Green shows the right answer — read any you missed.';
+  document.getElementById('quiz-result').innerHTML = `<div class="quiz-result">${emoji} You got ${correct} of ${QUIZ.length}. ${msg}</div>`;
+  const btn = document.getElementById('check-quiz');
+  btn.disabled = true; btn.textContent = 'Checked ✓';
+};
 
 async function loadLesson() {
   const main = document.getElementById('content-main');
@@ -92,11 +131,10 @@ async function loadLesson() {
         ${(lesson.unit || unit) ? `<span style="font-size:0.76rem; color:var(--text-dim);">${lesson.unit || unit}</span>` : ''}`;
       document.getElementById('lesson-title').textContent = lesson.title;
       document.getElementById('lesson-content').innerHTML = learnItHtml(lesson);
-      document.getElementById('check-options').innerHTML = checksHtml(lesson);
+      document.getElementById('check-options').innerHTML = quizHtml(lesson);
     }
 
     document.getElementById('done-area').innerHTML = `
-      <textarea id="notes-content" class="rh-input" placeholder="Your answer, or where your work lives (Drive link, notebook, told a parent)…" style="min-height:110px;"></textarea>
       <button class="btn btn-success" onclick="markDone()">✓ Mark This Done</button>`;
 
   } catch (e) {
@@ -106,7 +144,12 @@ async function loadLesson() {
 }
 
 window.markDone = async function () {
-  const notes = document.getElementById('notes-content')?.value.trim() || '';
+  const shortAns = document.getElementById('short-answer')?.value.trim() || '';
+  const parts = [];
+  if (quizScore) parts.push(`Quiz: ${quizScore}`);
+  else if (QUIZ.length) parts.push('Quiz: not checked');
+  if (shortAns) parts.push(`Short answer: ${shortAns}`);
+  const notes = parts.join('\n') || 'Marked done';
   try {
     const res = await fetch(`${CONFIG.apiBase}/${encodeURIComponent(TABLES.todos)}/${recordId}`, {
       method: 'PATCH',
