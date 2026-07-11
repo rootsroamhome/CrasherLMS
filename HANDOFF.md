@@ -1,5 +1,12 @@
 # HomeSkewl — where we are (updated 2026-07-10, third pass)
 
+> **New:** the project is now documented in [`docs/README.md`](docs/README.md) (index +
+> recap), [`docs/STYLE-GUIDE.md`](docs/STYLE-GUIDE.md) (design system + hard rules incl. the
+> real-photos-only rule, colors, fonts, loading), and
+> [`docs/BUILDING-MATH-UNITS.md`](docs/BUILDING-MATH-UNITS.md) (how to build the rest of the
+> year's math units). This HANDOFF is still the running state log.
+
+
 ## Latest pass — Today rebuilt around the units, mastery view, clean readers
 The date-locked to-do list is **retired as the front door.** The site now runs on the units:
 - **Math unit (`unit-math-proportions.js`).** First real math unit — "Proportional Relationships"
