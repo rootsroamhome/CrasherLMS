@@ -15,6 +15,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>Today</span>
     </a>
+    <a href="unit.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+      <span>My Unit</span>
+    </a>
     <a href="this-week.html" class="nav-link">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg>
       <span>This Week</span>
@@ -27,32 +31,27 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span>Parents</span>
     </a>
-    <a href="learning-review.html" class="nav-link">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      <span>Review</span>
-    </a>
   </div>
 </nav>
 
 <main class="page">
   <div class="page-header">
     <h1>The Big Picture</h1>
-    <div class="date">Progress overview — all units, all standards</div>
+    <div class="date">Everything Crasher has done in the units — progress, quiz results, vocab, and every answer he's written.</div>
   </div>
 
-  <!-- Stats row -->
   <div class="stats-grid" id="stats-grid">
-    <div class="stat-card"><div class="stat-number" id="stat-done" style="color:var(--success)">–</div><div class="stat-label">Done This Week</div></div>
-    <div class="stat-card"><div class="stat-number" id="stat-stuck" style="color:#EF4444">–</div><div class="stat-label">Stuck (3+ days)</div></div>
-    <div class="stat-card"><div class="stat-number" id="stat-standards" style="color:var(--text-muted)">–</div><div class="stat-label">Standards Done</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-cards" style="color:var(--teal)">–</div><div class="stat-label">Cards Done</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-quiz" style="color:var(--success)">–</div><div class="stat-label">Avg Quiz Score</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-words" style="color:#D19A1F">–</div><div class="stat-label">Words Owned</div></div>
   </div>
 
-  <div id="content">
-    <div class="loading"><div class="spinner"></div>Loading…</div>
-  </div>
+  <div id="content"><div class="loading"><div class="spinner"></div>Reading his work…</div></div>
 </main>
 
 <script src="config.js"></script>
+<script src="unit-rivers.js"></script>
+<script src="unit-metals.js"></script>
 <script src="big-picture.js"></script>
 </body>
 </html>

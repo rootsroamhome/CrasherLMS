@@ -1,7 +1,34 @@
-# HomeSkewl — where we are (updated 2026-07-10, second pass)
+# HomeSkewl — where we are (updated 2026-07-10, third pass)
+
+## Latest pass — Today rebuilt around the units, mastery view, clean readers
+The date-locked to-do list is **retired as the front door.** The site now runs on the units:
+- **Today (`index.html`/`index.js`) is now units-driven and Airtable-free.** It shows one
+  "Today's lesson" card — the next unlocked card of the unit he's in — which links straight
+  into My Unit at that card (shows "Start"/"Continue" + progress bar). Below it, an
+  **"Every day"** strip with Math and Independent Reading, each with a focus timer.
+  **Nothing rolls over:** the daily "done today" checks are stored under the local date
+  (`homeskewl_daily_<YYYY-MM-DD>`) and simply reset next day — no carry-forward anywhere.
+  Edit the `DAILY` array at the top of `index.js` to change the daily anchors.
+- **Big Picture (`big-picture.html`/`big-picture.js`) is now a mastery + portfolio dashboard.**
+  It reads every unit's localStorage and shows, per unit: cards done, quiz accuracy (with a
+  per-lesson bar chart), vocab "words owned" (with the fuzzy words as a study list), the KWL,
+  and **every written answer he's typed**, reconstructed prompt-by-prompt. Top row totals
+  across all units. This is the answer to "where do his answers go / how do we see mastery."
+  Caveat: it reads *this browser's* localStorage, so it reflects the device he works on —
+  true cross-device sync is still the open Airtable to-do.
+- **Clean reading panes (`reader.html`/`reader.js` + `readings.js`).** Any lesson reading that
+  used to link to an outside site (USGS, Britannica) now opens an in-app, ad-free, printable
+  reading pane instead. Primary sources got real text: Gilgamesh's flood, the Code of
+  Hammurabi, Yu the Great, the Shield of Achilles (Hephaestus), Ogun. Plus two research
+  "reading room" pages (four river civilizations; materials that changed the world). 9 docs total.
+- **All lesson links open in a new tab** (external resources + readings), so the lesson never
+  gets navigated away from. Internal unit navigation and the "All lessons" map stay in-tab.
+- **Nav is consistent everywhere now:** Today · My Unit · This Week · Big Picture · Parents.
+  (The old "Review" link was dropped from the nav; `learning-review.html` still exists.)
 
 Everything below is committed to git and live at **https://homeskewl.netlify.app**.
 A fresh session can pick up from this file + `CLAUDE.md` + the repo — nothing lives only in chat.
+(Units 1–2 and the year map from the earlier passes are all still current — see below.)
 
 ## The direction we landed on
 Moving from a **date-locked daily to-do list** to **interdisciplinary, self-paced thematic units**
@@ -79,15 +106,23 @@ view. Focus timers on the 30-min items. Photos are **paused** (Wikipedia hotlink
 
 ## Next steps
 1. Get Crasher's real feel for Units 1–2 (pacing/depth); his minutes-per-card and quiz results
-   should shape how Unit 3 gets built.
+   (now visible on the Big Picture dashboard) should shape how Unit 3 gets built.
 2. Build Units 3–6 per `docs/YEAR-MAP.md` (Unit 3 = Deep Time & the Restless Earth is next).
-3. Decide whether to point the "Today" home screen at the current unit's next card (+ a daily
-   math/reading strip) so there's one front door.
-4. Sync unit progress → Big Picture / Parents page (currently localStorage only).
-5. Revisit photos with a reliable source.
-6. Spot-check the TED-Ed embed in Unit 2's launch card plays (yt id `yQP4UJhNn0I`).
+   Any new reading that would link off-site should get a `readings.js` entry + `reader.html?doc=` link.
+3. **Cross-device sync** — the dashboard reads localStorage, so it only sees the device he works
+   on. If Danielle wants to review his answers from her own phone/laptop, that needs a real sync
+   (Airtable or similar). This is the main open item now.
+4. Revisit photos with a reliable source.
+5. Spot-check the TED-Ed embed in Unit 2's launch card plays (yt id `yQP4UJhNn0I`).
+6. DONE this pass: Today points at the current unit card; daily strip w/ timers, no rollover;
+   mastery/answers dashboard; clean in-app readers; all lesson links open in a new tab.
 
-## The older system (still present, being superseded)
-Date-based to-do list: `index.html`/`index.js`, `lesson.html`/`lesson.js`/`lessons.js`,
-`this-week.*`, `big-picture.*`, `parent-guide.*`, `learning-review.*`, Airtable (429 dated items,
-loaded by `populate-7th-grade.mjs`). Fine to keep for now; the unit model is the future.
+## The older system (mostly superseded)
+- `index.html`/`index.js` and `big-picture.*` were **rewritten this pass** (Today + mastery,
+  both units-driven, no Airtable). They no longer touch the date-list.
+- Still Airtable-backed and unchanged: `this-week.*` (the weekly Self-Study/Rabbit-Hole pick still
+  posts a Done record), `parent-guide.*` (parent planning from `curriculum.js`), `lesson.html`/
+  `lesson.js`/`lessons.js` (the old generic science-lesson renderer + all its content — note the
+  Humanities units in `lessons.js` are the raw material for building units 3–6), `learning-review.*`.
+- Airtable still holds the 381 dated items (`populate-7th-grade.mjs`); nothing reads them on the
+  Today page anymore, but the parent/this-week pages do. Safe to leave.

@@ -1,230 +1,164 @@
 /**
- * big-picture.js — Parent overview page
- * All Airtable calls go through the /api/airtable proxy.
+ * big-picture.js — mastery + portfolio dashboard.
+ *
+ * Reads every unit (window.HS_UNITS) and the work Crasher saved in
+ * localStorage — which cards are done, quiz scores, vocab self-sort, KWL,
+ * and every written answer — and lays it out so a teacher can see progress,
+ * mastery signals, and his actual writing in one place.
+ *
+ * NOTE: this reads the browser's localStorage, so it shows the work done on
+ * THIS device. (Cross-device sync to a shared database is a separate to-do.)
  */
 
-const TODAY_BP       = new Date().toISOString().split('T')[0];
-const SEVEN_DAYS_AGO = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+const HS_UNITS = window.HS_UNITS || [];
 
-async function airtableGetAll(table, filterFormula) {
-  const all = [];
-  let offset = null;
+function unitState(id) { try { return JSON.parse(localStorage.getItem('homeskewl_unit_' + id)) || {}; } catch (e) { return {}; } }
+function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function pct(n, d) { return d ? Math.round(n / d * 100) : 0; }
 
-  do {
-    const params = new URLSearchParams();
-    if (filterFormula) params.set('filterByFormula', filterFormula);
-    params.set('pageSize', '100');
-    if (offset) params.set('offset', offset);
+/* Pull a tidy summary of one unit's saved work. */
+function analyze(u) {
+  const s = unitState(u.id);
+  const done = s.done || {}, ans = s.ans || {}, quiz = s.quiz || {}, sort = s.sort || {}, kwl = s.kwl || {};
+  const total = u.cards.length;
+  const doneCount = u.cards.filter(c => done[c.id]).length;
 
-    const url  = `${CONFIG.apiBase}/${encodeURIComponent(table)}?${params}`;
-    const res  = await fetch(url);
-    const json = await res.json();
-    if (!res.ok) {
-      const msg = (typeof json.error === 'string' ? json.error : json.error?.message) || `HTTP ${res.status}`;
-      throw new Error(msg);
+  // Quizzes: parse "3/4" scores that were saved.
+  let quizGot = 0, quizMax = 0; const quizRows = [];
+  u.cards.forEach(c => {
+    const hasQuiz = c.blocks.some(b => b.type === 'quiz');
+    if (!hasQuiz) return;
+    const raw = quiz[c.id];
+    if (raw && raw.includes('/')) {
+      const [g, m] = raw.split('/').map(Number);
+      quizGot += g; quizMax += m;
+      quizRows.push({ n: c.n, title: c.title, got: g, max: m });
+    } else {
+      quizRows.push({ n: c.n, title: c.title, got: null, max: c.blocks.find(b => b.type === 'quiz').questions.length });
     }
+  });
 
-    all.push(...(json.records || []));
-    offset = json.offset || null;
-  } while (offset);
+  // Vocab self-sort.
+  const words = u.vocab.mustOwn.map(v => v.term);
+  const got = words.filter(w => sort[w] === 'got').length;
+  const fuzzy = words.filter(w => sort[w] === 'fuzzy');
 
-  return all;
+  return { s, done, ans, kwl, total, doneCount, quizGot, quizMax, quizRows, words, got, fuzzy, sorted: got + fuzzy.length };
 }
 
-function subjectColor(subject) {
-  return SUBJECT_COLORS[subject] || { accent: '#64748B', label: '#94A3B8', bg: '#1E293B' };
+/* Meter row: label, count text, and a filled bar. */
+function meter(label, text, value, color) {
+  return `<div class="bp-meter">
+    <div class="bp-meter-top"><span>${label}</span><span class="bp-meter-val">${esc(text)}</span></div>
+    <div class="bp-meter-bar"><div style="width:${value}%; background:${color};"></div></div>
+  </div>`;
 }
 
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
-function el(tag, cls, html) {
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-  if (html) e.innerHTML = html;
-  return e;
-}
-
-function renderUnits(todos) {
-  const units = {};
-  const unitsBySubject = {};
-
-  for (const r of todos) {
-    if (['Self-Study', 'Rabbit Hole'].includes(r.fields['Subject'])) continue;
-    const unit    = r.fields['Unit'] || 'Uncategorized';
-    const subject = r.fields['Subject'] || 'Unknown';
-    if (!units[unit]) units[unit] = { subject, total: 0, done: 0 };
-    units[unit].total++;
-    if (r.fields['Status'] === 'Done') units[unit].done++;
-  }
-
-  if (Object.keys(units).length === 0) return el('p', 'empty-msg', 'No units yet — add items in Airtable to see progress here.');
-
-  // Group units by subject
-  for (const [name, data] of Object.entries(units)) {
-    const subject = data.subject;
-    if (!unitsBySubject[subject]) unitsBySubject[subject] = [];
-    unitsBySubject[subject].push({ name, data });
-  }
-
-  const container = document.createDocumentFragment();
-
-  // Render each subject section
-  for (const [subject, unitList] of Object.entries(unitsBySubject)) {
-    const color = subjectColor(subject).accent;
-    const section = el('div', 'subject-section');
-    section.innerHTML = `<div class="subject-section-title" style="color:${color};">📚 ${subject}</div>`;
-
-    const grid = el('div', 'unit-grid');
-    const tile = subjectColor(subject).tile || 'var(--card)';
-    for (const { name, data } of unitList) {
-      const pct    = data.total > 0 ? Math.round((data.done / data.total) * 100) : 0;
-      const status = pct === 100 ? '✓ Complete' : pct > 0 ? 'In Progress' : 'Not Started';
-      const card   = el('div', 'unit-card');
-      card.style.setProperty('--tile', tile);
-      card.style.setProperty('--card-accent', color);
-      card.innerHTML = `
-        <div class="unit-name">${name}</div>
-        <div class="unit-progress-bar"><div class="unit-progress-fill" style="width:${pct}%; background:${color};"></div></div>
-        <div class="unit-count">${data.done}/${data.total} done · ${status}</div>
-      `;
-      grid.appendChild(card);
+/* Every written answer for one card, reconstructed from block structure. */
+function cardWork(u, c, a) {
+  const parts = [];
+  c.blocks.forEach((b, bi) => {
+    if (b.type === 'answers') {
+      b.prompts.forEach((p, pi) => {
+        const v = a[`${c.id}_${bi}_${pi}`];
+        parts.push(`<div class="bp-qa">
+          <div class="bp-q">${esc(p)}</div>
+          <div class="bp-a${v ? '' : ' empty'}">${v ? esc(v) : '— not answered yet —'}</div>
+        </div>`);
+      });
     }
-    section.appendChild(grid);
-    container.appendChild(section);
-  }
-
-  return container;
-}
-
-function renderStandards(standards) {
-  if (standards.length === 0) return el('p', 'empty-msg', 'No standards added yet.');
-
-  const bySubject = {};
-  for (const r of standards) {
-    const subj = r.fields['Subject'] || 'Unknown';
-    if (!bySubject[subj]) bySubject[subj] = [];
-    bySubject[subj].push(r);
-  }
-
-  const container = document.createDocumentFragment();
-  for (const [subj, rows] of Object.entries(bySubject)) {
-    const color   = subjectColor(subj).accent;
-    const section = el('div', 'subject-section');
-    section.innerHTML = `<div class="subject-section-title" style="color:${color};">${subj}</div>`;
-    const list = el('div');
-    for (const r of rows) {
-      const done = r.fields['Completed'] === true;
-      const row  = el('div', 'standard-row');
-      row.innerHTML = `
-        <div class="standard-check ${done ? 'done' : 'pending'}">${done ? '✓' : ''}</div>
-        <div>
-          <div class="standard-code">${r.fields['Standard code'] || ''}</div>
-          <div class="standard-ican">${r.fields['I Can statement'] || ''}</div>
-          ${done && r.fields['Completion date'] ? `<div class="completion-date">Completed ${formatDate(r.fields['Completion date'])}</div>` : ''}
-        </div>
-      `;
-      list.appendChild(row);
+    if (b.type === 'build' && b.photo) {
+      const v = a[`${c.id}_${bi}_photo`];
+      if (v) parts.push(`<div class="bp-qa"><div class="bp-q">${esc(b.title || 'Build')} — photo/link</div><div class="bp-a"><a href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a></div></div>`);
     }
-    section.appendChild(list);
-    container.appendChild(section);
-  }
-  return container;
+    if (b.type === 'rubric') {
+      const checks = b.items.map((it, ii) => `<li class="${a[`${c.id}_${bi}_r${ii}`] === 'y' ? 'on' : ''}">${esc(it)}</li>`).join('');
+      parts.push(`<div class="bp-qa"><div class="bp-q">Self-check</div><ul class="bp-rubric">${checks}</ul></div>`);
+    }
+  });
+  if (!parts.length) return '';
+  return `<div class="bp-workcard"><div class="bp-workcard-title">${c.n}. ${esc(c.title)}</div>${parts.join('')}</div>`;
 }
 
-function renderRecent(todos) {
-  const recent = todos
-    .filter(r => r.fields['Unit'] !== 'Self-Study' && r.fields['Status'] === 'Done' && r.fields['Completion date'] >= SEVEN_DAYS_AGO)
-    .sort((a, b) => (b.fields['Completion date'] || '').localeCompare(a.fields['Completion date'] || ''));
+function unitBlock(u) {
+  const d = analyze(u);
+  const quizAvg = d.quizMax ? pct(d.quizGot, d.quizMax) : null;
+  const gotPct = pct(d.got, d.words.length);
+  const donePct = pct(d.doneCount, d.total);
 
-  if (recent.length === 0) return el('p', 'empty-msg', 'Nothing completed in the last 7 days yet.');
+  // Quiz bar chart (one bar per quiz card).
+  const chart = d.quizRows.map(r => {
+    const h = r.got === null ? 0 : pct(r.got, r.max);
+    const label = r.got === null ? '–' : `${r.got}/${r.max}`;
+    const col = r.got === null ? 'var(--line)' : (h === 100 ? 'var(--success)' : h >= 50 ? 'var(--teal)' : '#F0533F');
+    return `<div class="bp-bar"><div class="bp-bar-fill" style="height:${Math.max(h, 4)}%; background:${col};"></div>
+      <div class="bp-bar-num">${label}</div><div class="bp-bar-cap">#${r.n}</div></div>`;
+  }).join('');
 
-  const list = el('div');
-  for (const r of recent) {
-    const color = subjectColor(r.fields['Subject']).accent;
-    const row   = el('div', 'completion-row');
-    row.innerHTML = `
-      <div style="font-size:0.7rem; color:${color}; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${r.fields['Subject']}</div>
-      <div class="completion-item">${r.fields['Item name'] || 'Untitled'}</div>
-      ${r.fields['Student notes'] ? `<div class="completion-notes">"${r.fields['Student notes']}"</div>` : ''}
-      <div class="completion-date">${formatDate(r.fields['Completion date'])}</div>
-    `;
-    list.appendChild(row);
-  }
-  return list;
+  // Vocab: got / fuzzy / untouched segmented bar + study list.
+  const untouched = d.words.length - d.sorted;
+  const vocabBar = `<div class="bp-seg">
+    <div style="flex:${d.got}; background:var(--success);" title="Got it: ${d.got}"></div>
+    <div style="flex:${d.fuzzy.length}; background:#D19A1F;" title="Fuzzy: ${d.fuzzy.length}"></div>
+    <div style="flex:${Math.max(untouched, 0)}; background:var(--cream-2);" title="Not rated: ${untouched}"></div>
+  </div>`;
+
+  // KWL
+  const kwl = (d.kwl.k || d.kwl.w || d.kwl.l) ? `<div class="bp-kwl">
+    <div><span>Knew going in</span><p>${esc(d.kwl.k) || '<em>—</em>'}</p></div>
+    <div><span>Wanted to know</span><p>${esc(d.kwl.w) || '<em>—</em>'}</p></div>
+    <div><span>Learned by the end</span><p>${esc(d.kwl.l) || '<em>(not finished)</em>'}</p></div>
+  </div>` : '';
+
+  const work = u.cards.map(c => cardWork(u, c, d.ans)).filter(Boolean).join('');
+
+  return `<section class="bp-unit">
+    <div class="bp-unit-head">
+      <h2>${esc(u.title)}</h2>
+      <p class="bp-eq">${esc(u.eq)}</p>
+    </div>
+
+    <div class="bp-meters">
+      ${meter('Cards done', `${d.doneCount} / ${d.total}`, donePct, 'var(--teal)')}
+      ${meter('Quiz accuracy', quizAvg === null ? 'no quizzes yet' : `${quizAvg}% (${d.quizGot}/${d.quizMax})`, quizAvg || 0, 'var(--success)')}
+      ${meter('Words owned', `${d.got} / ${d.words.length}`, gotPct, '#D19A1F')}
+    </div>
+
+    ${d.quizRows.length ? `<details class="bp-detail"><summary>Quiz scores by lesson</summary>
+      <div class="bp-chart">${chart}</div></details>` : ''}
+
+    <details class="bp-detail"><summary>Vocabulary self-check</summary>
+      ${vocabBar}
+      <div class="bp-legend"><span class="dot-got"></span>Got it (${d.got}) <span class="dot-fuzzy"></span>Still fuzzy (${d.fuzzy.length}) <span class="dot-none"></span>Not rated (${Math.max(untouched, 0)})</div>
+      ${d.fuzzy.length ? `<div class="bp-studylist"><strong>Study list:</strong> ${d.fuzzy.map(esc).join(' · ')}</div>` : ''}
+    </details>
+
+    ${kwl ? `<details class="bp-detail"><summary>KWL — what he knew, wanted, and learned</summary>${kwl}</details>` : ''}
+
+    <details class="bp-detail" open><summary>His written work (${work ? 'his answers' : 'nothing yet'})</summary>
+      ${work || '<p class="empty-msg">No written answers saved for this unit yet.</p>'}
+    </details>
+  </section>`;
 }
 
-function renderStuck(todos) {
-  const stuck = todos.filter(r => !['Self-Study','Rabbit Hole'].includes(r.fields['Subject']) && r.fields['Status'] !== 'Done' && (r.fields['Days carried'] || 0) >= 3);
-  if (stuck.length === 0) return el('p', 'empty-msg', 'Nothing stuck — great!');
-
-  const list = el('div');
-  for (const r of stuck) {
-    const color = subjectColor(r.fields['Subject']).accent;
-    const days  = r.fields['Days carried'] || 0;
-    const row   = el('div', 'completion-row');
-    row.innerHTML = `
-      <div style="font-size:0.7rem; color:${color}; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${r.fields['Subject']}</div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span class="completion-item">${r.fields['Item name'] || 'Untitled'}</span>
-        <span class="stuck-badge">↩ ${days} days</span>
-      </div>
-      <div class="completion-date">Scheduled ${formatDate(r.fields['Scheduled date'])}</div>
-    `;
-    list.appendChild(row);
-  }
-  return list;
-}
-
-
-function section(title, icon, content) {
-  const wrap = document.createElement('div');
-  wrap.style.marginBottom = '28px';
-  const hdr = el('div', 'section-label');
-  hdr.innerHTML = `${icon} ${title}`;
-  wrap.appendChild(hdr);
-  if (content instanceof Node || content instanceof DocumentFragment) {
-    wrap.appendChild(content);
-  } else {
-    wrap.insertAdjacentHTML('beforeend', content);
-  }
-  return wrap;
-}
-
-async function load() {
+function load() {
   const content = document.getElementById('content');
-  try {
-    const [todos, standards] = await Promise.all([
-      airtableGetAll(TABLES.todos),
-      airtableGetAll(TABLES.standards),
-    ]);
+  if (!HS_UNITS.length) { content.innerHTML = '<p class="empty-msg">No units loaded.</p>'; return; }
 
-    const thisWeek      = todos.filter(r => r.fields['Unit'] !== 'Self-Study' && r.fields['Completion date'] >= SEVEN_DAYS_AGO && r.fields['Status'] === 'Done');
-    const stuck         = todos.filter(r => !['Self-Study','Rabbit Hole'].includes(r.fields['Subject']) && r.fields['Status'] !== 'Done' && (r.fields['Days carried'] || 0) >= 3);
-    const standardsDone = standards.filter(r => r.fields['Completed'] === true);
+  let cardsDone = 0, cardsTotal = 0, qGot = 0, qMax = 0, wGot = 0, wTotal = 0;
+  HS_UNITS.forEach(u => {
+    const d = analyze(u);
+    cardsDone += d.doneCount; cardsTotal += d.total;
+    qGot += d.quizGot; qMax += d.quizMax;
+    wGot += d.got; wTotal += d.words.length;
+  });
 
-    document.getElementById('stat-done').textContent      = thisWeek.length;
-    document.getElementById('stat-stuck').textContent     = stuck.length;
-    document.getElementById('stat-standards').textContent = `${standardsDone.length}/${standards.length}`;
+  document.getElementById('stat-cards').textContent = `${cardsDone}/${cardsTotal}`;
+  document.getElementById('stat-quiz').textContent = qMax ? `${pct(qGot, qMax)}%` : '–';
+  document.getElementById('stat-words').textContent = `${wGot}/${wTotal}`;
 
-    content.innerHTML = '';
-    content.appendChild(section('Unit Progress',                       '📊', renderUnits(todos)));
-    content.appendChild(section('Standards Tracker',                   '📋', renderStandards(standards)));
-    content.appendChild(section('Completed in the Last 7 Days',        '✓',  renderRecent(todos)));
-    content.appendChild(section('Items That Might Be Stuck (3+ days)', '⚠️', renderStuck(todos)));
-
-  } catch (e) {
-    content.innerHTML = `
-      <div class="empty-state">
-        <div class="big-emoji">⚠️</div>
-        <h2>Couldn't load data</h2>
-        <p>${e.message}</p>
-      </div>
-    `;
-    console.error(e);
-  }
+  content.innerHTML = HS_UNITS.map(unitBlock).join('') +
+    `<p class="bp-footnote">This page reads the work saved in this browser on this device. It's a running picture of his thinking — the quiz and vocab numbers are signals to talk about, not grades.</p>`;
 }
 
 load();

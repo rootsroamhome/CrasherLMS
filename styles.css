@@ -1045,3 +1045,127 @@ textarea.u-ans { min-height: 84px; }
   .track-grid { grid-template-columns: 1fr; }
   input, textarea, select { font-size: 16px !important; }
 }
+
+/* =========================================================
+   Today landing (units-driven) · reading panes · dashboard
+   Added in the "link the unit into Today + mastery" pass.
+   ========================================================= */
+
+/* ── Today landing ── */
+.today-hero { margin-bottom: 26px; }
+.today-date { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); }
+.today-greeting { font-family: var(--serif); font-size: 2.4rem; line-height: 1.05; margin: 4px 0 10px; }
+.today-fact { font-size: 1rem; color: var(--text-muted); max-width: 62ch; line-height: 1.5; }
+
+.today-lesson { display: block; text-decoration: none; color: var(--ink); background: var(--tile, var(--cream-2));
+  border: 2.5px solid var(--ink); border-radius: var(--radius); padding: 22px 22px 18px; margin-bottom: 30px;
+  box-shadow: 5px 5px 0 rgba(26,26,26,0.12); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.today-lesson:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 rgba(26,26,26,0.16); }
+.today-eyebrow { font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-soft); }
+.today-lesson-title { font-family: var(--serif); font-size: 1.9rem; line-height: 1.1; margin: 6px 0 12px; }
+.today-lesson-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.today-min, .today-standards { font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); }
+.today-lesson-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.today-go { font-weight: 800; font-size: 1.02rem; }
+.today-unit-progress { font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); }
+.today-lesson-bar { height: 8px; background: rgba(26,26,26,0.12); border-radius: 20px; overflow: hidden; margin-top: 12px; }
+.today-lesson-bar > div { height: 100%; border-radius: 20px; }
+.today-lesson-done { background: var(--cream-2); }
+
+.daily-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 12px 0 26px; }
+.daily-card { background: var(--tile, var(--cream-2)); border: 2.5px solid var(--ink); border-radius: var(--radius);
+  padding: 16px 16px 14px; box-shadow: 4px 4px 0 rgba(26,26,26,0.1); }
+.daily-card.is-done { opacity: 0.62; }
+.daily-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.daily-min { font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); }
+.daily-title { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; }
+.daily-note { font-size: 0.88rem; color: var(--ink-soft); margin: 4px 0 12px; line-height: 1.45; }
+.daily-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.daily-card .timer { background: rgba(255,255,255,0.55); }
+
+.today-week { display: flex; justify-content: space-between; align-items: center; gap: 12px; text-decoration: none;
+  color: var(--ink); background: var(--paper); border: 2px dashed var(--ink); border-radius: var(--radius-sm);
+  padding: 14px 18px; font-size: 0.95rem; transition: background 0.15s ease; }
+.today-week:hover { background: var(--cream-2); }
+.today-week-go { font-weight: 800; font-size: 1.1rem; }
+
+/* ── Reading pane ── */
+.reader-page { max-width: 760px; }
+.reader-doc { background: var(--paper); border: 2px solid var(--ink); border-radius: var(--radius);
+  padding: 40px 44px; box-shadow: 5px 5px 0 rgba(26,26,26,0.1); }
+.reader-eyebrow { font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal); }
+.reader-title { font-family: var(--serif); font-size: 2.3rem; line-height: 1.08; margin: 8px 0 6px; }
+.reader-sub { font-size: 1.05rem; font-style: italic; color: var(--text-muted); margin-bottom: 22px; }
+.reader-body { font-family: var(--serif); font-size: 1.12rem; line-height: 1.72; color: #26221d; }
+.reader-body h2 { font-family: var(--sans); font-size: 1.05rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--teal); margin: 30px 0 8px; }
+.reader-body p { margin: 0 0 15px; }
+.reader-body ul { margin: 0 0 15px; padding-left: 22px; }
+.reader-body li { margin-bottom: 7px; }
+.reader-body blockquote { margin: 18px 0; padding: 14px 20px; border-left: 4px solid var(--teal);
+  background: var(--cream-2); border-radius: 0 8px 8px 0; font-size: 1.05rem; }
+.reader-body blockquote p:last-child { margin-bottom: 0; }
+.reader-source { font-size: 0.82rem; color: var(--text-dim); font-style: italic; margin-top: 26px;
+  padding-top: 14px; border-top: 1px solid var(--line); }
+.reader-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+@media print {
+  .nav, .reader-actions { display: none !important; }
+  .reader-doc { border: none; box-shadow: none; padding: 0; }
+  body { background: #fff; }
+}
+
+/* read-block links to readers (inside lessons) */
+.read-links { font-size: 0.92rem; font-weight: 600; margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line); }
+
+/* ── Big Picture: mastery + portfolio ── */
+.bp-unit { background: var(--paper); border: 2px solid var(--ink); border-radius: var(--radius);
+  padding: 22px 22px 10px; margin-bottom: 26px; box-shadow: 4px 4px 0 rgba(26,26,26,0.08); }
+.bp-unit-head h2 { font-family: var(--serif); font-size: 1.7rem; line-height: 1.1; margin: 0; }
+.bp-eq { font-size: 0.95rem; font-style: italic; color: var(--text-muted); display: block; margin: 4px 0 16px; }
+.bp-meters { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 6px; }
+.bp-meter-top { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 5px; }
+.bp-meter-val { color: var(--text-muted); }
+.bp-meter-bar { height: 12px; background: var(--cream-2); border: 1.5px solid var(--ink); border-radius: 20px; overflow: hidden; }
+.bp-meter-bar > div { height: 100%; border-radius: 20px; transition: width 0.5s ease; }
+
+.bp-detail { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 6px; }
+.bp-detail > summary { cursor: pointer; font-weight: 700; font-size: 0.92rem; padding: 8px 0; list-style: none; }
+.bp-detail > summary::-webkit-details-marker { display: none; }
+.bp-detail > summary::before { content: '▸ '; color: var(--teal); }
+.bp-detail[open] > summary::before { content: '▾ '; }
+
+.bp-chart { display: flex; align-items: flex-end; gap: 8px; height: 130px; padding: 10px 4px 0; }
+.bp-bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+.bp-bar-fill { width: 70%; min-height: 4px; border-radius: 5px 5px 0 0; border: 1.5px solid var(--ink); border-bottom: none; }
+.bp-bar-num { font-size: 0.68rem; font-weight: 800; margin-top: 4px; }
+.bp-bar-cap { font-size: 0.66rem; color: var(--text-dim); }
+
+.bp-seg { display: flex; height: 18px; border: 1.5px solid var(--ink); border-radius: 20px; overflow: hidden; margin: 8px 0; }
+.bp-seg > div { min-width: 0; }
+.bp-legend { font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.bp-legend span[class^="dot-"] { width: 11px; height: 11px; border-radius: 50%; display: inline-block; border: 1px solid var(--ink); margin-left: 8px; }
+.dot-got { background: var(--success); }
+.dot-fuzzy { background: #D19A1F; }
+.dot-none { background: var(--cream-2); }
+.bp-studylist { font-size: 0.88rem; margin-top: 10px; padding: 10px 12px; background: var(--cream-2); border-radius: 8px; }
+
+.bp-kwl { display: grid; gap: 10px; }
+.bp-kwl > div span { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--teal); }
+.bp-kwl > div p { margin: 3px 0 0; font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap; }
+
+.bp-workcard { margin: 10px 0 4px; padding: 14px 16px; background: var(--cream-2); border-radius: var(--radius-sm); }
+.bp-workcard-title { font-weight: 800; font-size: 0.98rem; margin-bottom: 10px; }
+.bp-qa { margin-bottom: 12px; }
+.bp-q { font-size: 0.86rem; font-weight: 700; color: var(--text-muted); margin-bottom: 3px; }
+.bp-a { font-size: 0.98rem; line-height: 1.55; white-space: pre-wrap; background: var(--paper); border: 1px solid var(--line);
+  border-radius: 8px; padding: 9px 12px; }
+.bp-a.empty { color: var(--text-dim); font-style: italic; background: transparent; border-style: dashed; }
+.bp-a a { color: var(--teal); word-break: break-all; }
+.bp-rubric { list-style: none; padding: 0; margin: 0; }
+.bp-rubric li { font-size: 0.92rem; padding: 3px 0 3px 24px; position: relative; color: var(--text-dim); }
+.bp-rubric li::before { content: '☐'; position: absolute; left: 0; }
+.bp-rubric li.on { color: var(--ink); }
+.bp-rubric li.on::before { content: '☑'; color: var(--success); }
+
+.bp-footnote { font-size: 0.82rem; color: var(--text-dim); font-style: italic; max-width: 66ch; margin-top: 8px; }
+.empty-msg { color: var(--text-dim); font-size: 0.92rem; }

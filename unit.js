@@ -248,6 +248,13 @@ function render() {
     ${cardHtml(viewCard, status)}`;
 
   wire(viewCard, status);
+
+  // Every outside resource or reading opens in a new tab, so the lesson stays
+  // put. (Internal unit navigation and the map's "#" jumps are left alone.)
+  document.querySelectorAll('#unit-app a[href^="http"], #unit-app a[href^="reader.html"]').forEach(a => {
+    a.target = '_blank'; a.rel = 'noopener';
+  });
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

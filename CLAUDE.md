@@ -14,7 +14,17 @@ Homeschool LMS for one middle-school student (going into 7th grade). Daily to-do
 
 ## File Map
 ```
-index.html / index.js       — Daily to-do list (main page) w/ date nav + rotating fun facts
+index.html / index.js       — "Today" landing (units-driven, NO Airtable): the current unit's next
+                              card links into My Unit, + a daily Math/Reading strip w/ focus timers.
+                              Daily checks are date-keyed in localStorage and never roll over.
+unit.html / unit.js          — Self-paced unit renderer. Loads every unit-*.js (they self-register
+                              into window.HS_UNITS); ?u=<id> selects one. Progress/answers/quizzes
+                              per unit in localStorage. All external + reading links open new tab.
+unit-rivers.js / unit-metals.js — Unit content (Unit 1, Unit 2). Same card/block schema.
+reader.html / reader.js / readings.js — Clean, ad-free, printable reading panes at reader.html?doc=<id>.
+                              Lessons link here instead of outside sites; readings.js holds the text.
+big-picture.html / .js       — Mastery + portfolio dashboard (units-driven, NO Airtable): reads each
+                              unit's localStorage → cards done, quiz chart, vocab, KWL, every answer.
 this-week.html / .js         — Weekly Self-Study ⇄ Rabbit Hole choice (pick per week, saved in localStorage)
 lesson.html / lesson.js      — ONE generic science lesson renderer; matches ?recordId item name → LESSONS
 lessons.js                   — All science lesson content (hook / Learn It / Show It), keyed by item-name phrase
@@ -32,7 +42,17 @@ populate-7th-grade.mjs       — Rebuilds the 2026–27 year (To-Do Items + Stan
 populate-schedule.mjs / repopulate-todos.mjs / setup-airtable.mjs — Older one-time scripts (superseded)
 ```
 
-## Adding / editing science lessons
+## Adding / editing a thematic unit (the current model)
+Each unit is one `unit-<id>.js` file that does `window.HS_UNITS.push({ id, short, title, eq,
+vocab:{mustOwn,frayer}, cards:[…] })`. Add the file to the `<script>` list in `unit.html`,
+`index.html`, and `big-picture.html` (all three read HS_UNITS). Cards are ordered; each has
+`{id, n, title, subject, minutes, standards, blocks:[…]}`. Block types the renderer understands:
+hook, video (`yt` embed or `url` link-out), read (inline `body` and/or `url` → prefer
+`reader.html?doc=…`), answers, build, quiz, flashcards, matching, frayer, kwl/kwlback/kwlfinish,
+vocabsort, rubric, prose, deeper, next, done. Off-site readings should get a `readings.js` entry
+and link via `reader.html?doc=<id>`. See `docs/YEAR-MAP.md` for the planned units + standards map.
+
+## Adding / editing science lessons (older date-list model)
 A science To-Do item links to `lesson.html` and its **Item name** contains a phrase
 (e.g. `Atoms & Molecules — Learn It`). `lesson.js` matches that phrase against a key in
 `lessons.js`. To add a lesson: add an entry to `LESSONS` in `lessons.js`, then schedule
@@ -63,10 +83,17 @@ Stored in `.env.local` (gitignored). Read them with: `cat .env.local`
 - Weekly rhythm: Math + independent Reading daily; Humanities Mon/Wed; Science Tue/Thu; the Self-Study⇄Rabbit-Hole pick on Mon.
 - `repopulate-todos.mjs` is the OLD summer loader — do not run it; use `populate-7th-grade.mjs` to reset the year.
 
-## Key Behaviors
-- **index.js:** Loads `Not Started` items with `Scheduled date <= today`. Carry-forward increments `Days carried` once per calendar day (localStorage flag). Carry-forward is fire-and-forget (non-blocking).
-- **Date navigation:** Prev/Next buttons on index page. Past = read-only. Future = grayed preview. "Back to Today" button appears when not on today's date.
-- **Mark Done flow:** Opens inline form, student enters where work is stored, PATCH updates Status + Completion date + Student notes.
-- **Fetch timeout:** All fetches abort at 10 seconds.
+## Key Behaviors (current, units model)
+- **Today (index.js):** picks the "active" unit = first unit not 100% done, shows its next unlocked
+  card as a deep link into `unit.html?u=<id>`. Daily Math/Reading anchors live in the `DAILY` array;
+  their "done today" flags are keyed by **local** date and never carry over.
+- **Unit progression (unit.js):** the next card unlocks when the current one is Marked Done. No dates.
+  Answers/quiz/KWL/vocab/match all autosave to `localStorage['homeskewl_unit_<id>']`.
+- **Big Picture (big-picture.js):** reconstructs answer keys from block structure
+  (`<cardId>_<blockIndex>_<promptIndex>`) to show every saved answer; reads localStorage only.
+- **New-tab links:** unit.js forces `target=_blank` on every `http` and `reader.html` link inside a
+  lesson; internal unit nav + the map's `#` jumps stay in-tab.
+- *(Legacy, still used by this-week.js / parent-guide.js:)* Airtable fetches abort at 10s; the old
+  date-list / carry-forward logic was removed from index.js this pass.
 
 → See [`docs/deployment.md`](docs/deployment.md) for Netlify setup details.
