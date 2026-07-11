@@ -1,4 +1,4 @@
-# HomeSkewl — where we are (updated 2026-07-10)
+# HomeSkewl — where we are (updated 2026-07-10, second pass)
 
 Everything below is committed to git and live at **https://homeskewl.netlify.app**.
 A fresh session can pick up from this file + `CLAUDE.md` + the repo — nothing lives only in chat.
@@ -29,6 +29,38 @@ dates — the next lesson unlocks when the current one is marked done, so nothin
   build, quiz, flashcards, matching, frayer, kwl/kwlback/kwlfinish, vocabsort, rubric, prose, deeper, next, done.
 - UX niceties done: preview any card from the map (no commitment), one-click un-mark-done, reset progress.
 
+## Unit 2 — Metals & the Rise of Empires (BUILT + LIVE)
+- Reach it at **`/unit.html?u=metals`** — the unit page now has a **unit switcher** (pill links
+  in the header showing each unit's progress). `?u=<id>` picks the unit; progress is saved
+  per-unit in localStorage (`homeskewl_unit_<id>`), so Unit 1 progress was untouched.
+- Files: `unit-metals.js` (content). Unit files now self-register into `window.HS_UNITS`
+  (`unit-rivers.js` was converted to the same pattern); `unit.js` renders whichever is selected.
+  The KWL block takes per-unit `klabel`/`wlabel` overrides now.
+- **Essential question:** How does changing what things are made of change who has power?
+- Braid: matter & chemical reactions (MS-PS1-1…6) + Bronze/Iron Age trade & empires + forge
+  myths and argument writing. **16 cards**, same shape as Unit 1:
+  1 Launch (atoms video + vocab + KWL) · 2–3 Atoms & Elements A/B (molecule models build) ·
+  4–5 What Heat Does A/B (food-coloring particle build) · 6–7 Chemical Reactions A/B
+  (sealed-bag conservation-of-mass build, matching #1) · 8 From Rock to Metal (smelting,
+  bronze, Frayer × 3) · 9–10 Biography of a Material project A/B (Canva) · 11 The Tin Problem
+  (Uluburun wreck, monopoly→tribute→empire chain, Bronze Age Collapse) · 12 The Forge in Story
+  (Hephaestus + Ogun, myth/compare writing, matching #2) · 13 Iron: The Metal for Everyone
+  (Assyria, plow vs sword, argument seed) · 14 Our Material: Lithium (his ebike battery,
+  McDermitt Caldera/Thacker Pass — the local + modern hook) · 15–16 Reflection A/B.
+- Deliberate echoes of Unit 1: the dominoes chain (surplus→specialization) restarts with iron;
+  card 14 mirrors card 14 of Unit 1 (a "our backyard" lesson); same assessment tiers
+  (quizzes/matching → Canva project → synthesis + self-rubric).
+- Vocab: 15 must-own (atom → monopoly), Frayer on chemical reaction / alloy / empire.
+- One embedded video (TED-Ed "Just How Small Is an Atom?", yt `yQP4UJhNn0I`) — worth a
+  click-through check; other videos use the search-link pattern.
+
+## Year map (NEW — read before building Unit 3)
+**`docs/YEAR-MAP.md`** holds the full 6-unit year plan: themes, essential questions, which
+science/SS/ELA standards each unit OWNS vs revisits, and a coverage table showing every
+standard is hit. Short version: 3 Deep Time & the Restless Earth · 4 A Connected World ·
+5 When the Ground Shifts (choice novel) · 6 Power (capstone, closes the loop to rivers +
+metals). Units 1–2 built; 3–6 to build after Crasher road-tests these.
+
 ## The teacher's stated preferences (Danielle — a professional teacher)
 - Wants real interdisciplinary planning (used Catlin Tucker's framework), no cherry-picking standards,
   natural pacing (don't cram or stretch), Oregon pacing guides as reference.
@@ -46,14 +78,14 @@ view. Focus timers on the 30-min items. Photos are **paused** (Wikipedia hotlink
 `lessons.js` has a loremflickr fallback + `LESSON_PHOTOS` curated Wikipedia URLs to revisit).
 
 ## Next steps
-1. Get Crasher's real feel for Unit 1 (pacing/depth), iterate on this unit.
-2. Build the rest of the year's units using Unit 1 as the template (same framework + block types).
-   Themes roughly follow the science/history arc already scoped in `curriculum.js` / `lessons.js`.
-3. Produce a **year-long standards coverage map** so every standard is hit across the units.
-4. Decide whether to point the "Today" home screen at the current unit's next card (+ a daily
+1. Get Crasher's real feel for Units 1–2 (pacing/depth); his minutes-per-card and quiz results
+   should shape how Unit 3 gets built.
+2. Build Units 3–6 per `docs/YEAR-MAP.md` (Unit 3 = Deep Time & the Restless Earth is next).
+3. Decide whether to point the "Today" home screen at the current unit's next card (+ a daily
    math/reading strip) so there's one front door.
-5. Sync unit progress → Big Picture / Parents page (currently localStorage only).
-6. Revisit photos with a reliable source.
+4. Sync unit progress → Big Picture / Parents page (currently localStorage only).
+5. Revisit photos with a reliable source.
+6. Spot-check the TED-Ed embed in Unit 2's launch card plays (yt id `yQP4UJhNn0I`).
 
 ## The older system (still present, being superseded)
 Date-based to-do list: `index.html`/`index.js`, `lesson.html`/`lesson.js`/`lessons.js`,

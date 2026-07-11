@@ -11,8 +11,10 @@
  *   matching, frayer, kwl, reflection, prose, deeper, next
  */
 
-const UNIT = {
+window.HS_UNITS = window.HS_UNITS || [];
+window.HS_UNITS.push({
   id: 'rivers',
+  short: 'Unit 1 · Rivers',
   title: 'Rivers & the Rise of Civilization',
   eq: 'How do rivers shape the way people live — and how do people shape rivers back?',
 
@@ -285,6 +287,4 @@ const UNIT = {
     },
 
   ],
-};
-
-if (typeof module !== 'undefined') module.exports = { UNIT };
+});

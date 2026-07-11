@@ -1,11 +1,14 @@
 /**
- * unit.js — self-paced renderer + progression for the Rivers unit.
- * Reads UNIT (unit-rivers.js). Everything (answers, quiz scores, KWL, vocab
- * self-sort, which cards are done) is saved to localStorage, so it's fully
- * contained in-app and survives refreshes. No due dates — the next card
- * unlocks when the current one is marked done.
+ * unit.js — self-paced renderer + progression for the thematic units.
+ * Reads window.HS_UNITS (unit-*.js files register themselves); ?u=<id> picks
+ * the unit, defaulting to the first. Everything (answers, quiz scores, KWL,
+ * vocab self-sort, which cards are done) is saved to localStorage per unit,
+ * so it's fully contained in-app and survives refreshes. No due dates — the
+ * next card unlocks when the current one is marked done.
  */
 
+const HS_UNITS = window.HS_UNITS || [];
+const UNIT = HS_UNITS.find(u => u.id === new URLSearchParams(location.search).get('u')) || HS_UNITS[0];
 const LS_KEY = 'homeskewl_unit_' + UNIT.id;
 let state = {};
 let viewId = null;
@@ -26,6 +29,13 @@ function currentIndex() {
   return UNIT.cards.length - 1;
 }
 function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function unitDoneCount(u) {
+  try {
+    const s = JSON.parse(localStorage.getItem('homeskewl_unit_' + u.id)) || {};
+    return Object.keys(s.done || {}).filter(k => s.done[k]).length;
+  } catch (e) { return 0; }
+}
 
 /* ── block renderers ─────────────────────────────────────────── */
 
@@ -122,9 +132,9 @@ function blockHtml(card, b, bi) {
       return `<div class="u-block u-kwl">
         <div class="u-sec">🧠 What you're bringing in</div>
         ${b.prompt ? `<p class="u-focus">${esc(b.prompt)}</p>` : ''}
-        <label class="u-prompt">What I think I already know about rivers &amp; the first cities:
+        <label class="u-prompt">${esc(b.klabel || 'What I think I already know about rivers & the first cities:')}
           <textarea class="rh-input u-kwl-k" placeholder="Type here…">${esc(state.kwl.k || '')}</textarea></label>
-        <label class="u-prompt">What I'm curious about / want to figure out:
+        <label class="u-prompt">${esc(b.wlabel || "What I'm curious about / want to figure out:")}
           <textarea class="rh-input u-kwl-w" placeholder="Type here…">${esc(state.kwl.w || '')}</textarea></label></div>`;
 
     case 'kwlback':
@@ -218,8 +228,14 @@ function render() {
   const doneCount = Object.keys(state.done).filter(k => state.done[k]).length;
   const pct = Math.round((doneCount / UNIT.cards.length) * 100);
 
+  const switcher = HS_UNITS.length > 1 ? `<div class="u-switch">${HS_UNITS.map(u => {
+    const d = unitDoneCount(u);
+    return `<a class="u-switch-link${u.id === UNIT.id ? ' on' : ''}" href="unit.html?u=${u.id}">${esc(u.short || u.title)}${d ? ` · ${d}/${u.cards.length}` : ''}</a>`;
+  }).join('')}</div>` : '';
+
   document.getElementById('unit-app').innerHTML = `
     <div class="u-head">
+      ${switcher}
       <div class="hero-title">${esc(UNIT.title)}</div>
       <p class="hero-sub">${esc(UNIT.eq)}</p>
       <div class="u-progress">
