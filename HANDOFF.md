@@ -45,8 +45,11 @@ The date-locked to-do list is **retired as the front door.** The site now runs o
     **click-to-toggle by hand** (persisted in `localStorage['homeskewl_standards']`) for work done
     outside the units (e.g. daily Khan math). This is the FULL set on purpose: gaps between the units
     and the standards are meant to be visible so units can be adjusted or supplemented. Edit `STANDARDS`
-    to change it. (Note: the units' own `standards` strings still use the older CCSS/NGSS codes; only
-    this checklist is on the Oregon codes.)
+    to change it. The units' own per-lesson `standards` tags were **also converted to the Oregon codes**
+    (via `scratchpad/convert-standards.js`) so lesson tags match the checklist exactly; every code a
+    lesson shows is on the checklist. (Two judgment calls in that conversion: the water-cycle lessons
+    map to `7.ESS2.1` — Oregon has no grade-7 water-cycle PE — and the economics strand `7.E` maps to
+    `7.E.ST.10`, specialization & trade.)
 - **Clean reading panes (`reader.html`/`reader.js` + `readings.js`).** Any lesson reading that
   used to link to an outside site (USGS, Britannica) now opens an in-app, ad-free, printable
   reading pane instead. Primary sources got real text: Gilgamesh's flood, the Code of

@@ -81,7 +81,7 @@ window.HS_UNITS.push({
     /* ───────────────── PHASE 1 · WATER & LAND ───────────────── */
     {
       id: 'launch', n: 1, title: 'Launch — Where would you build a city?',
-      subject: 'Science · Humanities', minutes: 40, standards: 'MS-ESS3-1 · 7.G.GR.1',
+      subject: 'Science · Humanities', minutes: 40, standards: '7.ESS3.1 · 7.G.GR.1',
       blocks: [
         { type: 'hook', text: 'Fill a gallon jug. That is every drop of water on Earth. Now pour off the oceans, the ice caps, and the water buried too deep to reach — and what you can actually drink is about <b>one tablespoon</b>. That tiny amount is always on the move, and for four billion years people have chased it. Almost every great city in history was built on the same thing: a river.' },
         { type: 'video', title: 'NASA — The Water Cycle', yt: '0_c0ZzZfC8c', focus: 'Watch how water never sits still — it is always going somewhere.' },
@@ -92,7 +92,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'cycle-a', n: 2, title: 'Water Cycle · A', subject: 'Science', minutes: 30, standards: 'MS-ESS2-4',
+      id: 'cycle-a', n: 2, title: 'Water Cycle · A', subject: 'Science', minutes: 30, standards: '7.ESS2.1',
       blocks: [
         { type: 'hook', text: 'Every day, the sun lifts about a trillion tons of water off Earth\'s surface into the sky — no pumps, no wires, just sunlight. The water cycle is the biggest solar-powered machine on the planet, and it has run the same loop for four billion years. The rain on your window has been ocean, cloud, and river before — probably more than once.' },
         { type: 'video', title: 'NASA — Earth\'s Water Cycle', yt: 'c_M9qp3lwcU', focus: 'One thing to figure out: where does the water go, and what is pushing it?' },
@@ -107,7 +107,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'cycle-b', n: 3, title: 'Water Cycle · B', subject: 'Science', minutes: 30, standards: 'MS-ESS2-4',
+      id: 'cycle-b', n: 3, title: 'Water Cycle · B', subject: 'Science', minutes: 30, standards: '7.ESS2.1',
       blocks: [
         { type: 'build', title: 'Make it rain', minutes: 15, steps: '<ol><li>Pour <b>hot</b> water into a clear jar or glass until it is about a third full.</li><li>Rest a plate on top and pile a few <b>ice cubes</b> on the plate.</li><li>Watch for a couple of minutes. Warm vapor rises (evaporation), hits the cold plate and turns to droplets (condensation), and "rains" back down (precipitation).</li></ol>', photo: true, photoLabel: 'Snap a photo of your rain-in-a-jar and paste the link (optional):' },
         { type: 'answers', prompts: [
@@ -124,7 +124,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'land-a', n: 4, title: 'Water Shapes Land · A', subject: 'Science', minutes: 30, standards: 'MS-ESS2-2 · MS-ESS2-1',
+      id: 'land-a', n: 4, title: 'Water Shapes Land · A', subject: 'Science', minutes: 30, standards: '7.ESS2.2 · 7.ESS2.1',
       blocks: [
         { type: 'hook', text: 'A river is a sculptor and a farmer at the same time. Moving water is soft, but given enough time it cuts through solid rock — the Grand Canyon is a mile deep because a river spent millions of years sawing downward. And everything it carves away, it carries downstream and drops somewhere else, building the flattest, richest farmland on the planet.' },
         { type: 'video', title: 'How rivers shape the land (erosion & deposition)', url: 'https://www.youtube.com/results?search_query=rivers+erosion+deposition+landforms+geography', watch: true, focus: 'Watch for two opposite jobs: carving (erosion) and dropping (deposition).' },
@@ -137,7 +137,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'land-b', n: 5, title: 'Water Shapes Land · B', subject: 'Science', minutes: 35, standards: 'MS-ESS2-2',
+      id: 'land-b', n: 5, title: 'Water Shapes Land · B', subject: 'Science', minutes: 35, standards: '7.ESS2.2',
       blocks: [
         { type: 'build', title: 'Build a river (stream table)', minutes: 25, steps: '<ol><li>Fill a baking pan or plastic tray with a few inches of <b>sand or soil</b>. Prop one end up on a book so it slopes.</li><li>Slowly pour water at the <b>high</b> end and watch it carve a channel down the slope — that is erosion.</li><li>Watch what happens at the <b>low</b> end: the water slows and drops its load, building a little fan of sediment. That is a delta forming.</li><li>Try pouring faster, then slower. Does the river carve differently?</li></ol>', photo: true, photoLabel: 'Photo of your stream table (optional):' },
         { type: 'answers', prompts: [
@@ -155,7 +155,7 @@ window.HS_UNITS.push({
 
     /* ───────────────── PHASE 2 · PEOPLE & CIVILIZATION ───────────────── */
     {
-      id: 'cities-a', n: 6, title: 'Floodplains → Cities · A', subject: 'Humanities · Science', minutes: 35, standards: '7.G.HI.4 · 7.H.CH.3 · MS-LS2-1',
+      id: 'cities-a', n: 6, title: 'Floodplains → Cities · A', subject: 'Humanities · Science', minutes: 35, standards: '7.G.HI.4 · 7.H.CH.3 · 7.LS2.1',
       blocks: [
         { type: 'hook', text: 'Here is the most important chain reaction in human history. A river floods and lays down fresh silt. The floodplain grows so much food that, for the first time ever, a family can grow <b>more than it needs</b>. That extra food is called a surplus — and it changes everything.' },
         { type: 'read', title: 'The chain that built the first cities', source: 'read', body: '<p>Follow the dominoes:</p><p><b>Fertile floodplain</b> → so much food that farmers grow a <b>surplus</b> → not everyone has to farm anymore → freed-up people take <b>specialized</b> jobs (potters, priests, scribes, soldiers, metalworkers) → those specialists gather together → you get <b>cities</b>, a <b>government</b> to organize it all, and <b>writing</b> to keep track. That whole package is a <b>civilization</b>.</p><p>It happened independently in four river valleys: the <b>Tigris and Euphrates</b> (Mesopotamia), the <b>Nile</b> (Egypt), the <b>Indus</b> (Pakistan/India), and the <b>Huang He</b> or Yellow River (China). Same recipe, four different rivers. The river came first. The civilization grew out of it.</p>' },
@@ -179,7 +179,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'mesopotamia', n: 8, title: 'A Civilization Up Close: Mesopotamia', subject: 'Humanities · ELA', minutes: 45, standards: '7.H.CH.3 · 7.C.PI.1 · RI.7.1',
+      id: 'mesopotamia', n: 8, title: 'A Civilization Up Close: Mesopotamia', subject: 'Humanities · ELA', minutes: 45, standards: '7.H.CH.3 · 7.C.PI.1 · 7.RI.1',
       blocks: [
         { type: 'hook', text: 'The very first writing was not poetry or history — it was receipts. In Mesopotamia, so much grain was moving around that people needed a way to keep track, so they pressed marks into clay with a reed. That system, <b>cuneiform</b>, started as accounting and ended up recording the oldest stories on Earth.' },
         { type: 'read', title: 'Mesopotamia: the land between the rivers', source: 'clean reading', url: 'reader.html?doc=mesopotamia', body: '<p>Read the clean version for the whole story. Hold these in your head:</p><ul><li>Cities like Uruk ran as <b>city-states</b> — each city was its own little country with its own ruler and god.</li><li>They dug <b>irrigation</b> canals to spread river water to fields farther from the banks — engineering their way to more surplus.</li><li>They invented the wheel, the plow, written law, and the 60-minute hour (that is why an hour still has 60 minutes).</li></ul>' },
@@ -193,7 +193,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'portrait-a', n: 9, title: 'Portrait of a Civilization · A', subject: 'Humanities · ELA', minutes: 35, standards: '7.H.CH.3 · W.7.2',
+      id: 'portrait-a', n: 9, title: 'Portrait of a Civilization · A', subject: 'Humanities · ELA', minutes: 35, standards: '7.H.CH.3 · 7.W.2',
       blocks: [
         { type: 'prose', body: '<p>Time for the project. You are going to build a <b>Portrait of a River Civilization</b> — a Canva presentation, a poster, or a model — that teaches someone else what made your civilization tick. First, pick one and gather your facts. You will build it in the next card.</p>' },
         { type: 'answers', prompts: [
@@ -212,7 +212,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'portrait-b', n: 10, title: 'Portrait of a Civilization · B', subject: 'Humanities · ELA', minutes: 45, standards: 'W.7.2 · SL.7.4',
+      id: 'portrait-b', n: 10, title: 'Portrait of a Civilization · B', subject: 'Humanities · ELA', minutes: 45, standards: '7.W.2 · 7.SL.4',
       blocks: [
         { type: 'build', title: 'Build your portrait', minutes: 40, steps: '<p>Turn your notes into a <b>Canva presentation</b> (or a poster/model) with a slide or section for each: where &amp; when, food &amp; the river, jobs, government, and your one amazing thing. Make it something you would actually want to look at. <a href="https://www.canva.com/create/presentations/" target="_blank" rel="noopener" class="choice-link">Open Canva ↗</a></p><p>Checklist before you call it done: clear title · all five parts covered · at least one image · it connects the civilization back to its river.</p>', photo: true, photoLabel: 'Paste the link to your finished portrait:' },
         { type: 'answers', prompts: [
@@ -224,7 +224,7 @@ window.HS_UNITS.push({
 
     /* ───────────────── PHASE 3 · POWER & HOME ───────────────── */
     {
-      id: 'myths-a', n: 11, title: 'Flood Myths · A', subject: 'ELA', minutes: 35, standards: 'RL.7.2 · RL.7.9',
+      id: 'myths-a', n: 11, title: 'Flood Myths · A', subject: 'ELA', minutes: 35, standards: '7.RL.2 · 7.RL.9',
       blocks: [
         { type: 'hook', text: 'The same flood that fed a civilization could also drown it. That terror shows up in the oldest stories humans ever wrote — nearly every river culture has a great-flood myth. They are not just scary tales; they are how people made sense of a force they could not control.' },
         { type: 'read', title: 'Two floods: Gilgamesh and Yu the Great', source: 'read', body: '<p><b>The Flood in the Epic of Gilgamesh</b> (Mesopotamia, ~4,000 years old): the gods, annoyed with noisy humans, send a flood to wipe them out. One man is warned to build a giant boat and save his family and animals. Sound familiar? It is centuries older than the Noah story and almost certainly related.</p><p><b>Yu the Great</b> (China): instead of a hero who just <em>survives</em> the flood, Yu <b>engineers</b> his way out of it — he spends 13 years digging channels to drain the floodwaters to the sea. For taming the river, he is made the first emperor. Two cultures, two totally different answers to the same river.</p><p class="read-links">📄 Read the full stories: <a href="reader.html?doc=gilgamesh-flood">The Flood of Gilgamesh ↗</a> · <a href="reader.html?doc=yu-the-great">Yu the Great ↗</a></p>' },
@@ -236,7 +236,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'myths-b', n: 12, title: 'Flood Myths · B', subject: 'ELA', minutes: 35, standards: 'W.7.3 · RL.7.9',
+      id: 'myths-b', n: 12, title: 'Flood Myths · B', subject: 'ELA', minutes: 35, standards: '7.W.3 · 7.RL.9',
       blocks: [
         { type: 'prose', body: '<p>Pick one:</p><ul><li><b>Write your own river myth</b> — a short story that explains a flood, a drought, or why a river bends where it does. Give it characters and a lesson.</li><li><b>Compare the two</b> — write a paragraph on how Gilgamesh\'s flood and Yu the Great are alike and different, and what each says about its people.</li></ul>' },
         { type: 'answers', prompts: [
@@ -247,7 +247,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'harness', n: 13, title: 'Harnessing Rivers: Dams & Power', subject: 'Humanities · Science', minutes: 45, standards: '7.C.PI.1 · MS-ESS3',
+      id: 'harness', n: 13, title: 'Harnessing Rivers: Dams & Power', subject: 'Humanities · Science', minutes: 45, standards: '7.C.PI.1 · 7.ESS3.1',
       blocks: [
         { type: 'hook', text: 'Yu the Great became emperor for controlling a river — and that is the whole back half of this story. Whoever controls the water controls the food, and whoever controls the food controls the people. Rivers did not just grow civilizations; they became the ultimate source of power. And with modern dams, a river can literally power a city.' },
         { type: 'video', title: 'How hydroelectric dams work', url: 'https://www.youtube.com/results?search_query=how+hydroelectric+dam+works+explained', watch: true, focus: 'Watch how falling water gets turned into electricity.' },
@@ -283,7 +283,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'reflect-b', n: 16, title: 'Reflection · B — Your Answer', subject: 'Portfolio', minutes: 40, standards: 'W.7.2 · synthesis',
+      id: 'reflect-b', n: 16, title: 'Reflection · B — Your Answer', subject: 'Portfolio', minutes: 40, standards: '7.W.2 · synthesis',
       blocks: [
         { type: 'prose', body: '<p>This is the whole unit in one place. Answer the essential question using what you learned — the science, the history, a myth, and the Rogue. Work in at least <b>five</b> of the unit words.</p><blockquote>How do rivers shape the way people live — and how do people shape rivers back?</blockquote>' },
         { type: 'answers', prompts: [
