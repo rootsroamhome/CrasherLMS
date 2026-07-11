@@ -927,6 +927,9 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
 #unit-app.theme-math { --u-accent: #D19A1F; --u-accent-soft: #F4CE5E; }
 #unit-app.theme-math .btn-primary { background: var(--u-accent); color: #fff; }
 #unit-app.theme-math .u-eyebrow { color: var(--u-accent); }
+#unit-app.theme-clep { --u-accent: var(--plum); --u-accent-soft: #C9A6D9; }
+#unit-app.theme-clep .btn-primary { background: var(--u-accent); color: #fff; }
+#unit-app.theme-clep .u-eyebrow { color: var(--u-accent); }
 .u-head { margin-bottom: 24px; }
 .u-switch-wrap { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
 .u-switch-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-dim); margin-bottom: 7px; }
@@ -938,8 +941,11 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
 .u-switch-group.core  .u-switch-link.on { background: var(--teal); color: #fff; }
 .u-switch-group.math  .u-switch-link { border-color: #D19A1F; }
 .u-switch-group.math  .u-switch-link.on { background: #D19A1F; color: #fff; }
+.u-switch-group.clep  .u-switch-link { border-color: var(--plum); }
+.u-switch-group.clep  .u-switch-link.on { background: var(--plum); color: #fff; }
 .u-switch-group.core  .u-switch-label { color: var(--teal); }
 .u-switch-group.math  .u-switch-label { color: #D19A1F; }
+.u-switch-group.clep  .u-switch-label { color: var(--plum); }
 .u-progress { display: flex; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
 .u-progress-bar { flex: 1; min-width: 140px; height: 12px; background: var(--cream-2); border: 2px solid var(--ink); border-radius: 20px; overflow: hidden; }
 .u-progress-fill { height: 100%; background: var(--u-accent); border-radius: 20px; transition: width 0.4s ease; }
@@ -1276,12 +1282,17 @@ textarea.u-ans { min-height: 84px; }
 
 /* Standards checklist — collapsible d.school-style content-area cards */
 /* lightly-rounded tiles, set close together (almost touching) */
-/* Two independent column stacks = clean masonry nestle: a short + a tall card
-   per column, sitting flush (no coupled grid rows, so no dead gap under the
-   shorter card). Each column grows on its own when a card expands. */
-.std-grid { display: flex; align-items: flex-start; gap: 5px; }
-.std-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-@media (max-width: 720px) { .std-grid { flex-direction: column; } .std-col { width: 100%; } }
+/* Brick masonry: two rows of two, equal height, with the wide/narrow split
+   SWAPPED between rows (narrow | wide, then wide | narrow) so the card widths
+   vary for visual interest. A 5-track grid gives a clean 2:3 (40/60) split;
+   align-items:start keeps each card its own height, so opening one grows only
+   that card instead of stretching its row-mate. */
+.std-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; align-items: start; }
+.std-card.tex-a { grid-column: span 2; }  /* Math    — narrow, row 1 left  */
+.std-card.tex-b { grid-column: span 3; }  /* Science — wide,   row 1 right */
+.std-card.tex-c { grid-column: span 3; }  /* Reading — wide,   row 2 left  */
+.std-card.tex-d { grid-column: span 2; }  /* History — narrow, row 2 right */
+@media (max-width: 720px) { .std-grid { grid-template-columns: 1fr; } .std-card { grid-column: 1 / -1 !important; } }
 
 .std-card { position: relative; overflow: hidden; border: 2.5px solid var(--ink); border-radius: 8px;
   background: var(--tile, var(--cream-2)); box-shadow: 4px 4px 0 rgba(26,26,26,0.12); padding: 0; margin: 0; }
@@ -1290,10 +1301,8 @@ textarea.u-ans { min-height: 84px; }
   display: flex; flex-direction: column; justify-content: flex-end; padding: 22px 24px 22px 48px; overflow: hidden; }
 .std-face::-webkit-details-marker { display: none; }
 /* varied heights — taller Science & Reading, shorter Math & Social Studies */
-.std-card.tex-a .std-face { min-height: 172px; }
-.std-card.tex-b .std-face { min-height: 238px; }
-.std-card.tex-c .std-face { min-height: 238px; }
-.std-card.tex-d .std-face { min-height: 172px; }
+/* All four faces share the base 210px min-height (set on .std-face above) so the
+   brick rows line up evenly — the variance now lives in card WIDTH, not height. */
 /* the vertical subject tag lives in its own narrow left column so it never
    overlaps the arrow/heading */
 .std-card .tile-side { top: 22px; left: 18px; max-height: 120px; z-index: 2; }
@@ -1441,12 +1450,15 @@ textarea.u-ans { min-height: 84px; }
   border-radius: 0 8px 8px 0; font-size: 0.92rem; line-height: 1.5; margin: 14px 0; }
 
 /* Big Picture year arc + Parents switcher: two labeled columns (interdisciplinary / math) */
-.yr-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+.yr-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; align-items: start; }
 .yr-col-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
 .yr-col.core .yr-col-label { color: var(--teal); }
 .yr-col.math .yr-col-label { color: #D19A1F; }
 .yr-col.math .yr-bar > div { background: #D19A1F; }
 .yr-col.math .yr-chip.live-chip { background: #F4CE5E; }
+.yr-col.clep .yr-col-label { color: var(--plum); }
+.yr-col.clep .yr-bar > div { background: var(--plum); }
+.yr-col.clep .yr-chip.live-chip { background: #C9A6D9; }
 .pg-switch-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px; }
 @media (max-width: 760px) {
   .yr-columns { grid-template-columns: 1fr; gap: 26px; }

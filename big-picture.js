@@ -40,6 +40,22 @@ const MATH_PLAN = [
   { n: 6, id: 'math-statistics', title: 'Statistics & Probability', theme: 'Sampling · comparing populations · chance', window: 'May 3 – Jun 11' },
 ];
 
+/* College-credit elective — Modern States CLEP Western Civ I, one module at a time.
+   Taken slowly toward the CLEP exam Crasher can sit once he turns 13 (Feb). `id`
+   links a module to a built unit; only Module 1 is built so far. */
+/* Paced toward the free CLEP exam Crasher can sit once he turns 13 (Feb 2027).
+   ~one module a month, slow, 2–4 short Modern States lessons a week; Module 4 (Medieval,
+   21 lessons — the biggest, ~a quarter of the exam) gets extra time, and the winter modules
+   straddle the holiday break. Finish content by early Feb, leave ~2 weeks to review, then test. */
+const CLEP_PLAN = [
+  { n: 1, id: 'clep-early-civ', title: 'Ancient Near East', theme: '10 lessons · Mesopotamia · Egypt · empires', window: 'Now – Aug' },
+  { n: 2, id: 'clep-greece', title: 'Greece & Its Legacy', theme: '14 lessons · Sparta & Athens · philosophy', window: 'September' },
+  { n: 3, id: 'clep-rome', title: 'Rome: Republic to Empire', theme: '14 lessons · Republic → Empire · Roman law', window: 'October' },
+  { n: 4, id: 'clep-medieval', title: 'Medieval Europe', theme: '21 lessons (biggest) · feudalism · the Church · Black Death', window: 'Nov – early Dec' },
+  { n: 5, id: 'clep-renaissance', title: 'Renaissance & Reformation', theme: '13 lessons · humanism · Luther & Calvin', window: 'mid-Dec – mid-Jan' },
+  { n: 6, id: 'clep-early-modern', title: 'Early Modern Europe', theme: '13 lessons · exploration · science · to 1648', window: 'mid-Jan – early Feb' },
+];
+
 /* The full year's 7th-grade standards, by content area — the ACTUAL Oregon
    standards (checked against the ODE / IXL enumerations, July 2026):
    Math = 2021 Oregon Math Standards; Science = Oregon (NGSS) grade-7 standards;
@@ -144,13 +160,10 @@ function stdCard(a) {
   </details>`;
 }
 
-/* Masonry nestle: split the areas into two column stacks (even indices left,
-   odd right) so a short + a tall card pair up in each column and sit flush.
-   Each column grows independently, so opening a card never reflows the other. */
+/* Brick masonry: cards flow straight into a 5-track grid; the CSS spans give
+   each row a swapped wide/narrow split (see .std-card.tex-* in styles.css). */
 function standardsCards() {
-  const colL = STANDARDS.filter((_, i) => i % 2 === 0).map(stdCard).join('');
-  const colR = STANDARDS.filter((_, i) => i % 2 === 1).map(stdCard).join('');
-  return `<div class="std-grid"><div class="std-col">${colL}</div><div class="std-col">${colR}</div></div>`;
+  return `<div class="std-grid">${STANDARDS.map(stdCard).join('')}</div>`;
 }
 
 function section(title, body) {
@@ -162,7 +175,7 @@ function load() {
   const totalStd = STANDARDS.reduce((n, a) => n + a.list.length, 0);
   const doneStd = STANDARDS.reduce((n, a) => n + areaDone(a), 0);
   const unitsLive = HS_UNITS.length;
-  const totalUnits = YEAR_PLAN.length + MATH_PLAN.length;
+  const totalUnits = YEAR_PLAN.length + MATH_PLAN.length + CLEP_PLAN.length;
   const cardsDone = HS_UNITS.reduce((s, u) => s + doneCount(u), 0);
 
   document.getElementById('stat-units').textContent = `${unitsLive}/${totalUnits}`;
@@ -172,6 +185,7 @@ function load() {
   const yearColumns = `<div class="yr-columns">
     <div class="yr-col core"><div class="yr-col-label">Interdisciplinary</div><div class="yr-list">${YEAR_PLAN.map(unitRow).join('')}</div></div>
     <div class="yr-col math"><div class="yr-col-label">Math</div><div class="yr-list">${MATH_PLAN.map(unitRow).join('')}</div></div>
+    <div class="yr-col clep"><div class="yr-col-label">College Credit (CLEP)</div><div class="yr-list">${CLEP_PLAN.map(unitRow).join('')}</div></div>
   </div>`;
 
   content.innerHTML =
