@@ -20,7 +20,9 @@ index.html / index.js       — "Today" landing (units-driven, NO Airtable): the
 unit.html / unit.js          — Self-paced unit renderer. Loads every unit-*.js (they self-register
                               into window.HS_UNITS); ?u=<id> selects one. Progress/answers/quizzes
                               per unit in localStorage. All external + reading links open new tab.
-unit-rivers.js / unit-metals.js — Unit content (Unit 1, Unit 2). Same card/block schema.
+unit-rivers.js / unit-metals.js — Interdisciplinary unit content (Unit 1, Unit 2). Same card/block schema.
+unit-math-*.js               — The 6 math units (proportions, rates, negatives, expressions, geometry,
+                              statistics). Khan-scaffolded, track:'math' (gold theme), each IIFE-wrapped.
 reader.html / reader.js / readings.js — Clean, ad-free, printable reading panes at reader.html?doc=<id>.
                               Lessons link here instead of outside sites; readings.js holds the text.
 big-picture.html / .js       — Mastery + portfolio dashboard (units-driven, NO Airtable): reads each
@@ -34,6 +36,10 @@ big-picture.html / .js       — Progress dashboard (unit progress, standards tr
 learning-review.html         — AI-scored review of responses (uses netlify/functions/score-response.js)
 rabbit-hole.html / .js        — Legacy standalone rabbit-hole page (kept; superseded by this-week.html)
 content-*.html               — Legacy per-unit science pages from the summer Life Science units (kept as archive)
+portfolio.html / .js         — Crasher's work by track (Interdisciplinary/Math columns) + a clickable
+                              "Standards → his work" grid that jumps to the completed lesson showing mastery.
+standards.js                 — Shared Oregon 7th-grade STANDARDS data + code normalizer
+                              (window.HS_STANDARDS / window.hsNormStd). Loaded by big-picture + portfolio.
 styles.css                   — Shared styles. Editorial light theme: Fraunces serif + Inter, cream, ticker ribbons
 config.js                    — CONFIG.apiBase + TABLES + SUBJECT_COLORS constants
 netlify/functions/airtable.js — Serverless proxy; reads AIRTABLE_API_KEY + AIRTABLE_BASE_ID from env
