@@ -11,6 +11,9 @@ Start here. This is the map of everything, plus a one-page recap of what we buil
 - **[`YEAR-MAP.md`](YEAR-MAP.md)** — the year's **curriculum plan** + Oregon standards map.
 - **[`BUILDING-MATH-UNITS.md`](BUILDING-MATH-UNITS.md)** — **how to build** the remaining
   math units (Khan-scaffolded, gold theme).
+- **[`BUILDING-INTERDISCIPLINARY-UNITS.md`](BUILDING-INTERDISCIPLINARY-UNITS.md)** — **how to
+  build** interdisciplinary units 3–6 (teal): every wiring point + the design/content/photo
+  rules + the exact standards to tag.
 - `airtable.md`, `deployment.md` — legacy Airtable schema + Netlify setup.
 
 ## What HomeSkewl is
