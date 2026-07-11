@@ -211,12 +211,13 @@ function standardsMastery() {
     const total = a.list.length;
     return `<details class="std-card tile ${a.tex}" style="--tile:${colorTile(a.color)}; --ribbon:${colorBold(a.color)}; --ribbon-text:#fff;" data-area="${esc(a.area)}">
       <summary class="std-face">
+        <span class="std-ghost" aria-hidden="true">${esc(a.ghost || a.area)}</span>
         <span class="tile-side">${esc(a.side)}</span>
         <div class="big-ribbon"><div class="ribbon-track">${(esc(a.area) + '&nbsp;·&nbsp;').repeat(14)}</div></div>
         <div class="std-face-bottom">
           <span class="std-arrow">→</span>
           <div>
-            <div class="std-face-title">${esc(a.area)}</div>
+            <div class="std-face-title"><span class="std-word">${esc(a.area)}</span>${a.tagline ? ` <span class="std-bull">•</span> <span class="std-tag">${esc(a.tagline)}</span>` : ''}</div>
             <div class="std-face-sub"><span class="pf-std-count">${masteredCount}</span> of ${total} with work</div>
           </div>
         </div>

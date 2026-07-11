@@ -7,7 +7,7 @@
  */
 
 window.HS_STANDARDS = [
-  { area: 'Math', side: 'MATH', color: 'Math', tex: 'tex-a', source: 'Oregon 2021 Mathematics Standards · Grade 7', list: [
+  { area: 'Math', side: 'MATH', color: 'Math', tex: 'tex-a', ghost: 'Math', tagline: 'proportions, algebra, geometry & data', source: 'Oregon 2021 Mathematics Standards · Grade 7', list: [
     { code: '7.NS.A.1', label: 'Add & subtract rational numbers (extend to negatives & absolute value)' },
     { code: '7.NS.A.2', label: 'Multiply & divide rational numbers' },
     { code: '7.NS.A.3', label: 'Write rational numbers as equivalent fractions, decimals & percents' },
@@ -32,13 +32,16 @@ window.HS_STANDARDS = [
     { code: '7.DR.C.3', label: 'Compare two data distributions (center & variability)' },
     { code: '7.DR.D.4', label: 'Interpret center & variability to compare populations' },
   ] },
-  { area: 'Science', side: 'SCIENCE', color: 'Science', tex: 'tex-b', source: 'Oregon (NGSS) Science Standards · Grade 7', list: [
+  { area: 'Science', side: 'SCIENCE', color: 'Science', tex: 'tex-b', ghost: 'Science', tagline: 'matter, Earth & energy', source: 'Oregon (NGSS) Science Standards · Grade 7', list: [
     { code: '7.PS1.1', label: 'Model the atomic composition of molecules & extended structures' },
     { code: '7.PS1.2', label: 'Analyze evidence that a chemical reaction has occurred' },
     { code: '7.PS1.3', label: 'Synthetic materials come from natural resources & impact society' },
     { code: '7.PS1.4', label: 'Particle motion, temperature & state changes with thermal energy' },
     { code: '7.PS1.5', label: 'Conservation of mass — atom count is unchanged in a reaction' },
     { code: '7.PS1.6', label: 'Design a device that releases or absorbs thermal energy' },
+    { code: '7.PS3.1', label: 'Kinetic energy relates to the mass & speed of an object' },
+    { code: '7.PS3.2', label: 'Potential energy is stored based on position & interaction' },
+    { code: '7.PS3.5', label: 'Energy is transferred to or from an object (evidence of change)' },
     { code: '7.ESS2.1', label: "Cycling of Earth's materials & the energy that drives it" },
     { code: '7.ESS2.2', label: "Geoscience processes have changed Earth's surface (time & scale)" },
     { code: '7.ESS2.3', label: 'Evidence for past plate motions (fossils, rocks, seafloor)' },
@@ -56,7 +59,7 @@ window.HS_STANDARDS = [
     { code: 'MS.ETS1.3', label: 'Combine the best characteristics of solutions into a better one' },
     { code: 'MS.ETS1.4', label: 'Model to generate data for iterative testing & refinement' },
   ] },
-  { area: 'Reading & Writing', side: 'ELA', color: 'ELA', tex: 'tex-c', source: 'Oregon English Language Arts · Grade 7', list: [
+  { area: 'Reading & Writing', side: 'ELA', color: 'ELA', tex: 'tex-c', ghost: 'Reading', tagline: 'read closely, write to argue, inform & tell', source: 'Oregon English Language Arts · Grade 7', list: [
     { code: '7.RL.1', label: 'Literature: cite several pieces of textual evidence (explicit & inferred)' },
     { code: '7.RL.2', label: 'Literature: determine a theme & analyze its development; summarize' },
     { code: '7.RL.3', label: 'Literature: analyze how story/drama elements interact' },
@@ -99,7 +102,7 @@ window.HS_STANDARDS = [
     { code: '7.L.5', label: 'Figurative language, word relationships & nuance' },
     { code: '7.L.6', label: 'Acquire & use grade-level academic & domain vocabulary' },
   ] },
-  { area: 'Social Studies', side: 'HISTORY', color: 'Humanities', tex: 'tex-d', source: 'Oregon 2024 Social Science Standards · Grade 7', list: [
+  { area: 'Social Studies', side: 'HISTORY', color: 'Humanities', tex: 'tex-d', ghost: 'History', tagline: 'civics, geography, economics & history', source: 'Oregon 2024 Social Science Standards · Grade 7', list: [
     { code: '7.C.PI.1', label: 'Civics: early governance, Paleolithic to 900 CE' },
     { code: '7.C.PI.2', label: 'Civics: governance after 600 CE & treatment of underrepresented groups' },
     { code: '7.C.PI.3', label: 'Civics: compare historical & modern governance across continents' },

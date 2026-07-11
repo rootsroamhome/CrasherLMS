@@ -1256,30 +1256,39 @@ textarea.u-ans { min-height: 84px; }
 .std-card { position: relative; overflow: hidden; border: 2.5px solid var(--ink); border-radius: var(--radius);
   background: var(--tile, var(--cream-2)); box-shadow: 4px 4px 0 rgba(26,26,26,0.12); padding: 0; margin: 0; }
 .std-card > * { position: relative; z-index: 1; }
-.std-face { list-style: none; cursor: pointer; position: relative; min-height: 200px;
+.std-face { list-style: none; cursor: pointer; position: relative; min-height: 210px;
   display: flex; flex-direction: column; justify-content: flex-end; padding: 22px 24px 22px 48px; overflow: hidden; }
 .std-face::-webkit-details-marker { display: none; }
 /* the vertical subject tag lives in its own narrow left column so it never
    overlaps the arrow/heading */
-.std-card .tile-side { top: 22px; left: 18px; max-height: 120px; }
-/* big diagonal tape running "\" — high on the left, descending to the right — so it
-   stays in the top band and never crosses the heading (which sits bottom-left) */
-.big-ribbon { position: absolute; top: 14px; left: -20px; width: 150%; transform: rotate(var(--rib-angle, 18deg));
+.std-card .tile-side { top: 22px; left: 18px; max-height: 120px; z-index: 2; }
+/* giant faded wordmark ghosted behind the tile (d.school signature) — bleeds off
+   the edges, sits behind the tape and the heading */
+.std-ghost { position: absolute; top: 4px; left: 8px; z-index: 0; pointer-events: none;
+  font-family: var(--serif); font-weight: 600; font-size: clamp(6rem, 21vw, 10.5rem); line-height: 0.8;
+  letter-spacing: -0.02em; color: rgba(26,26,26,0.10); white-space: nowrap; }
+/* big diagonal corner tape — each card gets its own angle + height + direction
+   (set per nth-child below) so no two tiles look alike. Sits behind the heading. */
+.big-ribbon { position: absolute; top: var(--rib-top, 16px); left: -25%; width: 150%; transform: rotate(var(--rib-angle, 18deg));
   background: var(--ribbon, var(--ink)); color: var(--ribbon-text, var(--cream)); font-size: 0.6rem; font-weight: 800;
   letter-spacing: 0.16em; text-transform: uppercase; padding: 6px 0; text-align: center; white-space: nowrap;
   overflow: hidden; pointer-events: none; z-index: 1; }
-/* varied tape angles per card */
-.std-card:nth-child(1) { --rib-angle: 15deg; }
-.std-card:nth-child(2) { --rib-angle: 21deg; }
-.std-card:nth-child(3) { --rib-angle: 13deg; }
-.std-card:nth-child(4) { --rib-angle: 19deg; }
+/* varied tape: alternating directions (\ and /), different slopes + heights */
+.std-card:nth-child(1) { --rib-angle: 14deg;  --rib-top: 24px; }
+.std-card:nth-child(2) { --rib-angle: -12deg; --rib-top: 34px; }
+.std-card:nth-child(3) { --rib-angle: 31deg;  --rib-top: 8px;  }
+.std-card:nth-child(4) { --rib-angle: -25deg; --rib-top: 20px; }
 .std-face-bottom { display: flex; align-items: center; gap: 14px; position: relative; z-index: 2; }
 .std-arrow { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; border: 2.5px solid var(--ink);
-  display: grid; place-items: center; font-size: 1.3rem; font-weight: 700; background: rgba(255,255,255,0.4);
+  display: grid; place-items: center; font-size: 1.3rem; font-weight: 700; color: var(--ribbon-text, #fff);
+  background: var(--ribbon, var(--ink)); box-shadow: 2px 2px 0 rgba(26,26,26,0.18);
   transition: transform 0.2s ease; }
 .std-card[open] .std-arrow { transform: rotate(90deg); }
-.std-face-title { font-family: var(--serif); font-size: 1.8rem; font-weight: 600; line-height: 1; }
-.std-face-sub { font-size: 0.86rem; font-weight: 600; color: var(--ink-soft); margin-top: 3px; }
+.std-face-title { font-family: var(--serif); font-size: 1.55rem; font-weight: 600; line-height: 1.08; max-width: 15ch; }
+.std-word { font-weight: 700; }
+.std-bull { color: var(--ribbon); font-weight: 700; margin: 0 0.12em; }
+.std-tag { font-style: italic; font-weight: 500; color: var(--ink-soft); }
+.std-face-sub { font-size: 0.86rem; font-weight: 600; color: var(--ink-soft); margin-top: 5px; }
 .std-count { font-weight: 800; color: var(--ink); }
 
 .std-checklist { background: var(--paper); border-top: 2.5px solid var(--ink); padding: 8px 0; }
