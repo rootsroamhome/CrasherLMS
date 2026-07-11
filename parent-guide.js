@@ -47,7 +47,7 @@ function switcher(active) {
 function previewCard(u) {
   const c = colorOf('Science');
   const done = doneCount(u), total = u.cards.length;
-  const where = done === 0 ? 'Not started yet' : done === total ? 'Finished' : `On card ${done + 1} of ${total}`;
+  const where = done === 0 ? 'Not started yet' : done === total ? 'Finished' : `On lesson ${done + 1} of ${total}`;
   return `<div class="pg-preview" style="--tile:${c.tile};">
     ${u.image ? `<div class="pg-photo"><img src="${esc(u.image)}" alt=""></div>` : ''}
     <div class="pg-preview-body">

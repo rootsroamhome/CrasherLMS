@@ -18,7 +18,14 @@ function localToday() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
-const TODAY = localToday();
+const REAL_TODAY = localToday();
+// The date Today is *showing*. Defaults to the real date, but a date picker (and
+// a shareable ?d=YYYY-MM-DD link) can point it at any day — so someone can see
+// what the first day of school looks like without waiting for it.
+let viewDate = (() => {
+  const d = new URLSearchParams(location.search).get('d');
+  return /^\d{4}-\d{2}-\d{2}$/.test(d || '') ? d : REAL_TODAY;
+})();
 const HS_UNITS = window.HS_UNITS || [];
 // config.js / curriculum.js declare these as top-level `const`, which share the
 // page's global lexical scope but are NOT properties of window — so reference
@@ -45,18 +52,18 @@ function currentCard(u) { const d = unitState(u.id).done || {}; return u.cards.f
 function activeUnit() { return HS_UNITS.find(u => unitDoneCount(u) < u.cards.length) || HS_UNITS[HS_UNITS.length - 1]; }
 
 /* ── daily "done today" state (date-keyed, so it never carries over) ── */
-const DKEY = 'homeskewl_daily_' + TODAY;
-function dailyState() { try { return JSON.parse(localStorage.getItem(DKEY)) || {}; } catch (e) { return {}; } }
-function setDaily(k, v) { const s = dailyState(); if (v) s[k] = 1; else delete s[k]; localStorage.setItem(DKEY, JSON.stringify(s)); }
+function dkey() { return 'homeskewl_daily_' + viewDate; }
+function dailyState() { try { return JSON.parse(localStorage.getItem(dkey())) || {}; } catch (e) { return {}; } }
+function setDaily(k, v) { const s = dailyState(); if (v) s[k] = 1; else delete s[k]; localStorage.setItem(dkey(), JSON.stringify(s)); }
 
-/* ── dates ── */
+/* ── dates (all derived from viewDate, so the picker can time-travel) ── */
 function parseDate(s) { return new Date(s + 'T00:00:00'); }
 function daysBetween(a, b) { return Math.round((parseDate(b) - parseDate(a)) / 86400000); }
 function fmtLong(s) { return parseDate(s).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); }
-const DAYS_TO_SCHOOL = daysBetween(TODAY, SCHOOL_START);
-const IN_SESSION = DAYS_TO_SCHOOL <= 0;
-const IS_SUMMER = TODAY < SUMMER_END;
-function weekNumber() { const d = daysBetween(SCHOOL_START, TODAY); return d < 0 ? 0 : Math.floor(d / 7) + 1; }
+function daysToSchool() { return daysBetween(viewDate, SCHOOL_START); }
+function inSession() { return daysToSchool() <= 0; }
+function isSummer() { return viewDate < SUMMER_END; }
+function weekNumber() { const d = daysBetween(SCHOOL_START, viewDate); return d < 0 ? 0 : Math.floor(d / 7) + 1; }
 
 function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function colorOf(subject) {
@@ -130,13 +137,13 @@ function lessonTile() {
       <span class="tile-dot"></span><span class="tile-side">DONE</span>
       <div class="tile-eyebrow">Your unit</div>
       <h2 class="tile-title">🎉 You finished ${esc(u.title)}</h2>
-      <p class="tile-desc">Every card is done — head in to review your work or start what's next.</p>
+      <p class="tile-desc">Every lesson is done — head in to review your work or start what's next.</p>
       <div class="tile-foot"><span class="tile-cta">Open the unit →</span></div>
     </a>`;
   }
 
-  const eyebrow = IN_SESSION ? `Today's lesson · ${esc(u.short || u.title)}` : `Starts Mon, Aug 31 · ${esc(u.short || u.title)}`;
-  const cta = !IN_SESSION ? 'Preview the unit →' : (done > 0 ? 'Continue the unit →' : 'Start the unit →');
+  const eyebrow = inSession() ? `Today's lesson · ${esc(u.short || u.title)}` : `Starts Mon, Aug 31 · ${esc(u.short || u.title)}`;
+  const cta = !inSession() ? 'Preview the unit →' : (done > 0 ? 'Continue the unit →' : 'Start the unit →');
 
   return `<a class="card tile tex-a today-tile today-lesson-tile" href="unit.html?u=${u.id}" style="--tile:${c.tile}; --card-accent:${c.bg};">
     <span class="tile-dot"></span><span class="tile-side">LESSON</span>
@@ -150,9 +157,9 @@ function lessonTile() {
     </div>
     <div class="tile-foot">
       <span class="tile-cta">${cta}</span>
-      ${IN_SESSION ? `<span class="tile-prog">${done} of ${total} cards done</span>` : '<span class="tile-prog">Take a peek before the year starts</span>'}
+      ${inSession() ? `<span class="tile-prog">${done} of ${total} lessons done</span>` : '<span class="tile-prog">Take a peek before the year starts</span>'}
     </div>
-    ${IN_SESSION ? `<div class="tile-bar"><div style="width:${Math.round(done / total * 100)}%; background:${c.bg};"></div></div>` : ''}
+    ${inSession() ? `<div class="tile-bar"><div style="width:${Math.round(done / total * 100)}%; background:${c.bg};"></div></div>` : ''}
   </a>`;
 }
 
@@ -205,25 +212,37 @@ function portfolioTile() {
 }
 
 function schoolFlag() {
-  if (IN_SESSION) {
+  if (inSession()) {
     const wk = weekNumber();
     return `<div class="school-flag in-session">📚 School year 2026–27${wk ? ` · Week ${wk} of 37` : ''}</div>`;
   }
+  const d = daysToSchool();
   return `<div class="school-flag summer">☀️ Summer break — school starts <strong>${fmtLong(SCHOOL_START)}</strong>
-    <span class="countdown">${DAYS_TO_SCHOOL} ${DAYS_TO_SCHOOL === 1 ? 'day' : 'days'} to go</span></div>`;
+    <span class="countdown">${d} ${d === 1 ? 'day' : 'days'} to go</span></div>`;
+}
+
+function datePicker() {
+  const previewing = viewDate !== REAL_TODAY;
+  return `<div class="today-datepick">
+    <button type="button" class="btn btn-ghost" id="pick-day">📅 See another day</button>
+    <input type="date" id="day-jump" class="date-jump" value="${viewDate}" aria-label="Pick a day to preview" />
+    ${previewing ? `<button type="button" class="btn btn-ghost" id="back-today">↩ Back to today</button>` : ''}
+    ${previewing ? `<span class="previewing-badge">Previewing this day</span>` : ''}
+  </div>`;
 }
 
 function render() {
   const hero = `
     <div class="today-hero">
-      <div class="today-date">${fmtLong(TODAY)}</div>
+      <div class="today-date">${fmtLong(viewDate)}</div>
       <h1 class="today-greeting">${greeting()}, Crasher.</h1>
-      <p class="today-fact">${esc(getDailyFact(TODAY))}</p>
+      <p class="today-fact">${esc(getDailyFact(viewDate))}</p>
       ${schoolFlag()}
-      ${IS_SUMMER ? `<p class="today-summer-note">Over the summer it's just your reading and your math. The units kick off when school starts.</p>` : ''}
+      ${isSummer() ? `<p class="today-summer-note">Over the summer it's just your reading and your math. The units kick off when school starts.</p>` : ''}
+      ${datePicker()}
     </div>`;
 
-  const gallery = IS_SUMMER
+  const gallery = isSummer()
     ? `<div class="today-gallery">${DAILY.map(dailyTile).join('')}</div>`
     : `<div class="today-gallery">
         ${lessonTile()}
@@ -237,7 +256,24 @@ function render() {
 }
 
 /* ── wiring ── */
+function setViewDate(d) {
+  viewDate = d;
+  const url = new URL(location.href);
+  if (d === REAL_TODAY) url.searchParams.delete('d'); else url.searchParams.set('d', d);
+  history.replaceState(null, '', url);
+  render();
+}
+
 function wire() {
+  const jump = document.getElementById('day-jump');
+  const pick = document.getElementById('pick-day');
+  if (pick && jump) {
+    pick.onclick = () => { try { jump.showPicker(); } catch (e) { jump.focus(); } };
+    jump.onchange = (e) => { if (e.target.value) setViewDate(e.target.value); };
+  }
+  const back = document.getElementById('back-today');
+  if (back) back.onclick = () => setViewDate(REAL_TODAY);
+
   document.querySelectorAll('.daily-card').forEach(cardEl => {
     const key = cardEl.dataset.key;
     attachTimer(cardEl, parseInt(cardEl.querySelector('.timer').dataset.min, 10));

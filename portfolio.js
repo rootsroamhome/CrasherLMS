@@ -113,14 +113,14 @@ function unitAccordion(u) {
   const summary = `<summary class="pf-summary">
       <span class="pf-caret">▸</span>
       <span class="pf-unit-name">${esc(u.title)}</span>
-      <span class="pf-unit-stat">${d.doneCount}/${d.total} cards${quizAvg !== null ? ` · quiz ${quizAvg}%` : ''}${d.answered ? ` · ${d.answered} answers` : ''}</span>
+      <span class="pf-unit-stat">${d.doneCount}/${d.total} lessons${quizAvg !== null ? ` · quiz ${quizAvg}%` : ''}${d.answered ? ` · ${d.answered} answers` : ''}</span>
     </summary>`;
 
   return `<details class="pf-unit"${touched ? '' : ''}>
     ${summary}
     <div class="pf-body">
       <div class="bp-meters">
-        ${meter('Cards done', `${d.doneCount} / ${d.total}`, donePct, 'var(--teal)')}
+        ${meter('Lessons done', `${d.doneCount} / ${d.total}`, donePct, 'var(--teal)')}
         ${meter('Quiz accuracy', quizAvg === null ? 'no quizzes yet' : `${quizAvg}% (${d.quizGot}/${d.quizMax})`, quizAvg || 0, 'var(--success)')}
         ${meter('Words owned', `${d.got} / ${d.words.length}`, gotPct, '#D19A1F')}
       </div>

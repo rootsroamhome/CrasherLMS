@@ -13,6 +13,12 @@ The date-locked to-do list is **retired as the front door.** The site now runs o
   Tiles: feature lesson (unit's next card → My Unit), Reading + Math dailies w/ timers, weekly-pick
   tile (→ this-week.html, framed "pick Monday, work all week"), black **"See your work" → Portfolio**.
   **Nothing rolls over:** daily "done today" keyed by LOCAL date. Edit `DAILY` / `SUMMER_END` in `index.js`.
+  **Date picker / time-travel:** Today renders from `viewDate` (defaults to real today). A picker
+  ("See another day" / "Back to today") and a **shareable `?d=YYYY-MM-DD` link** let anyone preview
+  any day — e.g. `index.html?d=2026-08-31` shows the first day of school. All phase logic
+  (`isSummer()`, `inSession()`, `weekNumber()`) derives from `viewDate`.
+  **Terminology:** a unit's "cards" are called **lessons** in all user-facing copy (Danielle found
+  "cards" confusing). Code still uses `cards` internally; only display strings say "lesson(s)".
   ✅ **Photos are curated + self-hosted** in `assets/units/` (rivers.jpg, metals.jpg, reading.jpg —
   real Wikimedia Commons photos, see `assets/units/CREDITS.txt`). Static, high-quality, topical.
   **Do NOT use loremflickr / keyword-random stock again** — it returned watermarked "AI slop" and
