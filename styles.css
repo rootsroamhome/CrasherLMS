@@ -923,10 +923,18 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
    Rivers Unit — self-paced progression
    ========================================================= */
 .u-head { margin-bottom: 24px; }
-.u-switch { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-.u-switch-link { font-size: 0.8rem; font-weight: 700; text-decoration: none; color: var(--ink); background: var(--cream-2); border: 2px solid var(--ink); border-radius: 20px; padding: 5px 14px; transition: transform 0.15s ease, background 0.15s ease; }
+.u-switch-wrap { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.u-switch-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-dim); margin-bottom: 7px; }
+.u-switch { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 0; }
+.u-switch-link { font-size: 0.8rem; font-weight: 700; text-decoration: none; color: var(--ink); background: var(--paper); border: 2px solid var(--ink); border-radius: 20px; padding: 5px 14px; transition: transform 0.15s ease, background 0.15s ease; }
 .u-switch-link:hover { transform: translateY(-2px); }
-.u-switch-link.on { background: var(--teal); color: var(--cream); }
+/* two color-coded groups: interdisciplinary = teal, math = coral */
+.u-switch-group.core  .u-switch-link { border-color: var(--teal); }
+.u-switch-group.core  .u-switch-link.on { background: var(--teal); color: #fff; }
+.u-switch-group.math  .u-switch-link { border-color: var(--coral); }
+.u-switch-group.math  .u-switch-link.on { background: var(--coral); color: #fff; }
+.u-switch-group.core  .u-switch-label { color: var(--teal); }
+.u-switch-group.math  .u-switch-label { color: var(--coral); }
 .u-progress { display: flex; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
 .u-progress-bar { flex: 1; min-width: 140px; height: 12px; background: var(--cream-2); border: 2px solid var(--ink); border-radius: 20px; overflow: hidden; }
 .u-progress-fill { height: 100%; background: var(--teal); border-radius: 20px; transition: width 0.4s ease; }

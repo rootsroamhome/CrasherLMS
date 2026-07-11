@@ -235,10 +235,17 @@ function render() {
   const doneCount = Object.keys(state.done).filter(k => state.done[k]).length;
   const pct = Math.round((doneCount / UNIT.cards.length) * 100);
 
-  const switcher = HS_UNITS.length > 1 ? `<div class="u-switch">${HS_UNITS.map(u => {
-    const d = unitDoneCount(u);
-    return `<a class="u-switch-link${u.id === UNIT.id ? ' on' : ''}" href="unit.html?u=${u.id}">${esc(u.short || u.title)}${d ? ` · ${d}/${u.cards.length}` : ''}</a>`;
-  }).join('')}</div>` : '';
+  const switchRow = (units, cls, label) => units.length ? `<div class="u-switch-group ${cls}">
+    <div class="u-switch-label">${label}</div>
+    <div class="u-switch">${units.map(u => {
+      const d = unitDoneCount(u);
+      return `<a class="u-switch-link${u.id === UNIT.id ? ' on' : ''}" href="unit.html?u=${u.id}">${esc(u.short || u.title)}${d ? ` · ${d}/${u.cards.length}` : ''}</a>`;
+    }).join('')}</div></div>` : '';
+  const coreUnits = HS_UNITS.filter(u => u.track !== 'math');
+  const mathUnits = HS_UNITS.filter(u => u.track === 'math');
+  const switcher = HS_UNITS.length > 1
+    ? `<div class="u-switch-wrap">${switchRow(coreUnits, 'core', 'Interdisciplinary')}${switchRow(mathUnits, 'math', 'Math')}</div>`
+    : '';
 
   document.getElementById('unit-app').innerHTML = `
     <div class="u-head">
