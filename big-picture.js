@@ -20,10 +20,10 @@ const STD_KEY = 'homeskewl_standards';
 const YEAR_PLAN = [
   { n: 1, id: 'rivers', title: 'Rivers & the Rise of Civilization', theme: 'Water & land · first civilizations · flood myths', window: 'Aug 31 – Oct 9' },
   { n: 2, id: 'metals', title: 'Metals & the Rise of Empires', theme: 'Matter & reactions · Bronze/Iron Age · forge myths', window: 'Oct 12 – Nov 20' },
-  { n: 3, id: null, title: 'Deep Time & the Restless Earth', theme: 'Rock cycle · plate tectonics · reading evidence', window: 'Nov 30 – Jan 22' },
-  { n: 4, id: null, title: 'A Connected World', theme: 'Resources · trade routes · research writing', window: 'Jan 25 – Mar 5' },
-  { n: 5, id: null, title: 'When the Ground Shifts', theme: 'Natural hazards · turning points · a choice novel', window: 'Mar 8 – Apr 23' },
-  { n: 6, id: null, title: 'Power (capstone)', theme: 'Energy & circuits · who controls energy · persuasion', window: 'Apr 26 – Jun 11' },
+  { n: 3, id: 'deep-time', title: 'Deep Time & the Restless Earth', theme: 'Rock cycle · plate tectonics · reading evidence', window: 'Nov 30 – Jan 22' },
+  { n: 4, id: 'connected-world', title: 'A Connected World', theme: 'Resources · trade routes · research writing', window: 'Jan 25 – Mar 5' },
+  { n: 5, id: 'ground-shifts', title: 'When the Ground Shifts', theme: 'Natural hazards · turning points · a choice novel', window: 'Mar 8 – Apr 23' },
+  { n: 6, id: 'power', title: 'Power (capstone)', theme: 'Energy & circuits · who controls energy · persuasion', window: 'Apr 26 – Jun 11' },
 ];
 
 /* The math arc (Khan 7th-grade sequence). `id` links to a built math unit.
@@ -130,7 +130,7 @@ function standardsCards() {
       </button>`).join('');
     return `<details class="std-card tile ${a.tex}" style="--tile:${colorTile(a.color)}; --ribbon:${colorBold(a.color)}; --ribbon-text:#fff;" data-area="${esc(a.area)}">
       <summary class="std-face">
-        <span class="std-ghost" aria-hidden="true">${esc(a.ghost || a.area)}</span>
+        <span class="std-ghost" aria-hidden="true"><b>${esc(a.ghost || a.area)}</b><b>${esc(a.ghost || a.area)}</b><b>${esc(a.ghost || a.area)}</b></span>
         <span class="tile-side">${esc(a.side)}</span>
         <div class="big-ribbon"><div class="ribbon-track">${(esc(a.area) + '&nbsp;·&nbsp;').repeat(14)}</div></div>
         <div class="std-face-bottom">
@@ -169,10 +169,7 @@ function load() {
 
   content.innerHTML =
     section('The year, unit by unit', yearColumns) +
-    section('Standards checklist — the whole year', standardsCards()) +
-    `<p class="bp-footnote">Tap a subject to open its standards. A standard checks itself off when a lesson
-     that covers it is done — and you can tap any standard to check it by hand (handy for daily Khan math,
-     which lives outside the units). Crasher's actual answers are on the <a href="portfolio.html">Portfolio</a> page.</p>`;
+    section('Standards checklist — the whole year', standardsCards());
 
   wire();
 }

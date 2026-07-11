@@ -39,6 +39,29 @@ function unitDoneCount(u) {
 
 /* ── block renderers ─────────────────────────────────────────── */
 
+/* Icons for the two "your pick" blocks (learn-path + show-what-you-know). */
+function optIcon(kind) {
+  return ({ video: '▶', read: '📖', both: '🔀', record: '🎥', write: '✍️',
+            make: '🃏', draw: '🎨', project: '🖼️', teach: '🗣️' })[kind] || '•';
+}
+/* Render one learn-path option's inner content (a video or a reading). */
+function learnOptionInner(o) {
+  if (o.kind === 'read') {
+    return `${o.title ? `<div class="u-sec" style="margin-top:0;">📖 ${esc(o.title)}</div>` : ''}
+      ${o.body || ''}
+      ${o.url ? `<a class="choice-link" href="${o.url}" target="_blank" rel="noopener">Open the ${esc(o.source || 'reading')} ↗</a>` : ''}`;
+  }
+  // video
+  if (o.yt) {
+    return `${o.title ? `<div class="u-sec" style="margin-top:0;">▶ ${esc(o.title)}</div>` : ''}
+      <div class="u-video"><iframe src="https://www.youtube-nocookie.com/embed/${o.yt}" title="${esc(o.title || 'video')}" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+      ${o.focus ? `<p class="u-focus">${esc(o.focus)}</p>` : ''}`;
+  }
+  return `${o.title ? `<div class="u-sec" style="margin-top:0;">▶ ${esc(o.title)}</div>` : ''}
+    <a class="btn btn-primary" href="${o.url}" target="_blank" rel="noopener">${esc(o.watchLabel || '▶ Watch on YouTube')}</a>
+    ${o.focus ? `<p class="u-focus">${esc(o.focus)}</p>` : ''}`;
+}
+
 function blockHtml(card, b, bi) {
   const aid = (pi) => `${card.id}_${bi}_${pi}`;
   switch (b.type) {
@@ -73,6 +96,43 @@ function blockHtml(card, b, bi) {
 
     case 'prose':
       return `<div class="u-block u-prose">${b.body || ''}</div>`;
+
+    case 'learn': {
+      // Choose how to take it in: a video OR a reading (both stay available).
+      const pickAid = aid('pick');
+      const saved = state.ans[pickAid];
+      const picked = (saved !== undefined && saved !== '') ? parseInt(saved, 10) : 0;
+      return `<div class="u-block u-pick u-learn" data-pickaid="${pickAid}">
+        <div class="u-sec">🧭 ${esc(b.title || 'Learn it your way')}</div>
+        <p class="u-focus">${esc(b.note || 'Your call — pick how you want to take this in. (You can look at both if you want.)')}</p>
+        <div class="pick-tabs">${b.options.map((o, oi) =>
+          `<button type="button" class="pick-tab ${oi === picked ? 'on' : ''}" data-opt="${oi}">${optIcon(o.kind)} ${esc(o.label || (o.kind === 'read' ? 'Read it' : 'Watch it'))}</button>`).join('')}</div>
+        ${b.options.map((o, oi) =>
+          `<div class="pick-panel" data-opt="${oi}" style="display:${oi === picked ? 'block' : 'none'};">${learnOptionInner(o)}</div>`).join('')}
+      </div>`;
+    }
+
+    case 'choice': {
+      // Choose how to show what you know: record / write / make a set, etc.
+      const pickAid = aid('pick');
+      const saved = state.ans[pickAid];
+      const picked = (saved !== undefined && saved !== '') ? parseInt(saved, 10) : -1;
+      return `<div class="u-block u-pick u-choice" data-pickaid="${pickAid}">
+        <div class="u-sec">🌟 ${esc(b.title || 'Show what you know — your pick')}</div>
+        <p class="u-focus">${esc(b.note || 'Pick ONE way to prove you\'ve got it — whichever you\'ll actually do well.')}</p>
+        <div class="pick-tabs">${b.options.map((o, oi) =>
+          `<button type="button" class="pick-tab ${oi === picked ? 'on' : ''}" data-opt="${oi}">${optIcon(o.kind)} ${esc(o.label || 'Option')}</button>`).join('')}</div>
+        ${b.options.map((o, oi) => {
+          const rid = aid('r' + oi);
+          const field = o.input === 'text'
+            ? `<textarea class="rh-input u-ans" data-aid="${rid}" placeholder="Type here…">${esc(state.ans[rid] || '')}</textarea>`
+            : `<input type="text" class="u-ans" data-aid="${rid}" value="${esc(state.ans[rid] || '')}" placeholder="Paste your link here — https://…" style="width:100%;">`;
+          return `<div class="pick-panel" data-opt="${oi}" style="display:${oi === picked ? 'block' : 'none'};">
+            ${o.prompt ? `<p class="u-prompt-text">${o.prompt}</p>` : ''}
+            ${field}</div>`;
+        }).join('')}
+      </div>`;
+    }
 
     case 'answers':
       return `<div class="u-block u-answers">
@@ -304,6 +364,20 @@ function wire(card, isCurrent) {
   const kwlL = app.querySelector('.u-kwl-l'); if (kwlL) kwlL.oninput = () => { state.kwl.l = kwlL.value; save(); };
 
   app.querySelectorAll('.flip-card').forEach(el => { el.onclick = () => el.classList.toggle('flipped'); });
+
+  // "Your pick" blocks (learn-path + show-what-you-know): toggle the chosen
+  // panel and remember the choice. Response fields inside autosave via u-ans.
+  app.querySelectorAll('.u-pick').forEach(p => {
+    const pickAid = p.dataset.pickaid;
+    p.querySelectorAll('.pick-tab').forEach(tab => {
+      tab.onclick = () => {
+        const oi = tab.dataset.opt;
+        state.ans[pickAid] = oi; save();
+        p.querySelectorAll('.pick-tab').forEach(t => t.classList.toggle('on', t === tab));
+        p.querySelectorAll('.pick-panel').forEach(pl => { pl.style.display = pl.dataset.opt === oi ? 'block' : 'none'; });
+      };
+    });
+  });
 
   app.querySelectorAll('.sort-row').forEach(row => {
     row.querySelectorAll('.sort-b').forEach(btn => {

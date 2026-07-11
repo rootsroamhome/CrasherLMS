@@ -998,6 +998,31 @@ textarea.u-ans { min-height: 84px; }
 .u-reviewing { margin-top: 18px; padding: 12px 16px; background: var(--cream-2); border-radius: 12px; font-size: 0.88rem; color: var(--text-muted); }
 .u-reviewing a { color: var(--coral); font-weight: 700; }
 
+/* "Your pick" blocks — learn-path (video vs. reading) & show-what-you-know */
+.u-pick {
+  border: 2px solid var(--ink); border-radius: 16px; padding: 16px 18px 18px;
+  margin: 10px 0 20px; background: var(--paper);
+}
+.u-choice { background: var(--cream-2); }
+.u-pick > .u-sec { margin-top: 4px; }
+.pick-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 14px; }
+.pick-tab {
+  font-family: var(--font); font-size: 0.86rem; font-weight: 800;
+  padding: 9px 16px; border: 2px solid var(--ink); border-radius: 40px;
+  background: var(--paper); color: var(--ink); cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+.pick-tab:hover { transform: translateY(-1px); }
+.pick-tab.on { background: var(--u-accent); color: #fff; }
+.pick-panel { animation: pick-in 0.18s ease; }
+.pick-panel > .u-video { margin-top: 2px; }
+.u-prompt-text { font-size: 0.95rem; line-height: 1.55; color: var(--ink); margin: 2px 0 10px; }
+.u-choice .pick-panel input.u-ans,
+.u-choice .pick-panel textarea.u-ans {
+  width: 100%; margin-top: 2px;
+}
+@keyframes pick-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
 /* Flip flashcards */
 /* symmetrical word cards: uniform size, wrap and center so a short last row
    sits centered under the rest instead of hanging off to the left */
@@ -1250,34 +1275,70 @@ textarea.u-ans { min-height: 84px; }
 .yr-chip.live-chip { background: #8FD6E1; color: var(--ink); }
 
 /* Standards checklist — collapsible d.school-style content-area cards */
-.std-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+/* lightly-rounded tiles, set close together (almost touching) */
+.std-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; align-items: start; }
 @media (max-width: 720px) { .std-grid { grid-template-columns: 1fr; } }
 
-.std-card { position: relative; overflow: hidden; border: 2.5px solid var(--ink); border-radius: var(--radius);
+.std-card { position: relative; overflow: hidden; border: 2.5px solid var(--ink); border-radius: 8px;
   background: var(--tile, var(--cream-2)); box-shadow: 4px 4px 0 rgba(26,26,26,0.12); padding: 0; margin: 0; }
 .std-card > * { position: relative; z-index: 1; }
 .std-face { list-style: none; cursor: pointer; position: relative; min-height: 210px;
   display: flex; flex-direction: column; justify-content: flex-end; padding: 22px 24px 22px 48px; overflow: hidden; }
 .std-face::-webkit-details-marker { display: none; }
+/* varied heights — taller Science & Reading, shorter Math & Social Studies */
+.std-card:nth-child(1) .std-face { min-height: 172px; }
+.std-card:nth-child(2) .std-face { min-height: 238px; }
+.std-card:nth-child(3) .std-face { min-height: 238px; }
+.std-card:nth-child(4) .std-face { min-height: 172px; }
 /* the vertical subject tag lives in its own narrow left column so it never
    overlaps the arrow/heading */
 .std-card .tile-side { top: 22px; left: 18px; max-height: 120px; z-index: 2; }
 /* giant faded wordmark ghosted behind the tile (d.school signature) — bleeds off
    the edges, sits behind the tape and the heading */
-.std-ghost { position: absolute; top: 4px; left: 8px; z-index: 0; pointer-events: none;
-  font-family: var(--serif); font-weight: 600; font-size: clamp(6rem, 21vw, 10.5rem); line-height: 0.8;
-  letter-spacing: -0.02em; color: rgba(26,26,26,0.10); white-space: nowrap; }
+/* multi-word ghost collage: three faint, overlapping repeats of the subject
+   word per tile, each hand-placed at its own size/angle/spot (per card below),
+   so no two tiles look alike — the d.school layered-type feel. */
+.std-ghost { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.std-ghost b { position: absolute; font-family: var(--serif); font-weight: 700; font-style: normal;
+  white-space: nowrap; line-height: 0.78; letter-spacing: -0.015em; color: #fff; transform-origin: left top; }
+
+/* Card 1 — Math */
+.std-card:nth-child(1) .std-ghost b:nth-of-type(1) { font-size: 5.6rem; top: -8px;  left: -12px; transform: rotate(-7deg);  opacity: 0.20; }
+.std-card:nth-child(1) .std-ghost b:nth-of-type(2) { font-size: 2.5rem; top: 61%;   left: 44%;   transform: rotate(37deg);  opacity: 0.13; }
+.std-card:nth-child(1) .std-ghost b:nth-of-type(3) { font-size: 3.4rem; top: 14%;   left: 72%;   transform: rotate(85deg);  opacity: 0.10; }
+/* Card 2 — Science */
+.std-card:nth-child(2) .std-ghost b:nth-of-type(1) { font-size: 4.6rem; top: 34%;   left: -6px;  transform: rotate(9deg);   opacity: 0.18; }
+.std-card:nth-child(2) .std-ghost b:nth-of-type(2) { font-size: 2.9rem; top: -10px; left: 42%;   transform: rotate(-27deg); opacity: 0.12; }
+.std-card:nth-child(2) .std-ghost b:nth-of-type(3) { font-size: 2.1rem; top: 70%;   left: 58%;   transform: rotate(16deg);  opacity: 0.10; }
+/* Card 3 — Reading */
+.std-card:nth-child(3) .std-ghost b:nth-of-type(1) { font-size: 4.2rem; top: -6px;  left: 4px;   transform: rotate(-4deg);  opacity: 0.11; }
+.std-card:nth-child(3) .std-ghost b:nth-of-type(2) { font-size: 2.3rem; top: 55%;   left: 52%;   transform: rotate(53deg);  opacity: 0.075; }
+.std-card:nth-child(3) .std-ghost b:nth-of-type(3) { font-size: 3.1rem; top: 20%;   left: 66%;   transform: rotate(-39deg); opacity: 0.055; }
+/* Card 4 — History */
+.std-card:nth-child(4) .std-ghost b:nth-of-type(1) { font-size: 5.1rem; top: 6px;   left: -10px; transform: rotate(13deg);  opacity: 0.18; }
+.std-card:nth-child(4) .std-ghost b:nth-of-type(2) { font-size: 2.6rem; top: 62%;   left: 42%;   transform: rotate(-43deg); opacity: 0.12; }
+.std-card:nth-child(4) .std-ghost b:nth-of-type(3) { font-size: 3.0rem; top: -8px;  left: 60%;   transform: rotate(69deg);  opacity: 0.10; }
 /* big diagonal corner tape — each card gets its own angle + height + direction
    (set per nth-child below) so no two tiles look alike. Sits behind the heading. */
-.big-ribbon { position: absolute; top: var(--rib-top, 16px); left: -25%; width: 150%; transform: rotate(var(--rib-angle, 18deg));
-  background: var(--ribbon, var(--ink)); color: var(--ribbon-text, var(--cream)); font-size: 0.6rem; font-weight: 800;
-  letter-spacing: 0.16em; text-transform: uppercase; padding: 6px 0; text-align: center; white-space: nowrap;
+.big-ribbon { position: absolute; top: var(--rib-top, 16px); left: var(--rib-left, -25%); width: var(--rib-w, 150%);
+  transform: rotate(var(--rib-angle, 18deg));
+  background: var(--ribbon, var(--ink)); color: var(--ribbon-text, var(--cream)); font-size: var(--rib-fs, 0.6rem); font-weight: 800;
+  letter-spacing: 0.16em; text-transform: uppercase; padding: var(--rib-pad, 6px) 0; text-align: center; white-space: nowrap;
   overflow: hidden; pointer-events: none; z-index: 1; }
-/* varied tape: alternating directions (\ and /), different slopes + heights */
-.std-card:nth-child(1) { --rib-angle: 14deg;  --rib-top: 24px; }
-.std-card:nth-child(2) { --rib-angle: -12deg; --rib-top: 34px; }
-.std-card:nth-child(3) { --rib-angle: 31deg;  --rib-top: 8px;  }
-.std-card:nth-child(4) { --rib-angle: -25deg; --rib-top: 20px; }
+/* each tape a different width, angle and spot — staggered so no two align/touch */
+.std-card:nth-child(1) { --rib-angle: 11deg;  --rib-top: 16px; --rib-fs: 0.74rem; --rib-pad: 9px; }
+.std-card:nth-child(2) { --rib-angle: -21deg; --rib-top: 46px; --rib-fs: 0.5rem;  --rib-pad: 4px; }
+.std-card:nth-child(3) { --rib-angle: 16deg;  --rib-top: 12px; --rib-fs: 0.62rem; --rib-pad: 6px; }
+.std-card:nth-child(4) { --rib-angle: -74deg; --rib-top: 100px; --rib-fs: 0.5rem; --rib-pad: 3px; --rib-w: 95%; --rib-left: -42%; }
+/* Social Studies tape: thin, light like the ghost words, with orange letters */
+.std-card:nth-child(4) .big-ribbon { background: rgba(255,255,255,0.72); color: var(--ribbon); }
+/* Reading & Writing: light tape (lighter than the gold, but not as light as
+   Social Studies) with gold letters; the arrow keeps the base gold to match */
+.std-card:nth-child(3) .big-ribbon { background: rgba(255,255,255,0.5); color: var(--ribbon); }
+/* Science: shift the halftone dots to the top-right corner */
+.std-grid .std-card:nth-child(2)::after {
+  -webkit-mask-image: radial-gradient(130% 120% at 108% -8%, #000 0%, #000 14%, transparent 60%);
+  mask-image: radial-gradient(130% 120% at 108% -8%, #000 0%, #000 14%, transparent 60%); }
 .std-face-bottom { display: flex; align-items: center; gap: 14px; position: relative; z-index: 2; }
 .std-arrow { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; border: 2.5px solid var(--ink);
   display: grid; place-items: center; font-size: 1.3rem; font-weight: 700; color: var(--ribbon-text, #fff);

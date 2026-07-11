@@ -90,7 +90,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'atoms-a', n: 2, title: 'Atoms & Elements · A', subject: 'Science', minutes: 30, standards: '7.PS1.1',
+      id: 'atoms-a', n: 2, title: 'Atoms & Elements: The Alphabet of Everything', subject: 'Science', minutes: 30, standards: '7.PS1.1',
       blocks: [
         { type: 'hook', text: 'There are more atoms in one glass of water than there are glasses of water in all the oceans on Earth. Atoms are so small that nobody had ever seen one until 1981 — yet people had been <em>using</em> them to make bronze and steel for 5,000 years without knowing what they were doing. You\'re about to know more about what a sword is than the people who forged them.' },
         { type: 'read', title: 'The alphabet of everything', source: 'read', body: '<p>Think of it like language:</p><ul><li>An <b>atom</b> is a letter. An <b>element</b> is one kind of letter — hydrogen, oxygen, carbon, copper, iron. The periodic table is just the alphabet chart, about 90 natural letters long.</li><li>A <b>molecule</b> is a word: atoms bonded together. Water is H₂O — two hydrogens and an oxygen, always in exactly that combination.</li><li>A <b>compound</b> is a word built from <em>different</em> letters, and here\'s the wild part: a compound\'s <b>properties</b> are nothing like its ingredients\'. Sodium is a metal that explodes in water. Chlorine is a poison gas. Bond them together and you get table salt — the stuff on your fries.</li><li>Some substances aren\'t little separate molecules at all but <b>extended structures</b> — endless repeating patterns. Salt crystals are a 3-D grid of sodium and chlorine. Metals are a lattice of identical atoms packed like oranges in a crate. That packing is <em>why</em> metals bend instead of shattering: the layers can slide.</li></ul>' },
@@ -104,7 +104,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'atoms-b', n: 3, title: 'Atoms & Elements · B', subject: 'Science', minutes: 30, standards: '7.PS1.1',
+      id: 'atoms-b', n: 3, title: 'Atoms & Elements: Build the Molecules', subject: 'Science', minutes: 30, standards: '7.PS1.1',
       blocks: [
         { type: 'build', title: 'Build the molecules', minutes: 15, steps: '<ol><li>Grab toothpicks plus anything round in two or three colors — marshmallows, gumdrops, grapes, balled-up foil. Pick one color per element.</li><li>Build <b>water (H₂O)</b>: one oxygen, two hydrogens attached to it in a wide V.</li><li>Build <b>carbon dioxide (CO₂)</b>: one carbon in the middle, an oxygen on each side, in a straight line.</li><li>Now build a chunk of <b>salt</b>: alternate two colors in a 3-D cube grid, like a checkerboard with layers — no "molecule," just a repeating pattern that could go on forever.</li></ol>', photo: true, photoLabel: 'Snap a photo of your molecule models and paste the link (optional):' },
         { type: 'answers', prompts: [
@@ -121,11 +121,13 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'states-a', n: 4, title: 'What Heat Does · A', subject: 'Science', minutes: 30, standards: '7.PS1.4',
+      id: 'states-a', n: 4, title: 'What Heat Does: Particle Motion & States', subject: 'Science', minutes: 30, standards: '7.PS1.4',
       blocks: [
         { type: 'hook', text: 'Steel is a liquid. So is rock, and so is glass — just not at the temperature of your house. Every solid on Earth has a temperature where it gives up and flows, and every liquid has one where it locks into place. The entire Bronze Age came down to one skill: getting a fire hot enough to cross that line for metal — and knowing what to do in the seconds before it crossed back.' },
-        { type: 'video', title: 'States of matter & particle motion', url: 'https://www.youtube.com/results?search_query=states+of+matter+particle+motion+middle+school', watch: true, focus: 'Watch the particles, not the substance — the whole story is how fast they\'re jiggling.' },
-        { type: 'read', title: 'It\'s all about the jiggling', source: 'read', body: '<p>Every atom and molecule in every substance is vibrating, all the time. Temperature is just the <em>speed</em> of that jiggling.</p><ul><li>In a <b>solid</b>, particles are locked in formation, vibrating in place — that\'s why solids hold their shape.</li><li>Add heat (thermal energy) and they jiggle harder, until they break formation and start sliding past each other: the solid <b>melts</b> into a liquid.</li><li>Keep adding heat and particles fly off entirely: <b>evaporation</b> into a gas.</li><li>Pull heat back out and the whole thing runs in reverse — gas condenses, liquid freezes solid again.</li></ul><p>Here\'s the crucial part for this unit: melting is a <b>physical change</b>. The particles rearrange, but they\'re still the same particles — melt copper and cool it, and you\'ve still got copper, just in a new shape. That one fact is why casting metal in molds works at all. What it is <em>not</em> is a chemical reaction. That comes next, and it\'s a much stranger kind of change.</p>' },
+        { type: 'learn', title: 'Learn what heat does — your way', note: 'Watch it or read it, whichever you\'ll get more out of today.', options: [
+          { kind: 'video', label: 'Watch it', title: 'States of matter & particle motion', url: 'https://www.youtube.com/results?search_query=states+of+matter+particle+motion+middle+school', focus: 'Watch the particles, not the substance — the whole story is how fast they\'re jiggling.' },
+          { kind: 'read', label: 'Read it', title: 'It\'s all about the jiggling', source: 'reading', body: '<p>Every atom and molecule in every substance is vibrating, all the time. Temperature is just the <em>speed</em> of that jiggling.</p><ul><li>In a <b>solid</b>, particles are locked in formation, vibrating in place — that\'s why solids hold their shape.</li><li>Add heat (thermal energy) and they jiggle harder, until they break formation and start sliding past each other: the solid <b>melts</b> into a liquid.</li><li>Keep adding heat and particles fly off entirely: <b>evaporation</b> into a gas.</li><li>Pull heat back out and the whole thing runs in reverse — gas condenses, liquid freezes solid again.</li></ul><p>Here\'s the crucial part for this unit: melting is a <b>physical change</b>. The particles rearrange, but they\'re still the same particles — melt copper and cool it, and you\'ve still got copper, just in a new shape. That one fact is why casting metal in molds works at all. What it is <em>not</em> is a chemical reaction. That comes next, and it\'s a much stranger kind of change.</p>' },
+        ] },
         { type: 'answers', prompts: [
           'What actually happens to the particles when a solid melts?',
           'Why does melting copper and pouring it into a sword mold still give you copper — not some new substance?',
@@ -134,7 +136,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'states-b', n: 5, title: 'What Heat Does · B', subject: 'Science', minutes: 30, standards: '7.PS1.4',
+      id: 'states-b', n: 5, title: 'What Heat Does: See the Jiggling', subject: 'Science', minutes: 30, standards: '7.PS1.4',
       blocks: [
         { type: 'build', title: 'See the jiggling', minutes: 15, steps: '<ol><li>Fill one clear glass with <b>hot</b> tap water and one with <b>ice-cold</b> water. Let them sit still for a minute.</li><li>Drop <b>one drop of food coloring</b> into each at the same moment. Do not stir.</li><li>Watch. The color spreads through the hot water dramatically faster — you are literally watching faster particles knock the dye around.</li><li>Bonus round: set a chocolate chip, a pat of butter, and an ice cube on a plate on the counter. Which melts first? Each substance has its own melting point — that\'s a <b>property</b>.</li></ol>', photo: true, photoLabel: 'Photo of your two glasses mid-spread (optional):' },
         { type: 'answers', prompts: [
@@ -152,7 +154,7 @@ window.HS_UNITS.push({
 
     /* ───────────────── PHASE 2 · CHANGING STUFF ───────────────── */
     {
-      id: 'react-a', n: 6, title: 'Chemical Reactions · A', subject: 'Science', minutes: 35, standards: '7.PS1.2',
+      id: 'react-a', n: 6, title: 'Chemical Reactions: When Stuff Becomes New Stuff', subject: 'Science', minutes: 35, standards: '7.PS1.2',
       blocks: [
         { type: 'hook', text: 'Burn a big log and you\'re left with a handful of ash. So… where did the log <em>go</em>? It didn\'t vanish — almost the whole thing left as invisible gas and water vapor. A fire is your log\'s atoms trading partners with oxygen from the air and flying away as something new. That kind of change — where the stuff itself becomes different stuff — is a <b>chemical reaction</b>, and learning to command it is the most powerful trick our species ever pulled.' },
         { type: 'read', title: 'When stuff becomes different stuff', source: 'read', body: '<p>A <b>chemical reaction</b> takes starting substances — the <b>reactants</b> — and rearranges their atoms into new substances — the <b>products</b> — with brand-new <b>properties</b>. Melting didn\'t do that; the copper stayed copper. In a reaction, the identity itself changes.</p><p>How do you know one happened? Look for the evidence:</p><ul><li>Something <b>new</b> shows up with different properties — shiny iron turns to crumbly orange rust.</li><li><b>Gas</b> bubbles out of something that wasn\'t boiling.</li><li>The <b>color</b> changes through and through, or a solid appears in a clear liquid.</li><li><b>Temperature</b> changes on its own — reactions can release heat (fire, hand-warmers) or drink it in (cold packs).</li></ul><p>One more thing to sit with: rust isn\'t iron "decaying." It\'s iron <em>bonding with oxygen</em> from the air — a slow, quiet fire. The same reaction that burns a log is what eats a sword.</p>' },
@@ -166,7 +168,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'react-b', n: 7, title: 'Chemical Reactions · B', subject: 'Science', minutes: 35, standards: '7.PS1.5',
+      id: 'react-b', n: 7, title: 'Chemical Reactions: The Sealed-Bag Test', subject: 'Science', minutes: 35, standards: '7.PS1.5',
       blocks: [
         { type: 'hook', text: 'Here is one of the deepest laws in all of science, and you can prove it with a sandwich bag: in a chemical reaction, <b>atoms are never created and never destroyed</b>. They only rearrange. Weigh everything before, weigh everything after — always, always the same. It\'s called the conservation of mass, and once you believe it, "where did the log go?" stops being a mystery.' },
         { type: 'build', title: 'The sealed-bag reaction', minutes: 20, steps: '<ol><li>Put 2 spoonfuls of <b>baking soda</b> in a zip-top bag. Stand a small open cup with a few spoonfuls of <b>vinegar</b> upright inside the bag, then seal the bag with air squeezed out.</li><li>Weigh the whole sealed bag on a kitchen scale. Write the number down.</li><li>Tip the cup over <em>inside the sealed bag</em>. Fizz, inflation, drama — a gas (CO₂) is being produced.</li><li>Weigh it again, still sealed. <b>Same mass.</b> New substances, same atoms.</li><li>Now open the bag, let the gas out, and weigh once more. Lighter — and now you know exactly what left and where it went.</li></ol>', photo: true, photoLabel: 'Photo of your before/after scale readings (optional):' },
@@ -204,7 +206,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'biomat-a', n: 9, title: 'Biography of a Material · A', subject: 'Science · Humanities · ELA', minutes: 35, standards: '7.W.7 · 7.E.ST.10',
+      id: 'biomat-a', n: 9, title: 'Biography of a Material: Gather Your Facts', subject: 'Science · Humanities · ELA', minutes: 35, standards: '7.W.7 · 7.E.ST.10',
       blocks: [
         { type: 'prose', body: '<p>Time for the project. You\'re going to write the <b>biography of a material</b> — treat a substance like a famous person and tell its life story: where it comes from, the chemistry that creates it, and how it changed who had power in the world. First, pick your subject and gather the facts. You\'ll build the final piece in the next card.</p><p>Pick one:</p><ul><li><b>Bronze</b> — the alloy that armed the first empires</li><li><b>Iron / steel</b> — the metal that made armies huge</li><li><b>Concrete</b> — the stone you can pour, secret of Rome</li><li><b>Gunpowder</b> — the chemical reaction that ended castles</li><li><b>Paper</b> — the material that carried every idea</li><li><b>Lithium</b> — the metal your ebike runs on (sneak preview of card 14)</li></ul>' },
         { type: 'answers', prompts: [
@@ -222,7 +224,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'biomat-b', n: 10, title: 'Biography of a Material · B', subject: 'ELA · Humanities', minutes: 45, standards: '7.W.2 · 7.SL.4',
+      id: 'biomat-b', n: 10, title: 'Biography of a Material: Build It', subject: 'ELA · Humanities', minutes: 45, standards: '7.W.2 · 7.SL.4',
       blocks: [
         { type: 'build', title: 'Build the biography', minutes: 40, steps: '<p>Turn your notes into a <b>Canva presentation</b> (or a poster, or an illustrated write-up) with a slide or section for each: the recipe, the birthplace, the powers, the throne, and your one amazing thing. Tell it like a life story — your material should feel like the main character. <a href="https://www.canva.com/create/presentations/" target="_blank" rel="noopener" class="choice-link">Open Canva ↗</a></p><p>Checklist before you call it done: clear title · all five parts covered · at least one image · it names the actual chemistry (the reaction or process) · it answers "who got power from this?"</p>', photo: true, photoLabel: 'Paste the link to your finished biography:' },
         { type: 'answers', prompts: [
@@ -251,9 +253,10 @@ window.HS_UNITS.push({
       blocks: [
         { type: 'hook', text: 'Nearly every ancient culture put a god at the anvil. The Greeks had Hephaestus, the Norse had dwarven master-smiths, West Africa had Ogun. Why does the blacksmith get a god? Because to everyone watching, smelting looked like sorcery: a man walks into fire with a rock and walks out with a blade. The smith was the one person in the village who could <em>transform matter</em> — and myths are how people explained power they couldn\'t understand.' },
         { type: 'read', title: 'Two forges: Hephaestus and Ogun', source: 'read', body: '<p><b>The Shield of Achilles</b> (Greece, from Homer\'s <em>Iliad</em>): when the hero Achilles loses his armor, his goddess mother goes to <b>Hephaestus</b>, the lame smith-god, who forges him a shield with the whole world hammered into it — cities at peace and war, harvests, dances, the ocean around the rim. Homer spends 130 lines just describing it. The message: a god-forged object is worth more than an army, and the maker at the forge holds power even the war-gods respect.</p><p><b>Ogun</b> (Yoruba, West Africa): the god of iron who cleared the first path through the wilderness with his machete — nothing civilized happens until Ogun cuts the way. Smiths, warriors, and today even drivers and surgeons are under his protection: anyone whose power comes through iron. In some tellings the other gods are helpless until Ogun agrees to forge their tools.</p><p>Two cultures, an ocean apart, same verdict: <b>the one who transforms matter transforms everything else.</b> Sound familiar? It should — it\'s this unit\'s essential question, answered in myth instead of chemistry.</p><p class="read-links">📄 Read the full stories: <a href="reader.html?doc=shield-of-achilles">The Shield of Achilles ↗</a> · <a href="reader.html?doc=ogun">Ogun, God of Iron ↗</a></p>' },
-        { type: 'prose', body: '<p>Pick one:</p><ul><li><b>Write your own forge myth</b> — a short story explaining where a smith\'s power comes from, or how the first metal came into the world. Give it a character and a cost (myths always charge a price).</li><li><b>Compare the two</b> — write a paragraph on how Hephaestus and Ogun are alike and different, and what each says about how that culture saw the maker.</li></ul>' },
-        { type: 'answers', prompts: [
-          'Your myth, or your comparison, goes here:',
+        { type: 'choice', title: 'Show what you know — your pick', note: 'Two forge gods, one idea: whoever transforms matter holds power. Make something of it — your call.', options: [
+          { kind: 'write', label: 'Write a myth', input: 'text', prompt: 'Write your own forge myth — a short story explaining where a smith\'s power comes from, or how the first metal came into the world. Give it a character and a cost (myths always charge a price).' },
+          { kind: 'write', label: 'Compare the two', input: 'text', prompt: 'Write a paragraph comparing Hephaestus and Ogun: how are they alike and different, and what does each say about how that culture saw the maker?' },
+          { kind: 'record', label: 'Record it', input: 'link', prompt: 'Record yourself telling your own forge myth aloud like a storyteller, OR giving a 60-second compare-and-contrast of Hephaestus and Ogun. Paste the link.' },
         ] },
         { type: 'matching', title: 'Word match #2', note: 'Tap a word, then its meaning.', set: ['ore', 'smelting', 'alloy', 'empire', 'tribute', 'monopoly'] },
         { type: 'next', text: 'Next: the metal that broke the monopoly.' },
@@ -282,10 +285,10 @@ window.HS_UNITS.push({
       blocks: [
         { type: 'hook', text: 'There is a Bronze Age happening right now, and you own a piece of it. The material is <b>lithium</b> — the lightest metal there is — and it\'s in your ebike battery, your phone, and every electric car on the road. Nations are racing to lock up the supply, just like Bronze Age kings and their tin. Same story, new element. Except this time, one of the biggest deposits on Earth might be under <em>Oregon</em>.' },
         { type: 'read', title: 'The new tin', source: 'read', body: '<p>Your ebike battery is a chemical reaction with a pause button. Charge it, and electricity shoves <b>lithium ions</b> to one side of the cell — reactants loaded, energy stored. Ride, and the ions flow back, releasing that energy as electric current on demand. It\'s the campfire and the hand-warmer all over again — a reaction releasing energy — except this one is rechargeable and rides with you. Lithium gets the job because it\'s featherweight and eager to react: the most energy for the least weight. (It\'s also a <b>synthetic-materials</b> story — nobody digs up a battery; chemists build one out of processed natural resources, the same way ancient smiths turned ore into bronze.)</p><p>Now the geography, and see if it rhymes: lithium is only worth mining in a few places — salt-flat brines in Chile, Argentina, and Bolivia, and hard rock in Australia. A handful of countries and companies control most of it. Sound like the tin problem? It is the tin problem, with the same stakes: whoever controls the material controls what gets built.</p><p>The local twist: the <b>McDermitt Caldera</b>, an ancient collapsed supervolcano straddling the Oregon–Nevada line, may hold one of the largest lithium deposits ever found. But mining it means real costs — scarce desert water, wildlife habitat, and land that Native nations hold sacred; the fight over the Thacker Pass mine on the Nevada side went all the way to federal court. Every material in this unit had a price. This one\'s being argued about right now, a few hours from your house.</p>' },
-        { type: 'answers', prompts: [
-          'Explain how lithium today "rhymes with" tin in the Bronze Age. Name at least two parallels.',
-          'Your battery stores energy in a chemical reaction. In your own words, what happens when you charge it and when you ride?',
-          'A huge lithium deposit sits partly in Oregon. Mining it has real benefits and real costs — name two of each, then say where you\'d draw the line and why.',
+        { type: 'choice', title: 'Show what you know — your pick', note: 'Lithium is the tin of our age. Bring it home — pick how to show it.', options: [
+          { kind: 'write', label: 'Write it', input: 'text', prompt: 'Explain how lithium today "rhymes with" tin in the Bronze Age (at least two parallels). Then: a huge lithium deposit sits partly in Oregon — name two real benefits and two real costs of mining it, and say where you\'d draw the line and why.' },
+          { kind: 'record', label: 'Record it', input: 'link', prompt: 'Record a 60–90 second take: is mining Oregon\'s lithium worth it? Argue a side using the tin-and-empire pattern from this unit. Paste the link.' },
+          { kind: 'make', label: 'Make a set', input: 'link', prompt: 'Build a small Quizlet/flashcard set connecting this unit\'s power-materials (bronze, iron, tin, lithium) to who they gave power to. Paste the link.' },
         ] },
         { type: 'deeper', text: 'Battery engineers are racing to replace lithium with sodium — the explosive metal from your salt lesson, thousands of times more common. Look up "sodium-ion battery" and ask: if it works, what happens to the lithium monopoly?' },
         { type: 'next', text: 'Last stop: pull the whole unit together.' },
@@ -294,7 +297,7 @@ window.HS_UNITS.push({
 
     /* ───────────────── PHASE 4 · REFLECTION ───────────────── */
     {
-      id: 'reflect-a', n: 15, title: 'Reflection · A — Look Back', subject: 'Portfolio', minutes: 35, standards: 'self-assessment',
+      id: 'reflect-a', n: 15, title: 'Reflection: Look Back', subject: 'Portfolio', minutes: 35, standards: 'self-assessment',
       blocks: [
         { type: 'prose', body: '<p>You made it through the whole unit — from atoms you can\'t see to empires you can\'t miss. Before you write your final answer, look back at where you started and check what stuck.</p>' },
         { type: 'kwlback', prompt: 'Here is what you wrote on day one. Read it — you knew less than you think you did.' },
@@ -303,7 +306,7 @@ window.HS_UNITS.push({
       ],
     },
     {
-      id: 'reflect-b', n: 16, title: 'Reflection · B — Your Answer', subject: 'Portfolio', minutes: 40, standards: '7.W.1 · synthesis',
+      id: 'reflect-b', n: 16, title: 'Reflection: Your Answer', subject: 'Portfolio', minutes: 40, standards: '7.W.1 · synthesis',
       blocks: [
         { type: 'prose', body: '<p>This is the whole unit in one place. Answer the essential question using what you learned — the chemistry, the history, a myth, and a material from your own life. Work in at least <b>five</b> of the unit words, and finish the argument you started in the iron lesson: which material changed ordinary people\'s lives the most, and why?</p><blockquote>How does changing what things are made of change who has power?</blockquote>' },
         { type: 'answers', prompts: [

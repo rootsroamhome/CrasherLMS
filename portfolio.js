@@ -49,6 +49,7 @@ function analyze(u) {
   let answered = 0;
   u.cards.forEach(c => c.blocks.forEach((b, bi) => {
     if (b.type === 'answers') b.prompts.forEach((p, pi) => { if (ans[`${c.id}_${bi}_${pi}`]) answered++; });
+    if (b.type === 'choice') { const pk = ans[`${c.id}_${bi}_pick`]; if (pk !== undefined && pk !== '' && ans[`${c.id}_${bi}_r${pk}`]) answered++; }
   }));
 
   return { s, done, ans, kwl, total, doneCount, quizGot, quizMax, quizRows, words, got, fuzzy, sorted: got + fuzzy.length, answered };
@@ -98,6 +99,18 @@ function cardWork(u, c, d) {
     if (b.type === 'rubric') {
       const checks = b.items.map((it, ii) => `<li class="${a[`${c.id}_${bi}_r${ii}`] === 'y' ? 'on' : ''}">${esc(it)}</li>`).join('');
       parts.push(`<div class="bp-qa"><div class="bp-q">Self-check</div><ul class="bp-rubric">${checks}</ul></div>`);
+    }
+    if (b.type === 'choice') {
+      const pk = a[`${c.id}_${bi}_pick`];
+      if (pk !== undefined && pk !== '') {
+        const o = b.options[parseInt(pk, 10)];
+        const v = a[`${c.id}_${bi}_r${pk}`];
+        const label = o ? (o.label || 'His choice') : 'His choice';
+        const val = (o && o.input === 'text')
+          ? (v ? esc(v) : '— not done yet —')
+          : (v ? `<a href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a>` : '— not done yet —');
+        parts.push(`<div class="bp-qa"><div class="bp-q">${esc(b.title || 'Show what you know')} — chose: ${esc(label)}</div><div class="bp-a${v ? '' : ' empty'}">${val}</div></div>`);
+      }
     }
   });
   if (!parts.length) return '';
@@ -211,7 +224,7 @@ function standardsMastery() {
     const total = a.list.length;
     return `<details class="std-card tile ${a.tex}" style="--tile:${colorTile(a.color)}; --ribbon:${colorBold(a.color)}; --ribbon-text:#fff;" data-area="${esc(a.area)}">
       <summary class="std-face">
-        <span class="std-ghost" aria-hidden="true">${esc(a.ghost || a.area)}</span>
+        <span class="std-ghost" aria-hidden="true"><b>${esc(a.ghost || a.area)}</b><b>${esc(a.ghost || a.area)}</b><b>${esc(a.ghost || a.area)}</b></span>
         <span class="tile-side">${esc(a.side)}</span>
         <div class="big-ribbon"><div class="ribbon-track">${(esc(a.area) + '&nbsp;·&nbsp;').repeat(14)}</div></div>
         <div class="std-face-bottom">
