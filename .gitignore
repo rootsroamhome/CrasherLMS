@@ -6,3 +6,6 @@ populate-schedule.mjs
 
 # Local Netlify folder
 .netlify
+
+# Local Claude Code config (permissions, preview launch) — machine-specific
+.claude/

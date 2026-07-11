@@ -1378,3 +1378,38 @@ textarea.u-ans { min-height: 84px; }
   .yr-columns { grid-template-columns: 1fr; gap: 26px; }
   .pg-switch-cols { grid-template-columns: 1fr; gap: 14px; }
 }
+
+/* =========================================================
+   Portfolio — two-column work + "Standards → his work"
+   ========================================================= */
+.pf-section-sub { font-size: 0.9rem; color: var(--text-muted); margin: -4px 0 14px; max-width: 62ch; }
+
+/* accordions sit in the teal/gold year columns; gold spine for math */
+.pf-cols .yr-col > .pf-unit { display: block; }
+.pf-unit-math { border-color: var(--ink); }
+.pf-unit-math .pf-caret { color: #D19A1F; }
+
+/* lesson work card: the standards tag + quiz score */
+.pf-workstd { font-family: var(--sans); font-size: 0.66rem; font-weight: 800; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--text-dim); margin-left: 6px; white-space: nowrap; }
+.pf-score { font-weight: 800; }
+
+/* clickable standard rows (reuse .std-row look from Big Picture) */
+.std-row.pf-std { cursor: pointer; }
+.std-row.pf-std.mastered .std-check { background: var(--success); border-color: var(--success); }
+.std-row.pf-std.mastered .std-check::after { content: '✓'; color: #fff; font-size: 0.8rem; font-weight: 900; }
+.std-row.pf-std.mastered .std-label { color: var(--ink); }
+.std-row.pf-std.started .std-check { background: #F4CE5E; border-color: #D19A1F; }
+.std-row.pf-std.none { opacity: 0.48; cursor: default; }
+.std-row.pf-std.none:hover { background: none; }
+.pf-std-tag { margin-left: auto; align-self: center; font-size: 0.66rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--coral); white-space: nowrap; }
+.pf-std-tag.muted { color: var(--text-dim); }
+
+/* flash the work card a standard jumps to */
+.pf-flash { animation: pfFlash 2.2s ease; }
+@keyframes pfFlash {
+  0%   { box-shadow: 0 0 0 0 rgba(240,83,63,0.0); background: var(--cream-2); }
+  12%  { box-shadow: 0 0 0 3px var(--coral); background: #FFF3EF; }
+  100% { box-shadow: 0 0 0 0 rgba(240,83,63,0.0); background: var(--cream-2); }
+}

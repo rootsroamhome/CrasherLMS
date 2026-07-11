@@ -1,9 +1,14 @@
 /**
- * portfolio.js — Crasher's work, unit by unit.
+ * portfolio.js — Crasher's work, by track.
  *
- * Each unit is a COLLAPSED accordion (closed by default) so the page stays
- * short no matter how many units exist — tap a unit to open its work: quiz
- * scores, vocab self-check, KWL, and every written answer.
+ * Two columns like Big Picture — Interdisciplinary (teal) and Math (gold) — each
+ * a stack of COLLAPSED unit accordions (closed by default) so the page stays
+ * short: tap a unit to open its work (quiz scores, vocab self-check, KWL, every
+ * written answer).
+ *
+ * Plus a "Standards → his work" grid (the same four content-area boxes as Big
+ * Picture). Each standard is clickable: tap one and the page opens the unit and
+ * scrolls to the completed lesson whose saved work shows that mastery.
  *
  * Reads the browser's localStorage, so it shows the work done on THIS device.
  * (Cross-device sync to a shared database is a separate to-do.)
@@ -14,6 +19,8 @@ const HS_UNITS = window.HS_UNITS || [];
 function unitState(id) { try { return JSON.parse(localStorage.getItem('homeskewl_unit_' + id)) || {}; } catch (e) { return {}; } }
 function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function pct(n, d) { return d ? Math.round(n / d * 100) : 0; }
+function colorTile(subject) { const m = typeof SUBJECT_COLORS !== 'undefined' ? SUBJECT_COLORS : {}; return (m[subject] || {}).tile || '#8FD6E1'; }
+function colorBold(subject) { const m = typeof SUBJECT_COLORS !== 'undefined' ? SUBJECT_COLORS : {}; return (m[subject] || {}).bg || '#17A0AE'; }
 
 function analyze(u) {
   const s = unitState(u.id);
@@ -54,8 +61,26 @@ function meter(label, text, value, color) {
   </div>`;
 }
 
-function cardWork(u, c, a) {
+/* One lesson's saved work. Renders the quiz score (mastery evidence) plus any
+   written answers / build links / rubric self-check. Given a stable id + its
+   standards so the standards grid can jump straight to it. */
+function cardWork(u, c, d) {
+  const a = d.ans || {};
+  const quizMap = (d.s && d.s.quiz) || {};
   const parts = [];
+
+  const quizBlock = c.blocks.find(b => b.type === 'quiz');
+  if (quizBlock) {
+    const raw = quizMap[c.id];
+    if (raw && raw.includes('/')) {
+      const [g, m] = raw.split('/').map(Number);
+      const p = pct(g, m);
+      const col = p === 100 ? 'var(--success)' : p >= 50 ? 'var(--teal)' : '#F0533F';
+      parts.push(`<div class="bp-qa"><div class="bp-q">Quick check</div>
+        <div class="bp-a"><span class="pf-score" style="color:${col}">Scored ${g} / ${m} · ${p}%</span></div></div>`);
+    }
+  }
+
   c.blocks.forEach((b, bi) => {
     if (b.type === 'answers') {
       b.prompts.forEach((p, pi) => {
@@ -76,16 +101,19 @@ function cardWork(u, c, a) {
     }
   });
   if (!parts.length) return '';
-  return `<div class="bp-workcard"><div class="bp-workcard-title">${c.n}. ${esc(c.title)}</div>${parts.join('')}</div>`;
+  return `<div class="bp-workcard" id="pfwork-${u.id}-${c.id}">
+    <div class="bp-workcard-title">${c.n}. ${esc(c.title)}${c.standards ? ` <span class="pf-workstd">${esc(c.standards)}</span>` : ''}</div>
+    ${parts.join('')}</div>`;
 }
 
-/* One unit = one collapsed accordion. */
+/* One unit = one collapsed accordion, anchored by id so standards can jump to it. */
 function unitAccordion(u) {
   const d = analyze(u);
   const quizAvg = d.quizMax ? pct(d.quizGot, d.quizMax) : null;
   const gotPct = pct(d.got, d.words.length);
   const donePct = pct(d.doneCount, d.total);
-  const touched = d.doneCount > 0 || d.answered > 0;
+  const isMath = u.track === 'math';
+  const accent = isMath ? '#D19A1F' : 'var(--teal)';
 
   const chart = d.quizRows.map(r => {
     const h = r.got === null ? 0 : pct(r.got, r.max);
@@ -108,7 +136,7 @@ function unitAccordion(u) {
     <div><span>Learned by the end</span><p>${esc(d.kwl.l) || '<em>(not finished)</em>'}</p></div>
   </div>` : '';
 
-  const work = u.cards.map(c => cardWork(u, c, d.ans)).filter(Boolean).join('');
+  const work = u.cards.map(c => cardWork(u, c, d)).filter(Boolean).join('');
 
   const summary = `<summary class="pf-summary">
       <span class="pf-caret">▸</span>
@@ -116,11 +144,11 @@ function unitAccordion(u) {
       <span class="pf-unit-stat">${d.doneCount}/${d.total} lessons${quizAvg !== null ? ` · quiz ${quizAvg}%` : ''}${d.answered ? ` · ${d.answered} answers` : ''}</span>
     </summary>`;
 
-  return `<details class="pf-unit"${touched ? '' : ''}>
+  return `<details class="pf-unit${isMath ? ' pf-unit-math' : ''}" id="pf-${u.id}">
     ${summary}
     <div class="pf-body">
       <div class="bp-meters">
-        ${meter('Lessons done', `${d.doneCount} / ${d.total}`, donePct, 'var(--teal)')}
+        ${meter('Lessons done', `${d.doneCount} / ${d.total}`, donePct, accent)}
         ${meter('Quiz accuracy', quizAvg === null ? 'no quizzes yet' : `${quizAvg}% (${d.quizGot}/${d.quizMax})`, quizAvg || 0, 'var(--success)')}
         ${meter('Words owned', `${d.got} / ${d.words.length}`, gotPct, '#D19A1F')}
       </div>
@@ -134,10 +162,99 @@ function unitAccordion(u) {
 
       ${kwl}
 
-      <h3 class="bp-subhead">Written work</h3>
-      ${work || '<p class="empty-msg">No written answers saved for this unit yet.</p>'}
+      <h3 class="bp-subhead">Lesson work</h3>
+      ${work || '<p class="empty-msg">No saved work for this unit yet.</p>'}
     </div>
   </details>`;
+}
+
+/* ── Standards → his work ──────────────────────────────────────────────────
+   Index every standard code (normalized) to the lessons that cover it, marking
+   which are done. A standard with a done lesson = mastery evidence you can jump to. */
+function stdWorkIndex() {
+  const norm = window.hsNormStd;
+  const idx = {};
+  HS_UNITS.forEach(u => {
+    const done = unitState(u.id).done || {};
+    u.cards.forEach(c => {
+      (c.standards || '').split('·').forEach(t => {
+        const n = norm(t); if (!n) return;
+        (idx[n] = idx[n] || []).push({ unitId: u.id, cardId: c.id, done: !!done[c.id] });
+      });
+    });
+  });
+  return idx;
+}
+
+function standardsMastery() {
+  const S = window.HS_STANDARDS || [];
+  const norm = window.hsNormStd;
+  const idx = stdWorkIndex();
+  const grid = S.map(a => {
+    let masteredCount = 0;
+    const rows = a.list.map(s => {
+      const entries = idx[norm(s.code)] || [];
+      const doneE = entries.filter(e => e.done);
+      const state = doneE.length ? 'mastered' : (entries.length ? 'started' : 'none');
+      if (state === 'mastered') masteredCount++;
+      const target = doneE[0] || entries[0] || null;
+      const tgtAttrs = target ? ` data-unit="${esc(target.unitId)}" data-card="${esc(target.cardId)}"` : '';
+      const tag = state === 'mastered' ? '<span class="pf-std-tag">his work →</span>'
+                : state === 'started' ? '<span class="pf-std-tag muted">assigned</span>' : '';
+      return `<button type="button" class="std-row pf-std ${state}"${tgtAttrs} data-code="${esc(s.code)}"${state === 'none' ? ' disabled' : ''}>
+        <span class="std-check" aria-hidden="true"></span>
+        <span class="std-code">${esc(s.code)}</span>
+        <span class="std-label">${esc(s.label)}</span>
+        ${tag}
+      </button>`;
+    }).join('');
+    const total = a.list.length;
+    return `<details class="std-card tile ${a.tex}" style="--tile:${colorTile(a.color)}; --ribbon:${colorBold(a.color)}; --ribbon-text:#fff;" data-area="${esc(a.area)}">
+      <summary class="std-face">
+        <span class="tile-side">${esc(a.side)}</span>
+        <div class="big-ribbon"><div class="ribbon-track">${(esc(a.area) + '&nbsp;·&nbsp;').repeat(14)}</div></div>
+        <div class="std-face-bottom">
+          <span class="std-arrow">→</span>
+          <div>
+            <div class="std-face-title">${esc(a.area)}</div>
+            <div class="std-face-sub"><span class="pf-std-count">${masteredCount}</span> of ${total} with work</div>
+          </div>
+        </div>
+      </summary>
+      <div class="std-checklist">${a.source ? `<div class="std-source">${esc(a.source)}</div>` : ''}${rows}</div>
+    </details>`;
+  }).join('');
+  return `<div class="std-grid">${grid}</div>`;
+}
+
+function section(title, sub, body) {
+  return `<div class="bp-section"><div class="section-label">${title}</div>${sub ? `<p class="pf-section-sub">${sub}</p>` : ''}${body}</div>`;
+}
+
+function jumpToWork(unitId, cardId) {
+  if (!unitId) return;
+  const acc = document.getElementById('pf-' + unitId);
+  if (acc && !acc.open) {
+    acc.open = true;
+    const caret = acc.querySelector('.pf-caret');
+    if (caret) caret.textContent = '▾';
+  }
+  const work = document.getElementById('pfwork-' + unitId + '-' + cardId) || acc;
+  document.querySelectorAll('.pf-flash').forEach(e => e.classList.remove('pf-flash'));
+  if (!work) return;
+  // let the <details> expand before scrolling
+  requestAnimationFrame(() => {
+    work.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    work.classList.add('pf-flash');
+    setTimeout(() => work.classList.remove('pf-flash'), 2200);
+  });
+}
+
+function wireStandards() {
+  document.querySelectorAll('.pf-std').forEach(btn => {
+    if (btn.classList.contains('none')) return;
+    btn.addEventListener('click', () => jumpToWork(btn.dataset.unit, btn.dataset.card));
+  });
 }
 
 function load() {
@@ -156,13 +273,30 @@ function load() {
   document.getElementById('stat-quiz').textContent = qMax ? `${pct(qGot, qMax)}%` : '–';
   document.getElementById('stat-words').textContent = `${wGot}/${wTotal}`;
 
-  content.innerHTML = HS_UNITS.map(unitAccordion).join('') +
-    `<p class="bp-footnote">Tap a unit to open his work. This reads the work saved in this browser on this device — the quiz and vocab numbers are signals to talk about, not grades.</p>`;
+  const inter = HS_UNITS.filter(u => u.track !== 'math');
+  const math = HS_UNITS.filter(u => u.track === 'math');
+  const col = (label, cls, list) => `<div class="yr-col ${cls}"><div class="yr-col-label">${label}</div>${
+    list.length ? list.map(unitAccordion).join('') : '<p class="empty-msg">No units yet.</p>'}</div>`;
+
+  const workColumns = `<div class="yr-columns pf-cols">
+    ${col('Interdisciplinary', 'core', inter)}
+    ${col('Math', 'math', math)}
+  </div>`;
+
+  content.innerHTML =
+    section('His work, by track', 'Tap a unit to open his quiz scores, vocabulary, and written answers.', workColumns) +
+    section('Standards → his work',
+      'Tap any lit-up standard to jump to the completed lesson whose saved work shows it. Rows fill in as he finishes lessons on this device.',
+      standardsMastery()) +
+    `<p class="bp-footnote">This reads the work saved in this browser on this device — the quiz and vocab numbers
+     are signals to talk about, not grades. The whole-year standards <em>checklist</em> lives on the
+     <a href="big-picture.html">Big Picture</a> page.</p>`;
 
   // Toggle the caret when an accordion opens/closes.
-  content.querySelectorAll('.pf-unit').forEach(d => {
-    d.addEventListener('toggle', () => d.querySelector('.pf-caret').textContent = d.open ? '▾' : '▸');
+  content.querySelectorAll('.pf-unit').forEach(dEl => {
+    dEl.addEventListener('toggle', () => dEl.querySelector('.pf-caret').textContent = dEl.open ? '▾' : '▸');
   });
+  wireStandards();
 }
 
 load();

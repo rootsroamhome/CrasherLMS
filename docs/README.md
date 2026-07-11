@@ -52,4 +52,5 @@ framework, Netlify-hosted from `main`, progress in `localStorage`. Five tabs:
 
 ## Built so far
 Interdisciplinary: **Unit 1 Rivers**, **Unit 2 Metals** (units 3–6 planned, see YEAR-MAP).
-Math: **Proportional Relationships** (units 2–6 planned, see BUILDING-MATH-UNITS).
+Math: **all 6 units built** — Proportional Relationships, Rates & Percentages, Negative
+Numbers, Expressions & Equations, Geometry, Statistics & Probability (Khan-scaffolded, gold theme).
