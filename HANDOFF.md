@@ -2,13 +2,17 @@
 
 ## Latest pass — Today rebuilt around the units, mastery view, clean readers
 The date-locked to-do list is **retired as the front door.** The site now runs on the units:
-- **Today (`index.html`/`index.js`) is now units-driven and Airtable-free.** It shows one
-  "Today's lesson" card — the next unlocked card of the unit he's in — which links straight
-  into My Unit at that card (shows "Start"/"Continue" + progress bar). Below it, an
-  **"Every day"** strip with Math and Independent Reading, each with a focus timer.
-  **Nothing rolls over:** the daily "done today" checks are stored under the local date
-  (`homeskewl_daily_<YYYY-MM-DD>`) and simply reset next day — no carry-forward anywhere.
-  Edit the `DAILY` array at the top of `index.js` to change the daily anchors.
+- **Today (`index.html`/`index.js`) is now units-driven and Airtable-free.** A d.school-style
+  **textured tile gallery** (mixed subject colors + halftone + ribbon + loremflickr photos on the
+  lesson/reading tiles): a feature "lesson" tile = the next unlocked card of the unit he's in
+  (links into My Unit), Math + Reading daily tiles with focus timers, a weekly-pick tile, and a
+  black **portfolio tile → Big Picture**. **Gated to the school-year start** (`CURRICULUM.yearStart`,
+  Aug 31): before then it shows a summer countdown + "Preview the unit"; after, "Continue" + "Week N
+  of 37". **Nothing rolls over:** daily "done today" is keyed by LOCAL date (`homeskewl_daily_<date>`).
+  Edit the `DAILY` array / `UNIT_PHOTO` map at the top of `index.js`.
+  ⚠️ Gotcha: `config.js` and `curriculum.js` declare `SUBJECT_COLORS` / `CURRICULUM` as top-level
+  `const`, which are NOT on `window`. Reference them **by name** (guarded with `typeof`), never as
+  `window.SUBJECT_COLORS` — doing the latter is what made every Today tile fall back to teal ("all blue").
 - **Big Picture (`big-picture.html`/`big-picture.js`) is now a mastery + portfolio dashboard.**
   It reads every unit's localStorage and shows, per unit: cards done, quiz accuracy (with a
   per-lesson bar chart), vocab "words owned" (with the fuzzy words as a study list), the KWL,
