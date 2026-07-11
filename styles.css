@@ -1339,3 +1339,6 @@ textarea.u-ans { min-height: 84px; }
   font-weight: 800; letter-spacing: 0.02em; color: var(--ink); background: #F4CE5E; border: 1.5px solid var(--ink);
   border-radius: 20px; padding: 3px 11px; }
 .yr-row.planned .yr-window { background: var(--cream-2); }
+
+/* standards card: the Oregon source line at the top of an open checklist */
+.std-source { font-size: 0.74rem; font-style: italic; color: var(--text-dim); padding: 10px 22px 4px; }

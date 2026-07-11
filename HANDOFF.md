@@ -33,14 +33,20 @@ The date-locked to-do list is **retired as the front door.** The site now runs o
     only; cross-device sync still a to-do).
   - **Big Picture (`big-picture.html`/`big-picture.js`)** = THE YEAR + STANDARDS CHECKLIST (its
     original purpose — do not turn it back into an answer dump). Shows the six-unit arc (live vs.
-    planned, from `YEAR_PLAN`), and a **full 7th-grade standards checklist**: every standard for the
-    year in `STANDARDS` (Math / Science / ELA / Social Studies), grouped into **collapsible
-    d.school-style content-area cards** (colored tile + halftone + top-right "\" tape). Every
-    standard shows a ✓ (done) or empty circle. A standard **auto-checks** when a completed lesson
-    covers it (matched off the units' card `standards`), and each is **click-to-toggle by hand**
-    (persisted in `localStorage['homeskewl_standards']`) so things done outside the app — like daily
-    Khan **Math**, which no unit covers — can still be checked. Math is always shown so it never
-    looks like it doesn't exist. Add a new standard by editing the `STANDARDS` array.
+    planned, from `YEAR_PLAN`, each with a target-date pill), and a **full 7th-grade standards
+    checklist**: EVERY Oregon standard for the year in `STANDARDS` (~130), grouped into collapsible
+    content-area cards. Codes are the **actual Oregon standards** (verified against ODE/IXL, Jul 2026):
+    **Math** = 2021 Oregon Math Standards (7.NS/7.AEE/7.RP/7.GM/7.DR — NOT the CCSS 7.EE/7.SP codes);
+    **Science** = Oregon grade-7 NGSS (grade-prefixed, e.g. 7.PS1.1, 7.ESS2.1); **ELA** = Oregon
+    grade-7 (grade-first, e.g. 7.RL.1, 7.W.2); **Social Studies** = 2024 Oregon Social Science
+    Standards (in effect 2026–27; 7.C/7.G/7.E/7.H strands). Every standard shows ✓ (done) or an empty
+    circle. It **auto-checks** when a completed lesson covers it — `norm()` normalizes across code
+    formats so the units' older `MS-ESS2-1`/`RI.7.1` still match `7.ESS2.1`/`7.RI.1` — AND is
+    **click-to-toggle by hand** (persisted in `localStorage['homeskewl_standards']`) for work done
+    outside the units (e.g. daily Khan math). This is the FULL set on purpose: gaps between the units
+    and the standards are meant to be visible so units can be adjusted or supplemented. Edit `STANDARDS`
+    to change it. (Note: the units' own `standards` strings still use the older CCSS/NGSS codes; only
+    this checklist is on the Oregon codes.)
 - **Clean reading panes (`reader.html`/`reader.js` + `readings.js`).** Any lesson reading that
   used to link to an outside site (USGS, Britannica) now opens an in-app, ad-free, printable
   reading pane instead. Primary sources got real text: Gilgamesh's flood, the Code of
