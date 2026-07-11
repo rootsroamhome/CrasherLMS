@@ -26,6 +26,16 @@ const YEAR_PLAN = [
   { n: 6, id: null, title: 'Power (capstone)', theme: 'Energy & circuits · who controls energy · persuasion', window: 'Apr 26 – Jun 11' },
 ];
 
+/* The math arc (Khan 7th-grade sequence). `id` links to a built math unit. */
+const MATH_PLAN = [
+  { n: 1, id: 'math-proportions', title: 'Proportional Relationships', theme: 'Ratios · constant of proportionality · graphs · proportions' },
+  { n: 2, id: null, title: 'Rates & Percentages', theme: 'Unit rates · percent problems' },
+  { n: 3, id: null, title: 'Negative Numbers', theme: 'Add, subtract, multiply & divide rationals' },
+  { n: 4, id: null, title: 'Expressions & Equations', theme: 'Equivalent expressions · solve equations & inequalities' },
+  { n: 5, id: null, title: 'Geometry', theme: 'Scale drawings · angles · area, surface area & volume' },
+  { n: 6, id: null, title: 'Statistics & Probability', theme: 'Sampling · comparing populations · chance' },
+];
+
 /* The full year's 7th-grade standards, by content area — the ACTUAL Oregon
    standards (checked against the ODE / IXL enumerations, July 2026):
    Math = 2021 Oregon Math Standards; Science = Oregon (NGSS) grade-7 standards;
@@ -288,14 +298,20 @@ function load() {
   const totalStd = STANDARDS.reduce((n, a) => n + a.list.length, 0);
   const doneStd = STANDARDS.reduce((n, a) => n + areaDone(a), 0);
   const unitsLive = HS_UNITS.length;
+  const totalUnits = YEAR_PLAN.length + MATH_PLAN.length;
   const cardsDone = HS_UNITS.reduce((s, u) => s + doneCount(u), 0);
 
-  document.getElementById('stat-units').textContent = `${unitsLive}/${YEAR_PLAN.length}`;
+  document.getElementById('stat-units').textContent = `${unitsLive}/${totalUnits}`;
   document.getElementById('stat-cards').textContent = cardsDone;
   document.getElementById('stat-standards').textContent = `${doneStd}/${totalStd}`;
 
+  const yearColumns = `<div class="yr-columns">
+    <div class="yr-col core"><div class="yr-col-label">Interdisciplinary</div><div class="yr-list">${YEAR_PLAN.map(unitRow).join('')}</div></div>
+    <div class="yr-col math"><div class="yr-col-label">Math</div><div class="yr-list">${MATH_PLAN.map(unitRow).join('')}</div></div>
+  </div>`;
+
   content.innerHTML =
-    section('The year, unit by unit', `<div class="yr-list">${YEAR_PLAN.map(unitRow).join('')}</div>`) +
+    section('The year, unit by unit', yearColumns) +
     section('Standards checklist — the whole year', standardsCards()) +
     `<p class="bp-footnote">Tap a subject to open its standards. A standard checks itself off when a lesson
      that covers it is done — and you can tap any standard to check it by hand (handy for daily Khan math,

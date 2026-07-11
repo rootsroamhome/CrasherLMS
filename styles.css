@@ -1365,3 +1365,16 @@ textarea.u-ans { min-height: 84px; }
 /* math lesson: interdisciplinary "tie-in" callout */
 .tie-in { background: var(--cream-2); border-left: 4px solid var(--u-accent); padding: 10px 14px;
   border-radius: 0 8px 8px 0; font-size: 0.92rem; line-height: 1.5; margin: 14px 0; }
+
+/* Big Picture year arc + Parents switcher: two labeled columns (interdisciplinary / math) */
+.yr-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+.yr-col-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+.yr-col.core .yr-col-label { color: var(--teal); }
+.yr-col.math .yr-col-label { color: #D19A1F; }
+.yr-col.math .yr-bar > div { background: #D19A1F; }
+.yr-col.math .yr-chip.live-chip { background: #F4CE5E; }
+.pg-switch-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px; }
+@media (max-width: 760px) {
+  .yr-columns { grid-template-columns: 1fr; gap: 26px; }
+  .pg-switch-cols { grid-template-columns: 1fr; gap: 14px; }
+}

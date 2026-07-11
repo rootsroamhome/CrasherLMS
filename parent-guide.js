@@ -39,9 +39,11 @@ function resources(u) {
 
 function switcher(active) {
   if (HS_UNITS.length < 2) return '';
-  return `<div class="u-switch pg-switch">${HS_UNITS.map(u =>
-    `<a class="u-switch-link${u.id === active.id ? ' on' : ''}" href="parent-guide.html?u=${u.id}">${esc(u.short || u.title)}</a>`
-  ).join('')}</div>`;
+  const col = (units, cls, label) => units.length ? `<div class="u-switch-group ${cls}">
+    <div class="u-switch-label">${label}</div>
+    <div class="u-switch">${units.map(u =>
+      `<a class="u-switch-link${u.id === active.id ? ' on' : ''}" href="parent-guide.html?u=${u.id}">${esc(u.short || u.title)}</a>`).join('')}</div></div>` : '';
+  return `<div class="pg-switch-cols">${col(HS_UNITS.filter(u => u.track !== 'math'), 'core', 'Interdisciplinary')}${col(HS_UNITS.filter(u => u.track === 'math'), 'math', 'Math')}</div>`;
 }
 
 function previewCard(u) {
