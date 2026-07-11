@@ -38,8 +38,8 @@ const SUMMER_END = '2026-08-01';
 /* The daily anchors. Edit this list to change what shows every day. */
 const DAILY = [
   { key: 'reading', subject: 'ELA', title: 'Independent Reading', minutes: 30, side: 'EVERY DAY',
-    photo: 'assets/units/reading.jpg', link: null,
-    note: 'Your pick of book. Just read — no log, no quiz.' },
+    photos: ['assets/units/reading.jpg', 'assets/units/reading2.jpg', 'assets/units/reading3.jpg', 'assets/units/reading4.jpg'],
+    link: null, note: 'Your pick of book. Just read — no log, no quiz.' },
   { key: 'math', subject: 'Math', title: 'Math', minutes: 30, side: 'EVERY DAY',
     link: 'https://www.khanacademy.org/math/cc-seventh-grade-math', linkLabel: 'Open Khan Academy',
     note: 'Khan Academy, on grade level — pick up right where you left off.' },
@@ -79,8 +79,13 @@ function showToast(msg) {
 
 /* static, self-hosted photo band (curated real images — no random/AI stock) */
 function photoBand(src) {
-  return src ? `<div class="today-photo"><img src="${src}" alt="" loading="lazy"></div>` : '';
+  return src ? `<div class="today-photo"><img src="${src}" alt=""></div>` : '';
 }
+/* rotating photo picker: a daily tile with a `photos` array cycles through them,
+   advancing to a fresh photo each time it's marked done */
+function picIndex(key, len) { return ((parseInt(localStorage.getItem('homeskewl_pic_' + key) || '0', 10) % len) + len) % len; }
+function bumpPic(key, len) { const n = (picIndex(key, len) + 1) % len; localStorage.setItem('homeskewl_pic_' + key, n); return n; }
+function tilePhoto(item) { return item.photos ? item.photos[picIndex(item.key, item.photos.length)] : item.photo; }
 
 /* deterministic-ish texture variant so tiles don't all look identical */
 const TEX = ['tex-a', 'tex-b', 'tex-c', 'tex-d'];
@@ -172,7 +177,7 @@ function dailyTile(item, i) {
   return `<div class="card tile ${TEX[i % TEX.length]} ${i % 2 ? 'dots-blue' : 'dots-pink'} today-tile daily-card${isDone ? ' is-done' : ''}"
       data-key="${item.key}" style="--tile:${c.tile}; --card-accent:${c.bg};">
     <span class="tile-dot"></span><span class="tile-side">${esc(item.side || 'DAILY')}</span>
-    ${photoBand(item.photo)}
+    ${photoBand(tilePhoto(item))}
     <div class="tile-eyebrow">${item.minutes} min a day</div>
     <h2 class="tile-title">${esc(item.title)}</h2>
     <p class="tile-desc">${esc(item.note)}</p>
@@ -283,7 +288,12 @@ function wire() {
       setDaily(key, nowDone);
       cardEl.classList.toggle('is-done', nowDone);
       cardEl.querySelector('.daily-done').textContent = nowDone ? '✓ Done today' : 'Mark done today';
-      if (nowDone) showToast('Nice — checked off for today ✓');
+      if (nowDone) {
+        showToast('Nice — checked off for today ✓');
+        const item = DAILY.find(d => d.key === key);
+        const img = cardEl.querySelector('.today-photo img');
+        if (item && item.photos && img) img.src = item.photos[bumpPic(key, item.photos.length)];
+      }
     };
   });
 }

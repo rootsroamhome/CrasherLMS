@@ -1101,7 +1101,7 @@ textarea.u-ans { min-height: 84px; }
 
 .daily-card.is-done { opacity: 0.6; }
 .daily-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
-.today-tile .timer { background: rgba(255,255,255,0.5); position: relative; z-index: 1; }
+.today-tile .timer { background: rgba(255,255,255,0.5); position: relative; z-index: 1; margin-bottom: 16px; }
 
 @media (max-width: 720px) {
   .today-gallery { grid-template-columns: 1fr; }

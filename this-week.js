@@ -144,7 +144,7 @@ function renderTrack(track) {
       ${card(`
         <div class="rh-duration">Anytime · ~2–5 min</div>
         <div class="todo-title" style="margin-bottom:8px;">Share something weird</div>
-        <div class="rh-prompt">Find something interesting on the internet this week — a video, article, photo, subreddit, Wikipedia deep-dive — and drop the link with one sentence on why it got you.</div>
+        <div class="rh-prompt">Find something interesting on the internet this week — a video, article, photo, or Wikipedia deep-dive — and drop the link with one sentence on why it got you.</div>
         <textarea id="rh-weird" class="rh-input" placeholder="Link + why it\'s cool…"></textarea>
         <button class="btn btn-success" id="rh-weird-btn" onclick="submitRH('rh-weird','Rabbit Hole — shared something weird')">Share it ↑</button>
         <p id="rh-weird-confirm" style="display:none; margin-top:10px; color:var(--success); font-weight:700;">Saved. ✓</p>
