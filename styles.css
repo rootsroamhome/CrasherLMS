@@ -1276,8 +1276,12 @@ textarea.u-ans { min-height: 84px; }
 
 /* Standards checklist — collapsible d.school-style content-area cards */
 /* lightly-rounded tiles, set close together (almost touching) */
-.std-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; align-items: start; }
-@media (max-width: 720px) { .std-grid { grid-template-columns: 1fr; } }
+/* Two independent column stacks = clean masonry nestle: a short + a tall card
+   per column, sitting flush (no coupled grid rows, so no dead gap under the
+   shorter card). Each column grows on its own when a card expands. */
+.std-grid { display: flex; align-items: flex-start; gap: 5px; }
+.std-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+@media (max-width: 720px) { .std-grid { flex-direction: column; } .std-col { width: 100%; } }
 
 .std-card { position: relative; overflow: hidden; border: 2.5px solid var(--ink); border-radius: 8px;
   background: var(--tile, var(--cream-2)); box-shadow: 4px 4px 0 rgba(26,26,26,0.12); padding: 0; margin: 0; }
@@ -1286,10 +1290,10 @@ textarea.u-ans { min-height: 84px; }
   display: flex; flex-direction: column; justify-content: flex-end; padding: 22px 24px 22px 48px; overflow: hidden; }
 .std-face::-webkit-details-marker { display: none; }
 /* varied heights — taller Science & Reading, shorter Math & Social Studies */
-.std-card:nth-child(1) .std-face { min-height: 172px; }
-.std-card:nth-child(2) .std-face { min-height: 238px; }
-.std-card:nth-child(3) .std-face { min-height: 238px; }
-.std-card:nth-child(4) .std-face { min-height: 172px; }
+.std-card.tex-a .std-face { min-height: 172px; }
+.std-card.tex-b .std-face { min-height: 238px; }
+.std-card.tex-c .std-face { min-height: 238px; }
+.std-card.tex-d .std-face { min-height: 172px; }
 /* the vertical subject tag lives in its own narrow left column so it never
    overlaps the arrow/heading */
 .std-card .tile-side { top: 22px; left: 18px; max-height: 120px; z-index: 2; }
@@ -1302,22 +1306,22 @@ textarea.u-ans { min-height: 84px; }
 .std-ghost b { position: absolute; font-family: var(--serif); font-weight: 700; font-style: normal;
   white-space: nowrap; line-height: 0.78; letter-spacing: -0.015em; color: #fff; transform-origin: left top; }
 
-/* Card 1 — Math */
-.std-card:nth-child(1) .std-ghost b:nth-of-type(1) { font-size: 5.6rem; top: -8px;  left: -12px; transform: rotate(-7deg);  opacity: 0.20; }
-.std-card:nth-child(1) .std-ghost b:nth-of-type(2) { font-size: 2.5rem; top: 61%;   left: 44%;   transform: rotate(37deg);  opacity: 0.13; }
-.std-card:nth-child(1) .std-ghost b:nth-of-type(3) { font-size: 3.4rem; top: 14%;   left: 72%;   transform: rotate(85deg);  opacity: 0.10; }
-/* Card 2 — Science */
-.std-card:nth-child(2) .std-ghost b:nth-of-type(1) { font-size: 4.6rem; top: 34%;   left: -6px;  transform: rotate(9deg);   opacity: 0.18; }
-.std-card:nth-child(2) .std-ghost b:nth-of-type(2) { font-size: 2.9rem; top: -10px; left: 42%;   transform: rotate(-27deg); opacity: 0.12; }
-.std-card:nth-child(2) .std-ghost b:nth-of-type(3) { font-size: 2.1rem; top: 70%;   left: 58%;   transform: rotate(16deg);  opacity: 0.10; }
-/* Card 3 — Reading */
-.std-card:nth-child(3) .std-ghost b:nth-of-type(1) { font-size: 4.2rem; top: -6px;  left: 4px;   transform: rotate(-4deg);  opacity: 0.11; }
-.std-card:nth-child(3) .std-ghost b:nth-of-type(2) { font-size: 2.3rem; top: 55%;   left: 52%;   transform: rotate(53deg);  opacity: 0.075; }
-.std-card:nth-child(3) .std-ghost b:nth-of-type(3) { font-size: 3.1rem; top: 20%;   left: 66%;   transform: rotate(-39deg); opacity: 0.055; }
-/* Card 4 — History */
-.std-card:nth-child(4) .std-ghost b:nth-of-type(1) { font-size: 5.1rem; top: 6px;   left: -10px; transform: rotate(13deg);  opacity: 0.18; }
-.std-card:nth-child(4) .std-ghost b:nth-of-type(2) { font-size: 2.6rem; top: 62%;   left: 42%;   transform: rotate(-43deg); opacity: 0.12; }
-.std-card:nth-child(4) .std-ghost b:nth-of-type(3) { font-size: 3.0rem; top: -8px;  left: 60%;   transform: rotate(69deg);  opacity: 0.10; }
+/* Math */
+.std-card.tex-a .std-ghost b:nth-of-type(1) { font-size: 5.6rem; top: -8px;  left: -12px; transform: rotate(-7deg);  opacity: 0.20; }
+.std-card.tex-a .std-ghost b:nth-of-type(2) { font-size: 2.5rem; top: 61%;   left: 44%;   transform: rotate(37deg);  opacity: 0.13; }
+.std-card.tex-a .std-ghost b:nth-of-type(3) { font-size: 3.4rem; top: 14%;   left: 72%;   transform: rotate(85deg);  opacity: 0.10; }
+/* Science */
+.std-card.tex-b .std-ghost b:nth-of-type(1) { font-size: 4.6rem; top: 34%;   left: -6px;  transform: rotate(9deg);   opacity: 0.18; }
+.std-card.tex-b .std-ghost b:nth-of-type(2) { font-size: 2.9rem; top: -10px; left: 42%;   transform: rotate(-27deg); opacity: 0.12; }
+.std-card.tex-b .std-ghost b:nth-of-type(3) { font-size: 2.1rem; top: 70%;   left: 58%;   transform: rotate(16deg);  opacity: 0.10; }
+/* Reading */
+.std-card.tex-c .std-ghost b:nth-of-type(1) { font-size: 4.2rem; top: -6px;  left: 4px;   transform: rotate(-4deg);  opacity: 0.11; }
+.std-card.tex-c .std-ghost b:nth-of-type(2) { font-size: 2.3rem; top: 55%;   left: 52%;   transform: rotate(53deg);  opacity: 0.075; }
+.std-card.tex-c .std-ghost b:nth-of-type(3) { font-size: 3.1rem; top: 20%;   left: 66%;   transform: rotate(-39deg); opacity: 0.055; }
+/* History */
+.std-card.tex-d .std-ghost b:nth-of-type(1) { font-size: 5.1rem; top: 6px;   left: -10px; transform: rotate(13deg);  opacity: 0.18; }
+.std-card.tex-d .std-ghost b:nth-of-type(2) { font-size: 2.6rem; top: 62%;   left: 42%;   transform: rotate(-43deg); opacity: 0.12; }
+.std-card.tex-d .std-ghost b:nth-of-type(3) { font-size: 3.0rem; top: -8px;  left: 60%;   transform: rotate(69deg);  opacity: 0.10; }
 /* big diagonal corner tape — each card gets its own angle + height + direction
    (set per nth-child below) so no two tiles look alike. Sits behind the heading. */
 .big-ribbon { position: absolute; top: var(--rib-top, 16px); left: var(--rib-left, -25%); width: var(--rib-w, 150%);
@@ -1326,17 +1330,17 @@ textarea.u-ans { min-height: 84px; }
   letter-spacing: 0.16em; text-transform: uppercase; padding: var(--rib-pad, 6px) 0; text-align: center; white-space: nowrap;
   overflow: hidden; pointer-events: none; z-index: 1; }
 /* each tape a different width, angle and spot — staggered so no two align/touch */
-.std-card:nth-child(1) { --rib-angle: 11deg;  --rib-top: 16px; --rib-fs: 0.74rem; --rib-pad: 9px; }
-.std-card:nth-child(2) { --rib-angle: -21deg; --rib-top: 46px; --rib-fs: 0.5rem;  --rib-pad: 4px; }
-.std-card:nth-child(3) { --rib-angle: 16deg;  --rib-top: 12px; --rib-fs: 0.62rem; --rib-pad: 6px; }
-.std-card:nth-child(4) { --rib-angle: -74deg; --rib-top: 100px; --rib-fs: 0.5rem; --rib-pad: 3px; --rib-w: 95%; --rib-left: -42%; }
+.std-card.tex-a { --rib-angle: 11deg;  --rib-top: 16px; --rib-fs: 0.74rem; --rib-pad: 9px; }
+.std-card.tex-b { --rib-angle: -21deg; --rib-top: 46px; --rib-fs: 0.5rem;  --rib-pad: 4px; }
+.std-card.tex-c { --rib-angle: 16deg;  --rib-top: 12px; --rib-fs: 0.62rem; --rib-pad: 6px; }
+.std-card.tex-d { --rib-angle: -74deg; --rib-top: 100px; --rib-fs: 0.5rem; --rib-pad: 3px; --rib-w: 95%; --rib-left: -42%; }
 /* Social Studies tape: thin, light like the ghost words, with orange letters */
-.std-card:nth-child(4) .big-ribbon { background: rgba(255,255,255,0.72); color: var(--ribbon); }
+.std-card.tex-d .big-ribbon { background: rgba(255,255,255,0.72); color: var(--ribbon); }
 /* Reading & Writing: light tape (lighter than the gold, but not as light as
    Social Studies) with gold letters; the arrow keeps the base gold to match */
-.std-card:nth-child(3) .big-ribbon { background: rgba(255,255,255,0.5); color: var(--ribbon); }
+.std-card.tex-c .big-ribbon { background: rgba(255,255,255,0.5); color: var(--ribbon); }
 /* Science: shift the halftone dots to the top-right corner */
-.std-grid .std-card:nth-child(2)::after {
+.std-grid .std-card.tex-b::after {
   -webkit-mask-image: radial-gradient(130% 120% at 108% -8%, #000 0%, #000 14%, transparent 60%);
   mask-image: radial-gradient(130% 120% at 108% -8%, #000 0%, #000 14%, transparent 60%); }
 .std-face-bottom { display: flex; align-items: center; gap: 14px; position: relative; z-index: 2; }

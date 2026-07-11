@@ -119,31 +119,38 @@ function unitRow(row) {
 }
 
 /* ── standards cards (collapsible, d.school-style) ── */
-function standardsCards() {
-  return `<div class="std-grid">${STANDARDS.map(a => {
-    const done = areaDone(a), total = a.list.length;
-    const rows = a.list.map(s => `
-      <button type="button" class="std-row ${isDone(s.code) ? 'on' : ''}" data-code="${esc(s.code)}">
-        <span class="std-check" aria-hidden="true"></span>
-        <span class="std-code">${esc(s.code)}</span>
-        <span class="std-label">${esc(s.label)}</span>
-      </button>`).join('');
-    return `<details class="std-card tile ${a.tex}" style="--tile:${colorTile(a.color)}; --ribbon:${colorBold(a.color)}; --ribbon-text:#fff;" data-area="${esc(a.area)}">
-      <summary class="std-face">
-        <span class="std-ghost" aria-hidden="true"><b>${esc(a.ghost || a.area)}</b><b>${esc(a.ghost || a.area)}</b><b>${esc(a.ghost || a.area)}</b></span>
-        <span class="tile-side">${esc(a.side)}</span>
-        <div class="big-ribbon"><div class="ribbon-track">${(esc(a.area) + '&nbsp;·&nbsp;').repeat(14)}</div></div>
-        <div class="std-face-bottom">
-          <span class="std-arrow">→</span>
-          <div>
-            <div class="std-face-title"><span class="std-word">${esc(a.area)}</span>${a.tagline ? ` <span class="std-bull">•</span> <span class="std-tag">${esc(a.tagline)}</span>` : ''}</div>
-            <div class="std-face-sub"><span class="std-count">${done}</span> of ${total} done</div>
-          </div>
+function stdCard(a) {
+  const done = areaDone(a), total = a.list.length;
+  const rows = a.list.map(s => `
+    <button type="button" class="std-row ${isDone(s.code) ? 'on' : ''}" data-code="${esc(s.code)}">
+      <span class="std-check" aria-hidden="true"></span>
+      <span class="std-code">${esc(s.code)}</span>
+      <span class="std-label">${esc(s.label)}</span>
+    </button>`).join('');
+  return `<details class="std-card tile ${a.tex}" style="--tile:${colorTile(a.color)}; --ribbon:${colorBold(a.color)}; --ribbon-text:#fff;" data-area="${esc(a.area)}">
+    <summary class="std-face">
+      <span class="std-ghost" aria-hidden="true"><b>${esc(a.ghost || a.area)}</b><b>${esc(a.ghost || a.area)}</b><b>${esc(a.ghost || a.area)}</b></span>
+      <span class="tile-side">${esc(a.side)}</span>
+      <div class="big-ribbon"><div class="ribbon-track">${(esc(a.area) + '&nbsp;·&nbsp;').repeat(14)}</div></div>
+      <div class="std-face-bottom">
+        <span class="std-arrow">→</span>
+        <div>
+          <div class="std-face-title"><span class="std-word">${esc(a.area)}</span>${a.tagline ? ` <span class="std-bull">•</span> <span class="std-tag">${esc(a.tagline)}</span>` : ''}</div>
+          <div class="std-face-sub"><span class="std-count">${done}</span> of ${total} done</div>
         </div>
-      </summary>
-      <div class="std-checklist">${a.source ? `<div class="std-source">${esc(a.source)}</div>` : ''}${rows}</div>
-    </details>`;
-  }).join('')}</div>`;
+      </div>
+    </summary>
+    <div class="std-checklist">${a.source ? `<div class="std-source">${esc(a.source)}</div>` : ''}${rows}</div>
+  </details>`;
+}
+
+/* Masonry nestle: split the areas into two column stacks (even indices left,
+   odd right) so a short + a tall card pair up in each column and sit flush.
+   Each column grows independently, so opening a card never reflows the other. */
+function standardsCards() {
+  const colL = STANDARDS.filter((_, i) => i % 2 === 0).map(stdCard).join('');
+  const colR = STANDARDS.filter((_, i) => i % 2 === 1).map(stdCard).join('');
+  return `<div class="std-grid"><div class="std-col">${colL}</div><div class="std-col">${colR}</div></div>`;
 }
 
 function section(title, body) {
