@@ -6,9 +6,10 @@
  *   1. A feature "lesson" tile — the next unlocked card of the unit he's in,
  *      linking into My Unit. Gated to the school-year start (Aug 31): before
  *      then it's a friendly countdown + preview.
- *   2. The every-day 30-minute anchors (math + reading) with focus timers.
- *      "Done today" is stored under the LOCAL date, so it resets each morning
- *      and never piles up.
+ *   2. The every-day anchors (reading + math) with a 30-min focus timer. Math
+ *      drops the timer once school is in session (Aug 31+) so its self-paced
+ *      unit has no time limit; reading keeps it. "Done today" is stored under
+ *      the LOCAL date, so it resets each morning and never piles up.
  *   3. Tiles for the weekly Self-Study/Rabbit-Hole pick and his portfolio.
  */
 
@@ -42,6 +43,7 @@ const DAILY = [
     link: null, note: 'Your pick of book. Just read — no log, no quiz.' },
   { key: 'math', subject: 'Math', title: 'Math', minutes: 30, side: 'EVERY DAY',
     link: 'unit.html?u=math-proportions', linkLabel: "Open today's math lesson", internal: true,
+    noTimerInSession: true,   // self-paced once the 7th-grade units start (Aug 31): no timer
     note: 'Work the Proportional Relationships unit — a short video, a quick check, then Khan practice.' },
 ];
 
@@ -173,23 +175,30 @@ function lessonTile() {
 function dailyTile(item, i) {
   const c = colorOf(item.subject);
   const isDone = !!dailyState()[item.key];
+  // Self-paced anchors drop the 30-min timer once school is in session (Aug 31+),
+  // so he works through the unit with no time constraint. Summer keeps the timer.
+  const timed = !(item.noTimerInSession && inSession());
   const linkHtml = item.link
     ? `<a class="btn btn-primary" href="${item.link}"${item.internal ? '' : ' target="_blank" rel="noopener"'}>${esc(item.linkLabel || 'Open')} ${item.internal ? '→' : '↗'}</a>`
     : '';
-  return `<div class="card tile ${TEX[i % TEX.length]} ${i % 2 ? 'dots-blue' : 'dots-pink'} today-tile daily-card${isDone ? ' is-done' : ''}"
-      data-key="${item.key}" style="--tile:${c.tile}; --card-accent:${c.bg};">
-    <span class="tile-dot"></span><span class="tile-side">${esc(item.side || 'DAILY')}</span>
-    ${photoBand(tilePhoto(item))}
-    <div class="tile-eyebrow">${item.minutes} min a day</div>
-    <h2 class="tile-title">${esc(item.title)}</h2>
-    <p class="tile-desc">${esc(item.note)}</p>
-    <div class="timer" data-min="${item.minutes}">
+  const eyebrow = timed ? `${item.minutes} min a day` : 'Self-paced · take your time';
+  const timerHtml = timed
+    ? `<div class="timer" data-min="${item.minutes}">
       <div><div class="timer-label">Focus timer</div><div class="timer-display">${item.minutes}:00</div></div>
       <div class="timer-btns">
         <button class="btn btn-primary timer-start" type="button">▶ Start</button>
         <button class="btn btn-ghost timer-reset" type="button">↻ Reset</button>
       </div>
-    </div>
+    </div>`
+    : '';
+  return `<div class="card tile ${TEX[i % TEX.length]} ${i % 2 ? 'dots-blue' : 'dots-pink'} today-tile daily-card${isDone ? ' is-done' : ''}"
+      data-key="${item.key}" style="--tile:${c.tile}; --card-accent:${c.bg};">
+    <span class="tile-dot"></span><span class="tile-side">${esc(item.side || 'DAILY')}</span>
+    ${photoBand(tilePhoto(item))}
+    <div class="tile-eyebrow">${eyebrow}</div>
+    <h2 class="tile-title">${esc(item.title)}</h2>
+    <p class="tile-desc">${esc(item.note)}</p>
+    ${timerHtml}
     <div class="daily-actions">${linkHtml}
       <button class="btn btn-success daily-done" type="button">${isDone ? '✓ Done today' : 'Mark done today'}</button>
     </div>
@@ -283,7 +292,8 @@ function wire() {
 
   document.querySelectorAll('.daily-card').forEach(cardEl => {
     const key = cardEl.dataset.key;
-    attachTimer(cardEl, parseInt(cardEl.querySelector('.timer').dataset.min, 10));
+    const timerEl = cardEl.querySelector('.timer');
+    if (timerEl) attachTimer(cardEl, parseInt(timerEl.dataset.min, 10));
     cardEl.querySelector('.daily-done').onclick = (e) => {
       e.preventDefault(); e.stopPropagation();
       const nowDone = !dailyState()[key];
