@@ -31,10 +31,16 @@ The date-locked to-do list is **retired as the front door.** The site now runs o
     accordion** (closed by default; tap to open) so it never gets unwieldy: inside is cards-done,
     quiz chart, vocab study list, KWL, and every written answer. Reads localStorage (this device
     only; cross-device sync still a to-do).
-  - **Big Picture (`big-picture.html`/`big-picture.js`)** = THE YEAR + STANDARDS (its original
-    purpose — do not turn it back into an answer dump). Shows the six-unit arc (live vs. planned,
-    from `YEAR_PLAN`) with progress, and a **standards tracker** built by collecting the standards
-    codes off the built units' cards, grouped Science / Social Studies / ELA.
+  - **Big Picture (`big-picture.html`/`big-picture.js`)** = THE YEAR + STANDARDS CHECKLIST (its
+    original purpose — do not turn it back into an answer dump). Shows the six-unit arc (live vs.
+    planned, from `YEAR_PLAN`), and a **full 7th-grade standards checklist**: every standard for the
+    year in `STANDARDS` (Math / Science / ELA / Social Studies), grouped into **collapsible
+    d.school-style content-area cards** (colored tile + halftone + top-right "\" tape). Every
+    standard shows a ✓ (done) or empty circle. A standard **auto-checks** when a completed lesson
+    covers it (matched off the units' card `standards`), and each is **click-to-toggle by hand**
+    (persisted in `localStorage['homeskewl_standards']`) so things done outside the app — like daily
+    Khan **Math**, which no unit covers — can still be checked. Math is always shown so it never
+    looks like it doesn't exist. Add a new standard by editing the `STANDARDS` array.
 - **Clean reading panes (`reader.html`/`reader.js` + `readings.js`).** Any lesson reading that
   used to link to an outside site (USGS, Britannica) now opens an in-app, ad-free, printable
   reading pane instead. Primary sources got real text: Gilgamesh's flood, the Code of

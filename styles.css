@@ -1228,15 +1228,44 @@ textarea.u-ans { min-height: 84px; }
   padding: 5px 12px; border-radius: 30px; background: var(--cream-2); border: 1.5px solid var(--ink); color: var(--ink-soft); }
 .yr-chip.live-chip { background: #8FD6E1; color: var(--ink); }
 
-.std-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
-.std-col { background: var(--paper); border: 2px solid var(--ink); border-radius: var(--radius-sm); padding: 14px 16px;
-  box-shadow: 3px 3px 0 rgba(26,26,26,0.06); }
-.std-area { font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--teal);
-  margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-.std-count { background: var(--ink); color: var(--cream); font-size: 0.7rem; padding: 1px 8px; border-radius: 20px; }
-.std-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.std-chip { font-size: 0.74rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;
-  background: var(--cream-2); border: 1px solid var(--line); color: var(--ink-soft); }
+/* Standards checklist — collapsible d.school-style content-area cards */
+.std-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 720px) { .std-grid { grid-template-columns: 1fr; } }
+
+.std-card { position: relative; overflow: hidden; border: 2.5px solid var(--ink); border-radius: var(--radius);
+  background: var(--tile, var(--cream-2)); box-shadow: 4px 4px 0 rgba(26,26,26,0.12); padding: 0; margin: 0; }
+.std-card > * { position: relative; z-index: 1; }
+.std-face { list-style: none; cursor: pointer; position: relative; min-height: 200px;
+  display: flex; flex-direction: column; justify-content: flex-end; padding: 22px 24px; overflow: hidden; }
+.std-face::-webkit-details-marker { display: none; }
+/* big diagonal tape running "\" — high on the left, descending to the right — so it
+   stays in the top band and never crosses the heading (which sits bottom-left) */
+.big-ribbon { position: absolute; top: 14px; left: -20px; width: 150%; transform: rotate(18deg);
+  background: var(--ink); color: var(--cream); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.16em;
+  text-transform: uppercase; padding: 6px 0; text-align: center; white-space: nowrap; overflow: hidden;
+  pointer-events: none; z-index: 1; }
+.std-face-bottom { display: flex; align-items: center; gap: 14px; position: relative; z-index: 2; }
+.std-arrow { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; border: 2.5px solid var(--ink);
+  display: grid; place-items: center; font-size: 1.3rem; font-weight: 700; background: rgba(255,255,255,0.4);
+  transition: transform 0.2s ease; }
+.std-card[open] .std-arrow { transform: rotate(90deg); }
+.std-face-title { font-family: var(--serif); font-size: 1.8rem; font-weight: 600; line-height: 1; }
+.std-face-sub { font-size: 0.86rem; font-weight: 600; color: var(--ink-soft); margin-top: 3px; }
+.std-count { font-weight: 800; color: var(--ink); }
+
+.std-checklist { background: var(--paper); border-top: 2.5px solid var(--ink); padding: 8px 0; }
+.std-row { display: flex; align-items: flex-start; gap: 12px; width: 100%; text-align: left; background: none;
+  border: none; border-bottom: 1px solid var(--line); padding: 11px 22px; cursor: pointer; font: inherit; }
+.std-row:last-child { border-bottom: none; }
+.std-row:hover { background: var(--cream-2); }
+.std-check { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ink-dim);
+  margin-top: 1px; display: grid; place-items: center; transition: background 0.15s ease, border-color 0.15s ease; }
+.std-row.on .std-check { background: var(--success); border-color: var(--success); }
+.std-row.on .std-check::after { content: '✓'; color: #fff; font-size: 0.8rem; font-weight: 900; }
+.std-code { flex-shrink: 0; font-size: 0.74rem; font-weight: 800; font-family: var(--sans); color: var(--ink-soft);
+  background: var(--cream-2); border: 1px solid var(--line); border-radius: 20px; padding: 2px 9px; margin-top: 1px; min-width: 66px; text-align: center; }
+.std-label { font-size: 0.92rem; line-height: 1.4; }
+.std-row.on .std-label { color: var(--ink); }
 
 /* =========================================================
    Today summer note + Parents' Guide (units-driven)
