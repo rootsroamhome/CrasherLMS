@@ -52,8 +52,18 @@ The date-locked to-do list is **retired as the front door.** The site now runs o
   **Small/Medium/Large "do something real"** pick (from `unit.parent.activities` — one tiered set
   per unit, Rogue-Valley-local), and **"Refresh your own memory"** = the unit's readings + videos
   auto-collected from its cards. Per-unit granularity (add more activities to `unit.parent` if wanted).
-- **Ribbon** (`.ribbon`) is now a **top-right corner banner** (rotate 45°, clipped by the tile) so it
-  never crosses the tile's words — was a wide diagonal band across the middle before.
+- **Ribbons** are **corner tape**: `.ribbon` (portfolio/this-week) crosses the TOP-RIGHT corner
+  side-to-side (wide enough that both ends clip off-tile, never ending mid-tile); `.big-ribbon`
+  (standards cards) runs "\" across the top. Colour is a **bolder shade of the tile** via
+  `--ribbon` (never black), text via `--ribbon-text`, and the angle varies via `--rib-angle`.
+  All sit clear of the (bottom/left) headings.
+- **Today gallery** is a d.school-style **touching grid**: square corners, 3px ink gutters
+  (`gap`+ink background), `align-items:stretch` so paired tiles are **equal height** (no ragged
+  white space). Feature lesson tile spans both columns. 2-col at ≥720px (iPad+), 1-col below.
+- **Nav label is "Units"** (was "My Unit").
+- **Big Picture** unit rows show a cute **target-date pill** (`YEAR_PLAN[].window`, e.g. "Aug 31 –
+  Oct 9" — rough, adjustable). Standards-card side labels shortened (MATH/SCIENCE/ELA/HISTORY) so
+  they don't overlap the arrow.
 - **All lesson links open in a new tab** (external resources + readings). Internal nav stays in-tab.
 - **Nav everywhere:** Today · My Unit · **Portfolio** · Big Picture · Parents. (This Week was pulled
   from the nav — it's a once-a-week pick, reached from the Today weekly tile; `this-week.html` still

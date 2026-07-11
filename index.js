@@ -201,7 +201,7 @@ function weeklyTile() {
 }
 
 function portfolioTile() {
-  return `<a class="card tile black tex-d today-tile" href="portfolio.html" style="--card-accent:var(--teal);">
+  return `<a class="card tile black tex-d today-tile" href="portfolio.html" style="--card-accent:var(--teal); --ribbon:var(--teal); --ribbon-text:#fff; --rib-angle:50deg;">
     <span class="tile-dot"></span><span class="tile-side">YOUR WORK</span>
     <div class="ribbon"><div class="ribbon-track">PORTFOLIO</div></div>
     <div class="tile-eyebrow">Everything you've made</div>

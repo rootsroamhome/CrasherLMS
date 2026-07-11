@@ -171,25 +171,26 @@ button { font-family: var(--sans); cursor: pointer; }
 /* =========================================================
    Ticker ribbon (diagonal repeating tape) — signature motif
    ========================================================= */
-/* Corner banner — sits in the top-right corner, angled down from it, and never
-   crosses the tile's (left-aligned) words. The tile's overflow:hidden clips it
-   into a clean corner ribbon. */
+/* Corner tape — a long band across the TOP-RIGHT corner. It's wider than the
+   corner it crosses, so both ends clip off-tile (it never "ends in the middle").
+   Colour is a bolder shade of the tile via --ribbon; angle varies via --rib-angle.
+   Sits top-right so it stays clear of the tile's (left-aligned) heading. */
 .ribbon {
   position: absolute;
-  top: 20px;
-  right: -60px;
-  width: 200px;
+  top: 30px;
+  right: -95px;
+  width: 340px;
   overflow: hidden;
   text-align: center;
-  transform: rotate(45deg);
+  transform: rotate(var(--rib-angle, 45deg));
   transform-origin: center;
-  background: var(--ink);
-  color: var(--cream);
+  background: var(--ribbon, var(--ink));
+  color: var(--ribbon-text, var(--cream));
   font-size: 0.58rem;
   font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  padding: 5px 0;
+  padding: 6px 0;
   pointer-events: none;
   z-index: 3;
 }
@@ -656,8 +657,8 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
 }
 .track-choice > * { position: relative; z-index: 1; }
 .track-choice:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(26,26,26,0.11); }
-.track-choice.selfstudy { background: #DAD2AC; }
-.track-choice.rabbithole { background: #DDC1EE; }
+.track-choice.selfstudy { background: #DAD2AC; --ribbon: #7C8A4E; --rib-angle: 42deg; }
+.track-choice.rabbithole { background: #DDC1EE; --ribbon: #B657A0; --rib-angle: 50deg; }
 .track-choice .track-eyebrow { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-soft); }
 .track-choice .track-name { font-family: var(--serif); font-size: 1.9rem; font-weight: 600; line-height: 1; margin: 4px 0 8px; }
 .track-choice .track-desc { font-size: 0.86rem; color: var(--ink-soft); line-height: 1.45; }
@@ -1068,12 +1069,17 @@ textarea.u-ans { min-height: 84px; }
 .school-flag .countdown { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
   background: var(--ink); color: var(--cream); padding: 3px 10px; border-radius: 20px; }
 
-.today-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
-.today-tile { margin-bottom: 0; text-decoration: none; color: var(--ink); display: block; }
+/* d.school menu grid: square corners, tiles touching (3px ink gutters), equal
+   heights per row so there's no ragged white space */
+.today-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; align-items: stretch;
+  background: var(--ink); border: 3px solid var(--ink); overflow: hidden; }
+.today-tile { margin: 0; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; }
 .today-lesson-tile { grid-column: 1 / -1; }
-.card.tile.today-tile { box-shadow: 5px 5px 0 rgba(26,26,26,0.12); }
-.card.tile.today-tile:hover { transform: translate(-2px,-3px); box-shadow: 8px 9px 0 rgba(26,26,26,0.16); }
+.card.tile.today-tile { border-radius: 0; border: none; box-shadow: none; }
+.card.tile.today-tile:hover { transform: none; box-shadow: inset 0 0 0 4px rgba(26,26,26,0.22); }
 .card.tile.today-tile:hover .ribbon-track { animation-play-state: running; }
+/* push the tile's foot/actions to the bottom so stretched tiles fill evenly */
+.today-tile .tile-foot, .today-tile .daily-actions { margin-top: auto; }
 
 .today-photo { position: relative; z-index: 1; margin-bottom: 15px; }
 .today-photo img { width: 100%; height: 180px; object-fit: cover; display: block; border: 2px solid var(--ink);
@@ -1236,14 +1242,22 @@ textarea.u-ans { min-height: 84px; }
   background: var(--tile, var(--cream-2)); box-shadow: 4px 4px 0 rgba(26,26,26,0.12); padding: 0; margin: 0; }
 .std-card > * { position: relative; z-index: 1; }
 .std-face { list-style: none; cursor: pointer; position: relative; min-height: 200px;
-  display: flex; flex-direction: column; justify-content: flex-end; padding: 22px 24px; overflow: hidden; }
+  display: flex; flex-direction: column; justify-content: flex-end; padding: 22px 24px 22px 48px; overflow: hidden; }
 .std-face::-webkit-details-marker { display: none; }
+/* the vertical subject tag lives in its own narrow left column so it never
+   overlaps the arrow/heading */
+.std-card .tile-side { top: 22px; left: 18px; max-height: 120px; }
 /* big diagonal tape running "\" — high on the left, descending to the right — so it
    stays in the top band and never crosses the heading (which sits bottom-left) */
-.big-ribbon { position: absolute; top: 14px; left: -20px; width: 150%; transform: rotate(18deg);
-  background: var(--ink); color: var(--cream); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.16em;
-  text-transform: uppercase; padding: 6px 0; text-align: center; white-space: nowrap; overflow: hidden;
-  pointer-events: none; z-index: 1; }
+.big-ribbon { position: absolute; top: 14px; left: -20px; width: 150%; transform: rotate(var(--rib-angle, 18deg));
+  background: var(--ribbon, var(--ink)); color: var(--ribbon-text, var(--cream)); font-size: 0.6rem; font-weight: 800;
+  letter-spacing: 0.16em; text-transform: uppercase; padding: 6px 0; text-align: center; white-space: nowrap;
+  overflow: hidden; pointer-events: none; z-index: 1; }
+/* varied tape angles per card */
+.std-card:nth-child(1) { --rib-angle: 15deg; }
+.std-card:nth-child(2) { --rib-angle: 21deg; }
+.std-card:nth-child(3) { --rib-angle: 13deg; }
+.std-card:nth-child(4) { --rib-angle: 19deg; }
 .std-face-bottom { display: flex; align-items: center; gap: 14px; position: relative; z-index: 2; }
 .std-arrow { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; border: 2.5px solid var(--ink);
   display: grid; place-items: center; font-size: 1.3rem; font-weight: 700; background: rgba(255,255,255,0.4);
@@ -1319,3 +1333,9 @@ textarea.u-ans { min-height: 84px; }
 .today-datepick { display: flex; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; position: relative; }
 .previewing-badge { font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
   background: var(--coral); color: #fff; padding: 4px 12px; border-radius: 20px; }
+
+/* Big Picture: cute unit target-date pill */
+.yr-window { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; font-size: 0.74rem;
+  font-weight: 800; letter-spacing: 0.02em; color: var(--ink); background: #F4CE5E; border: 1.5px solid var(--ink);
+  border-radius: 20px; padding: 3px 11px; }
+.yr-row.planned .yr-window { background: var(--cream-2); }

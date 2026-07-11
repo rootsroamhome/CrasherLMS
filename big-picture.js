@@ -16,19 +16,20 @@ const HS_UNITS = window.HS_UNITS || [];
 const STD_KEY = 'homeskewl_standards';
 
 /* The planned year (see docs/YEAR-MAP.md). `id` links a plan row to a built unit. */
+/* `window` = the target date range for a unit (rough, adjustable — edit here). */
 const YEAR_PLAN = [
-  { n: 1, id: 'rivers', title: 'Rivers & the Rise of Civilization', theme: 'Water & land · first civilizations · flood myths' },
-  { n: 2, id: 'metals', title: 'Metals & the Rise of Empires', theme: 'Matter & reactions · Bronze/Iron Age · forge myths' },
-  { n: 3, id: null, title: 'Deep Time & the Restless Earth', theme: 'Rock cycle · plate tectonics · reading evidence' },
-  { n: 4, id: null, title: 'A Connected World', theme: 'Resources · trade routes · research writing' },
-  { n: 5, id: null, title: 'When the Ground Shifts', theme: 'Natural hazards · turning points · a choice novel' },
-  { n: 6, id: null, title: 'Power (capstone)', theme: 'Energy & circuits · who controls energy · persuasion' },
+  { n: 1, id: 'rivers', title: 'Rivers & the Rise of Civilization', theme: 'Water & land · first civilizations · flood myths', window: 'Aug 31 – Oct 9' },
+  { n: 2, id: 'metals', title: 'Metals & the Rise of Empires', theme: 'Matter & reactions · Bronze/Iron Age · forge myths', window: 'Oct 12 – Nov 20' },
+  { n: 3, id: null, title: 'Deep Time & the Restless Earth', theme: 'Rock cycle · plate tectonics · reading evidence', window: 'Nov 30 – Jan 22' },
+  { n: 4, id: null, title: 'A Connected World', theme: 'Resources · trade routes · research writing', window: 'Jan 25 – Mar 5' },
+  { n: 5, id: null, title: 'When the Ground Shifts', theme: 'Natural hazards · turning points · a choice novel', window: 'Mar 8 – Apr 23' },
+  { n: 6, id: null, title: 'Power (capstone)', theme: 'Energy & circuits · who controls energy · persuasion', window: 'Apr 26 – Jun 11' },
 ];
 
 /* The full year's 7th-grade standards, by content area. `match` (optional) is the
    token used to auto-check from a completed lesson when it differs from `code`. */
 const STANDARDS = [
-  { area: 'Math', side: 'MATHEMATICS', color: 'Math', tagline: 'daily on Khan Academy', tex: 'tex-a', list: [
+  { area: 'Math', side: 'MATH', color: 'Math', tagline: 'daily on Khan Academy', tex: 'tex-a', list: [
     { code: '7.RP.A', label: 'Analyze proportional relationships — ratios, unit rates, proportions' },
     { code: '7.NS.A', label: 'Add, subtract, multiply & divide rational numbers (including negatives)' },
     { code: '7.EE.A', label: 'Use properties to generate equivalent expressions' },
@@ -38,7 +39,7 @@ const STANDARDS = [
     { code: '7.SP.AB', label: 'Random sampling & comparing two populations' },
     { code: '7.SP.C', label: 'Probability of chance events' },
   ] },
-  { area: 'Science', side: 'NGSS SCIENCE', color: 'Science', tagline: 'across the units', tex: 'tex-b', list: [
+  { area: 'Science', side: 'SCIENCE', color: 'Science', tagline: 'across the units', tex: 'tex-b', list: [
     { code: 'MS-PS1-1', label: 'Model atoms, molecules & extended structures' },
     { code: 'MS-PS1-2', label: 'Analyze evidence that a chemical reaction occurred' },
     { code: 'MS-PS1-3', label: 'Synthetic materials come from natural resources' },
@@ -71,7 +72,7 @@ const STANDARDS = [
     { code: 'W.7.7', label: 'Conduct a short research project' },
     { code: 'SL.7.4', label: 'Present claims & findings' },
   ] },
-  { area: 'Social Studies', side: 'OREGON SOCIAL SCIENCES', color: 'Humanities', tagline: 'world history & civics in the units', tex: 'tex-d', list: [
+  { area: 'Social Studies', side: 'HISTORY', color: 'Humanities', tagline: 'world history & civics in the units', tex: 'tex-d', list: [
     { code: '7.G.GR.1', label: 'Geographic reasoning' },
     { code: '7.G.HI.4', label: 'Human–environment interaction' },
     { code: '7.G.HE.6', label: 'How environment shapes societies' },
@@ -88,6 +89,7 @@ function pct(n, d) { return d ? Math.round(n / d * 100) : 0; }
 function builtUnit(id) { return HS_UNITS.find(u => u.id === id); }
 function doneCount(u) { const done = unitState(u.id).done || {}; return u.cards.filter(c => done[c.id]).length; }
 function colorTile(subject) { const m = typeof SUBJECT_COLORS !== 'undefined' ? SUBJECT_COLORS : {}; return (m[subject] || {}).tile || '#8FD6E1'; }
+function colorBold(subject) { const m = typeof SUBJECT_COLORS !== 'undefined' ? SUBJECT_COLORS : {}; return (m[subject] || {}).bg || '#17A0AE'; }
 
 /* Standards covered by a lesson that's marked done, in any built unit. */
 function autoCovered() {
@@ -118,12 +120,20 @@ function isDone(code) { return !!store[code]; }
 function areaDone(a) { return a.list.filter(s => isDone(s.code)).length; }
 
 /* ── year arc ── */
+function dateTag(row) {
+  return row.window ? `<span class="yr-window">🗓️ ${esc(row.window)}</span>` : '';
+}
+
 function unitRow(row) {
   const u = builtUnit(row.id);
   if (!u) {
     return `<div class="yr-row planned">
       <div class="yr-n">${row.n}</div>
-      <div class="yr-main"><div class="yr-title">${esc(row.title)}</div><div class="yr-theme">${esc(row.theme)}</div></div>
+      <div class="yr-main">
+        <div class="yr-title">${esc(row.title)}</div>
+        <div class="yr-theme">${esc(row.theme)}</div>
+        ${dateTag(row)}
+      </div>
       <div class="yr-status"><span class="yr-chip">Planned</span></div>
     </div>`;
   }
@@ -134,6 +144,7 @@ function unitRow(row) {
     <div class="yr-main">
       <div class="yr-title">${esc(row.title)}</div>
       <div class="yr-theme">${esc(row.theme)}</div>
+      ${dateTag(row)}
       <div class="yr-bar"><div style="width:${p}%;"></div></div>
     </div>
     <div class="yr-status"><span class="yr-chip live-chip">${done}/${total} · ${status}</span></div>
@@ -150,7 +161,7 @@ function standardsCards() {
         <span class="std-code">${esc(s.code)}</span>
         <span class="std-label">${esc(s.label)}</span>
       </button>`).join('');
-    return `<details class="std-card tile ${a.tex}" style="--tile:${colorTile(a.color)};" data-area="${esc(a.area)}">
+    return `<details class="std-card tile ${a.tex}" style="--tile:${colorTile(a.color)}; --ribbon:${colorBold(a.color)}; --ribbon-text:#fff;" data-area="${esc(a.area)}">
       <summary class="std-face">
         <span class="tile-side">${esc(a.side)}</span>
         <div class="big-ribbon"><div class="ribbon-track">${(esc(a.area) + '&nbsp;·&nbsp;').repeat(14)}</div></div>
