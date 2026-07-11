@@ -922,22 +922,27 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
 /* =========================================================
    Rivers Unit — self-paced progression
    ========================================================= */
+/* per-unit accent: interdisciplinary units = teal; math units = yellow/gold */
+#unit-app { --u-accent: var(--teal); --u-accent-soft: #8FD6E1; }
+#unit-app.theme-math { --u-accent: #D19A1F; --u-accent-soft: #F4CE5E; }
+#unit-app.theme-math .btn-primary { background: var(--u-accent); color: #fff; }
+#unit-app.theme-math .u-eyebrow { color: var(--u-accent); }
 .u-head { margin-bottom: 24px; }
 .u-switch-wrap { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
 .u-switch-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-dim); margin-bottom: 7px; }
 .u-switch { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 0; }
 .u-switch-link { font-size: 0.8rem; font-weight: 700; text-decoration: none; color: var(--ink); background: var(--paper); border: 2px solid var(--ink); border-radius: 20px; padding: 5px 14px; transition: transform 0.15s ease, background 0.15s ease; }
 .u-switch-link:hover { transform: translateY(-2px); }
-/* two color-coded groups: interdisciplinary = teal, math = coral */
+/* two color-coded groups: interdisciplinary = teal, math = yellow/gold */
 .u-switch-group.core  .u-switch-link { border-color: var(--teal); }
 .u-switch-group.core  .u-switch-link.on { background: var(--teal); color: #fff; }
-.u-switch-group.math  .u-switch-link { border-color: var(--coral); }
-.u-switch-group.math  .u-switch-link.on { background: var(--coral); color: #fff; }
+.u-switch-group.math  .u-switch-link { border-color: #D19A1F; }
+.u-switch-group.math  .u-switch-link.on { background: #D19A1F; color: #fff; }
 .u-switch-group.core  .u-switch-label { color: var(--teal); }
-.u-switch-group.math  .u-switch-label { color: var(--coral); }
+.u-switch-group.math  .u-switch-label { color: #D19A1F; }
 .u-progress { display: flex; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
 .u-progress-bar { flex: 1; min-width: 140px; height: 12px; background: var(--cream-2); border: 2px solid var(--ink); border-radius: 20px; overflow: hidden; }
-.u-progress-fill { height: 100%; background: var(--teal); border-radius: 20px; transition: width 0.4s ease; }
+.u-progress-fill { height: 100%; background: var(--u-accent); border-radius: 20px; transition: width 0.4s ease; }
 .u-progress-label { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
 
 .unit-map { grid-template-columns: 1fr; gap: 6px; margin-top: 16px; display: grid; }
@@ -946,7 +951,7 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
 .map-item[disabled] { opacity: 0.5; cursor: default; }
 .map-item.current { border-color: var(--coral); border-width: 2px; }
 .map-item.done .map-title { color: var(--text-dim); }
-.map-icon { width: 20px; text-align: center; font-weight: 800; color: var(--teal); }
+.map-icon { width: 20px; text-align: center; font-weight: 800; color: var(--u-accent); }
 .map-item.current .map-icon { color: var(--coral); }
 .map-n { font-weight: 800; color: var(--text-dim); min-width: 18px; }
 .map-title { flex: 1; }
@@ -994,12 +999,14 @@ textarea.u-ans { min-height: 84px; }
 .u-reviewing a { color: var(--coral); font-weight: 700; }
 
 /* Flip flashcards */
-.flip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 6px; }
-.flip-card { perspective: 900px; background: none; border: none; padding: 0; height: 100px; cursor: pointer; }
+/* symmetrical word cards: uniform size, wrap and center so a short last row
+   sits centered under the rest instead of hanging off to the left */
+.flip-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
+.flip-card { perspective: 900px; background: none; border: none; padding: 0; width: 160px; height: 108px; flex: 0 0 auto; cursor: pointer; }
 .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.2,0.7,0.2,1); transform-style: preserve-3d; }
 .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
 .flip-front, .flip-back { position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 10px; border: 2px solid var(--ink); }
-.flip-front { background: #8FD6E1; font-family: var(--serif); font-weight: 600; font-size: 1.05rem; color: var(--ink); }
+.flip-front { background: var(--u-accent-soft); font-family: var(--serif); font-weight: 600; font-size: 1rem; line-height: 1.15; color: var(--ink); }
 .flip-back { background: var(--paper); transform: rotateY(180deg); font-size: 0.82rem; line-height: 1.35; color: var(--text-muted); }
 
 /* Frayer cards */
@@ -1354,3 +1361,7 @@ textarea.u-ans { min-height: 84px; }
 /* math unit: Khan practice link buttons */
 .practice-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 .u-practice .practice-links .btn { margin: 0; }
+
+/* math lesson: interdisciplinary "tie-in" callout */
+.tie-in { background: var(--cream-2); border-left: 4px solid var(--u-accent); padding: 10px 14px;
+  border-radius: 0 8px 8px 0; font-size: 0.92rem; line-height: 1.5; margin: 14px 0; }

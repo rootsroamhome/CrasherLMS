@@ -204,7 +204,7 @@ function cardHtml(card, status) {
   return `
     <div class="u-card" data-cardid="${card.id}">
       <div class="content-meta">
-        <span class="subject-badge" style="background:var(--teal); color:var(--cream);">${esc(card.subject)}</span>
+        <span class="subject-badge" style="background:var(--u-accent); color:#fff;">${esc(card.subject)}</span>
         <span style="font-size:0.76rem; font-weight:700; color:var(--text-dim);">${esc(card.standards || '')}</span>
         <span style="font-size:0.76rem; color:var(--text-dim);">~${card.minutes} min</span>
       </div>
@@ -247,7 +247,9 @@ function render() {
     ? `<div class="u-switch-wrap">${switchRow(coreUnits, 'core', 'Interdisciplinary')}${switchRow(mathUnits, 'math', 'Math')}</div>`
     : '';
 
-  document.getElementById('unit-app').innerHTML = `
+  const app = document.getElementById('unit-app');
+  app.classList.toggle('theme-math', UNIT.track === 'math');
+  app.innerHTML = `
     <div class="u-head">
       ${switcher}
       <div class="hero-title">${esc(UNIT.title)}</div>
