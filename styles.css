@@ -1051,43 +1051,50 @@ textarea.u-ans { min-height: 84px; }
    Added in the "link the unit into Today + mastery" pass.
    ========================================================= */
 
-/* ── Today landing ── */
-.today-hero { margin-bottom: 26px; }
+/* ── Today landing (d.school-style textured gallery) ── */
+.today-hero { margin-bottom: 22px; }
 .today-date { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); }
 .today-greeting { font-family: var(--serif); font-size: 2.4rem; line-height: 1.05; margin: 4px 0 10px; }
 .today-fact { font-size: 1rem; color: var(--text-muted); max-width: 62ch; line-height: 1.5; }
+.school-flag { display: inline-flex; align-items: center; gap: 12px; margin-top: 16px; padding: 9px 16px;
+  border: 2px solid var(--ink); border-radius: 30px; font-size: 0.9rem; font-weight: 700; background: var(--paper); }
+.school-flag.summer { background: #F4CE5E; }
+.school-flag.in-session { background: #8FD6E1; }
+.school-flag .countdown { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+  background: var(--ink); color: var(--cream); padding: 3px 10px; border-radius: 20px; }
 
-.today-lesson { display: block; text-decoration: none; color: var(--ink); background: var(--tile, var(--cream-2));
-  border: 2.5px solid var(--ink); border-radius: var(--radius); padding: 22px 22px 18px; margin-bottom: 30px;
-  box-shadow: 5px 5px 0 rgba(26,26,26,0.12); transition: transform 0.15s ease, box-shadow 0.15s ease; }
-.today-lesson:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 rgba(26,26,26,0.16); }
-.today-eyebrow { font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-soft); }
-.today-lesson-title { font-family: var(--serif); font-size: 1.9rem; line-height: 1.1; margin: 6px 0 12px; }
-.today-lesson-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
-.today-min, .today-standards { font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); }
-.today-lesson-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.today-go { font-weight: 800; font-size: 1.02rem; }
-.today-unit-progress { font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); }
-.today-lesson-bar { height: 8px; background: rgba(26,26,26,0.12); border-radius: 20px; overflow: hidden; margin-top: 12px; }
-.today-lesson-bar > div { height: 100%; border-radius: 20px; }
-.today-lesson-done { background: var(--cream-2); }
+.today-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.today-tile { margin-bottom: 0; text-decoration: none; color: var(--ink); display: block; }
+.today-lesson-tile { grid-column: 1 / -1; }
+.card.tile.today-tile { box-shadow: 5px 5px 0 rgba(26,26,26,0.12); }
+.card.tile.today-tile:hover { transform: translate(-2px,-3px); box-shadow: 8px 9px 0 rgba(26,26,26,0.16); }
+.card.tile.today-tile:hover .ribbon-track { animation-play-state: running; }
 
-.daily-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 12px 0 26px; }
-.daily-card { background: var(--tile, var(--cream-2)); border: 2.5px solid var(--ink); border-radius: var(--radius);
-  padding: 16px 16px 14px; box-shadow: 4px 4px 0 rgba(26,26,26,0.1); }
-.daily-card.is-done { opacity: 0.62; }
-.daily-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.daily-min { font-size: 0.74rem; font-weight: 700; color: var(--ink-soft); }
-.daily-title { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; }
-.daily-note { font-size: 0.88rem; color: var(--ink-soft); margin: 4px 0 12px; line-height: 1.45; }
-.daily-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.daily-card .timer { background: rgba(255,255,255,0.55); }
+.today-photo { position: relative; z-index: 1; margin-bottom: 15px; }
+.today-photo img { width: 100%; height: 180px; object-fit: cover; display: block; border: 2px solid var(--ink);
+  border-radius: 12px; transition: transform 0.9s cubic-bezier(0.2,0.7,0.2,1); }
+.today-tile:hover .today-photo img { transform: scale(1.03); }
+.today-lesson-tile .today-photo img { height: 240px; }
 
-.today-week { display: flex; justify-content: space-between; align-items: center; gap: 12px; text-decoration: none;
-  color: var(--ink); background: var(--paper); border: 2px dashed var(--ink); border-radius: var(--radius-sm);
-  padding: 14px 18px; font-size: 0.95rem; transition: background 0.15s ease; }
-.today-week:hover { background: var(--cream-2); }
-.today-week-go { font-weight: 800; font-size: 1.1rem; }
+.tile-eyebrow { font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-soft); }
+.tile-title { font-family: var(--serif); font-size: 1.7rem; font-weight: 600; line-height: 1.08; margin: 5px 0 8px; }
+.today-lesson-tile .tile-title { font-size: 2.1rem; }
+.tile-desc { font-size: 0.92rem; color: var(--ink-soft); line-height: 1.5; margin: 0 0 6px; }
+.tile-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 8px 0 4px; font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); }
+.tile-cta { font-weight: 800; font-size: 1.02rem; }
+.tile-prog { font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); }
+.tile-bar { height: 8px; background: rgba(26,26,26,0.14); border-radius: 20px; overflow: hidden; margin-top: 12px; }
+.tile-bar > div { height: 100%; border-radius: 20px; }
+.tile.black .tile-eyebrow, .tile.black .tile-desc, .tile.black .tile-prog { color: #C9C3B5; }
+.tile.black .tile-title, .tile.black .tile-cta { color: var(--cream); }
+
+.daily-card.is-done { opacity: 0.6; }
+.daily-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
+.today-tile .timer { background: rgba(255,255,255,0.5); position: relative; z-index: 1; }
+
+@media (max-width: 720px) {
+  .today-gallery { grid-template-columns: 1fr; }
+}
 
 /* ── Reading pane ── */
 .reader-page { max-width: 760px; }
