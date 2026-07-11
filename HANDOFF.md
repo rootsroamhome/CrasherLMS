@@ -2,6 +2,17 @@
 
 ## Latest pass — Today rebuilt around the units, mastery view, clean readers
 The date-locked to-do list is **retired as the front door.** The site now runs on the units:
+- **Math unit (`unit-math-proportions.js`).** First real math unit — "Proportional Relationships"
+  (Khan 7th-grade Unit 1, `cc-7th-ratio-proportion`). 8 lessons, built the same way as the others
+  (hook → explainer → vocab → our quick-check → practice) but the videos/practice **deep-link to
+  Khan** (confirmed URLs) instead of embedding. Marked **`track: 'math'`** so it does NOT take the
+  interdisciplinary "Today's lesson" slot — `index.js`/`parent-guide.js` filter `track !== 'math'`
+  for that. It appears in the Units switcher, its work shows in Portfolio, and its `7.RP.A.*`
+  standards auto-check the Big Picture Math checklist. The **daily Math tile now links into this
+  unit** (`unit.html?u=math-proportions`, internal/same-tab) instead of raw Khan. Two new block
+  types in `unit.js`: `practice` (Khan practice buttons, supports `links[]`) and `video` now takes
+  a `label`. To build the next math unit, copy this file, change `id`/content, keep `track:'math'`,
+  and add its `<script>` to the 5 HS_UNITS pages.
 - **Today (`index.html`/`index.js`) is units-driven and Airtable-free.** A d.school-style
   **textured tile gallery** (mixed subject colors + halftone + ribbon + curated photos). Three
   phases by date:

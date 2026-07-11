@@ -1342,3 +1342,7 @@ textarea.u-ans { min-height: 84px; }
 
 /* standards card: the Oregon source line at the top of an open checklist */
 .std-source { font-size: 0.74rem; font-style: italic; color: var(--text-dim); padding: 10px 22px 4px; }
+
+/* math unit: Khan practice link buttons */
+.practice-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.u-practice .practice-links .btn { margin: 0; }

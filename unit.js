@@ -55,8 +55,15 @@ function blockHtml(card, b, bi) {
       }
       return `<div class="u-block">
         ${b.title ? `<div class="u-sec">▶ Watch — ${esc(b.title)}</div>` : ''}
-        <a class="btn btn-primary" href="${b.url}" target="_blank" rel="noopener">▶ Watch on YouTube</a>
+        <a class="btn btn-primary" href="${b.url}" target="_blank" rel="noopener">${esc(b.label || '▶ Watch on YouTube')}</a>
         ${b.focus ? `<p class="u-focus">${esc(b.focus)}</p>` : ''}</div>`;
+
+    case 'practice':
+      return `<div class="u-block u-practice">
+        <div class="u-sec">🎯 ${esc(b.title || 'Practice on Khan')}</div>
+        ${b.note ? `<p class="u-focus">${esc(b.note)}</p>` : ''}
+        <div class="practice-links">${(b.links || [{ url: b.url, label: b.label }]).map(l =>
+          `<a class="btn btn-primary" href="${l.url}" target="_blank" rel="noopener">${esc(l.label || 'Practice')} ↗</a>`).join('')}</div></div>`;
 
     case 'read':
       return `<div class="u-block u-read">

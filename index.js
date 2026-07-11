@@ -41,15 +41,17 @@ const DAILY = [
     photos: ['assets/units/reading.jpg', 'assets/units/reading2.jpg', 'assets/units/reading3.jpg', 'assets/units/reading4.jpg'],
     link: null, note: 'Your pick of book. Just read — no log, no quiz.' },
   { key: 'math', subject: 'Math', title: 'Math', minutes: 30, side: 'EVERY DAY',
-    link: 'https://www.khanacademy.org/math/cc-seventh-grade-math', linkLabel: 'Open Khan Academy',
-    note: 'Khan Academy, on grade level — pick up right where you left off.' },
+    link: 'unit.html?u=math-proportions', linkLabel: "Open today's math lesson", internal: true,
+    note: 'Work the Proportional Relationships unit — a short video, a quick check, then Khan practice.' },
 ];
 
 /* ── unit progress (reads each unit's own localStorage) ── */
 function unitState(id) { try { return JSON.parse(localStorage.getItem('homeskewl_unit_' + id)) || {}; } catch (e) { return {}; } }
 function unitDoneCount(u) { const d = unitState(u.id).done || {}; return u.cards.filter(c => d[c.id]).length; }
 function currentCard(u) { const d = unitState(u.id).done || {}; return u.cards.find(c => !d[c.id]) || null; }
-function activeUnit() { return HS_UNITS.find(u => unitDoneCount(u) < u.cards.length) || HS_UNITS[HS_UNITS.length - 1]; }
+const CORE_UNITS = HS_UNITS.filter(u => u.track !== 'math');
+function activeUnit() { return CORE_UNITS.find(u => unitDoneCount(u) < u.cards.length) || CORE_UNITS[CORE_UNITS.length - 1]; }
+function mathUnit() { return HS_UNITS.find(u => u.track === 'math'); }
 
 /* ── daily "done today" state (date-keyed, so it never carries over) ── */
 function dkey() { return 'homeskewl_daily_' + viewDate; }
@@ -172,7 +174,7 @@ function dailyTile(item, i) {
   const c = colorOf(item.subject);
   const isDone = !!dailyState()[item.key];
   const linkHtml = item.link
-    ? `<a class="btn btn-primary" href="${item.link}" target="_blank" rel="noopener">${esc(item.linkLabel || 'Open')} ↗</a>`
+    ? `<a class="btn btn-primary" href="${item.link}"${item.internal ? '' : ' target="_blank" rel="noopener"'}>${esc(item.linkLabel || 'Open')} ${item.internal ? '→' : '↗'}</a>`
     : '';
   return `<div class="card tile ${TEX[i % TEX.length]} ${i % 2 ? 'dots-blue' : 'dots-pink'} today-tile daily-card${isDone ? ' is-done' : ''}"
       data-key="${item.key}" style="--tile:${c.tile}; --card-accent:${c.bg};">

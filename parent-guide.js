@@ -11,7 +11,7 @@ const HS_UNITS = window.HS_UNITS || [];
 
 function unitState(id) { try { return JSON.parse(localStorage.getItem('homeskewl_unit_' + id)) || {}; } catch (e) { return {}; } }
 function doneCount(u) { const d = unitState(u.id).done || {}; return u.cards.filter(c => d[c.id]).length; }
-function activeUnit() { return HS_UNITS.find(u => doneCount(u) < u.cards.length) || HS_UNITS[HS_UNITS.length - 1]; }
+function activeUnit() { const core = HS_UNITS.filter(u => u.track !== 'math'); return core.find(u => doneCount(u) < u.cards.length) || core[core.length - 1] || HS_UNITS[0]; }
 function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function colorOf(subject) { const m = typeof SUBJECT_COLORS !== 'undefined' ? SUBJECT_COLORS : {}; return m[subject] || { bg: '#17A0AE', tile: '#8FD6E1', accent: '#17A0AE' }; }
 
