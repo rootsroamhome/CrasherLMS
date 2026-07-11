@@ -13,6 +13,21 @@ window.HS_UNITS.push({
   short: 'Unit 2 · Metals',
   title: 'Metals & the Rise of Empires',
   eq: 'How does changing what things are made of change who has power?',
+  image: 'assets/units/metals.jpg',
+
+  parent: {
+    hotspots: [
+      '<b>Physical vs. chemical change</b> is THE misconception here. Melting copper is physical (it\'s still copper); rusting and smelting are chemical (a new substance appears). If he calls melting a chemical reaction, revisit cards 4–6.',
+      '<b>Conservation of mass</b> is counter-intuitive when a gas forms — "where did the mass go when the log burned?" The sealed-bag build (card 7) makes it click; do it on a kitchen scale.',
+      'The <b>bronze → tin → trade → empire</b> chain deliberately rhymes with the rivers unit\'s surplus chain. Point out the echo — same story, new material.',
+      '<b>Alloy</b> means a mix made <i>on purpose</i>. Check he gets that bronze is engineered (copper + tin), not something you dig out of the ground.',
+    ],
+    activities: [
+      { tier: 'Small', title: 'Kitchen chemistry afternoon', detail: 'Baking soda + vinegar sealed in a zip bag on a kitchen scale (the mass stays the same — conservation of mass). Rust some steel wool. Race a chocolate chip, a pat of butter, and an ice cube melting (different melting points = a property). All from the cupboard.', cost: 'Free', time: '1–2 hours' },
+      { tier: 'Medium', title: 'Watch metal get worked — or a battery bench', detail: 'Catch a blacksmith or farrier demo (county fairs, living-history days) to see forging for real. Or visit a Medford ebike/bike shop\'s battery bench and ask how lithium packs are built — that ties straight to the "Our Material: Lithium" card.', cost: 'Free–$', time: '1–2 hours' },
+      { tier: 'Large', title: 'ScienceWorks, Ashland — matter & energy', detail: 'ScienceWorks Hands-On Museum (~15 min away) has hands-on matter and energy exhibits that turn the abstract chemistry into something he can touch. A good rainy-day anchor for the whole unit.', cost: '≈ $12–15/person', time: 'Half day' },
+    ],
+  },
 
   vocab: {
     mustOwn: [

@@ -24,18 +24,18 @@ const HS_UNITS = window.HS_UNITS || [];
 // page's global lexical scope but are NOT properties of window — so reference
 // them by name (guarded), never as window.*.
 const SCHOOL_START = (typeof CURRICULUM !== 'undefined' && CURRICULUM.yearStart) || '2026-08-31';
-
-/* A loremflickr keyword per unit for the feature photo. */
-const UNIT_PHOTO = { rivers: 'river', metals: 'blacksmith' };
+// Deep summer runs until this date: Today shows only the daily reading + math,
+// no unit content. Units/preview/weekly/portfolio appear once school is close.
+const SUMMER_END = '2026-08-01';
 
 /* The daily anchors. Edit this list to change what shows every day. */
 const DAILY = [
-  { key: 'math', subject: 'Math', title: 'Math', minutes: 35, side: 'DAILY',
+  { key: 'reading', subject: 'ELA', title: 'Independent Reading', minutes: 30, side: 'EVERY DAY',
+    photo: 'assets/units/reading.jpg', link: null,
+    note: 'Your pick of book. Just read — no log, no quiz.' },
+  { key: 'math', subject: 'Math', title: 'Math', minutes: 30, side: 'EVERY DAY',
     link: 'https://www.khanacademy.org/math/cc-seventh-grade-math', linkLabel: 'Open Khan Academy',
     note: 'Khan Academy, on grade level — pick up right where you left off.' },
-  { key: 'reading', subject: 'ELA', title: 'Independent Reading', minutes: 30, side: 'DAILY',
-    photo: 'library', link: null,
-    note: 'Your pick of book. Just read — no log, no quiz.' },
 ];
 
 /* ── unit progress (reads each unit's own localStorage) ── */
@@ -55,6 +55,7 @@ function daysBetween(a, b) { return Math.round((parseDate(b) - parseDate(a)) / 8
 function fmtLong(s) { return parseDate(s).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); }
 const DAYS_TO_SCHOOL = daysBetween(TODAY, SCHOOL_START);
 const IN_SESSION = DAYS_TO_SCHOOL <= 0;
+const IS_SUMMER = TODAY < SUMMER_END;
 function weekNumber() { const d = daysBetween(SCHOOL_START, TODAY); return d < 0 ? 0 : Math.floor(d / 7) + 1; }
 
 function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
@@ -69,9 +70,9 @@ function showToast(msg) {
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-/* rotating photo band (degrades to the tile's color if the image fails) */
-function photoBand(keyword) {
-  return `<div class="today-photo"><img src="https://loremflickr.com/640/300/${keyword}" alt="" loading="lazy" onerror="this.parentElement.remove()"></div>`;
+/* static, self-hosted photo band (curated real images — no random/AI stock) */
+function photoBand(src) {
+  return src ? `<div class="today-photo"><img src="${src}" alt="" loading="lazy"></div>` : '';
 }
 
 /* deterministic-ish texture variant so tiles don't all look identical */
@@ -122,7 +123,6 @@ function lessonTile() {
   if (!u) return '';
   const card = currentCard(u);
   const done = unitDoneCount(u), total = u.cards.length;
-  const kw = UNIT_PHOTO[u.id] || 'landscape';
   const c = colorOf('Science');
 
   if (!card) {
@@ -140,7 +140,7 @@ function lessonTile() {
 
   return `<a class="card tile tex-a today-tile today-lesson-tile" href="unit.html?u=${u.id}" style="--tile:${c.tile}; --card-accent:${c.bg};">
     <span class="tile-dot"></span><span class="tile-side">LESSON</span>
-    ${photoBand(kw)}
+    ${photoBand(u.image)}
     <div class="tile-eyebrow">${eyebrow}</div>
     <h2 class="tile-title">${esc(card.title)}</h2>
     <div class="tile-meta">
@@ -165,7 +165,7 @@ function dailyTile(item, i) {
   return `<div class="card tile ${TEX[i % TEX.length]} ${i % 2 ? 'dots-blue' : 'dots-pink'} today-tile daily-card${isDone ? ' is-done' : ''}"
       data-key="${item.key}" style="--tile:${c.tile}; --card-accent:${c.bg};">
     <span class="tile-dot"></span><span class="tile-side">${esc(item.side || 'DAILY')}</span>
-    ${item.photo ? photoBand(item.photo) : ''}
+    ${photoBand(item.photo)}
     <div class="tile-eyebrow">${item.minutes} min a day</div>
     <h2 class="tile-title">${esc(item.title)}</h2>
     <p class="tile-desc">${esc(item.note)}</p>
@@ -186,17 +186,17 @@ function weeklyTile() {
   const c = colorOf('Rabbit Hole');
   return `<a class="card tile tex-b today-tile" href="this-week.html" style="--tile:${c.tile}; --card-accent:${c.bg};">
     <span class="tile-dot"></span><span class="tile-side">WEEKLY</span>
-    <div class="tile-eyebrow">Pick once, each Monday</div>
+    <div class="tile-eyebrow">Pick Monday · work on it all week</div>
     <h2 class="tile-title">Self-Study or Rabbit Hole</h2>
-    <p class="tile-desc">Go deep on one thing you choose, or chase something weird and make stuff. One pick for the whole week.</p>
-    <div class="tile-foot"><span class="tile-cta">Make this week's pick →</span></div>
+    <p class="tile-desc">Choose your track on Monday, then come here each day to work on it — go deep on one thing, or chase something weird and make stuff.</p>
+    <div class="tile-foot"><span class="tile-cta">Open this week's work →</span></div>
   </a>`;
 }
 
 function portfolioTile() {
-  return `<a class="card tile black tex-d today-tile" href="big-picture.html" style="--card-accent:var(--teal);">
+  return `<a class="card tile black tex-d today-tile" href="portfolio.html" style="--card-accent:var(--teal);">
     <span class="tile-dot"></span><span class="tile-side">YOUR WORK</span>
-    <div class="ribbon"><div class="ribbon-track">PORTFOLIO · PROGRESS · MASTERY · PORTFOLIO · PROGRESS · MASTERY · </div></div>
+    <div class="ribbon"><div class="ribbon-track">PORTFOLIO</div></div>
     <div class="tile-eyebrow">Everything you've made</div>
     <h2 class="tile-title">See your work</h2>
     <p class="tile-desc">Your answers, quiz scores, and vocabulary — all in one place, unit by unit.</p>
@@ -214,19 +214,25 @@ function schoolFlag() {
 }
 
 function render() {
-  document.getElementById('today').innerHTML = `
+  const hero = `
     <div class="today-hero">
       <div class="today-date">${fmtLong(TODAY)}</div>
       <h1 class="today-greeting">${greeting()}, Crasher.</h1>
       <p class="today-fact">${esc(getDailyFact(TODAY))}</p>
       ${schoolFlag()}
-    </div>
-    <div class="today-gallery">
-      ${lessonTile()}
-      ${DAILY.map(dailyTile).join('')}
-      ${weeklyTile()}
-      ${portfolioTile()}
+      ${IS_SUMMER ? `<p class="today-summer-note">Over the summer it's just your reading and your math. The units kick off when school starts.</p>` : ''}
     </div>`;
+
+  const gallery = IS_SUMMER
+    ? `<div class="today-gallery">${DAILY.map(dailyTile).join('')}</div>`
+    : `<div class="today-gallery">
+        ${lessonTile()}
+        ${DAILY.map(dailyTile).join('')}
+        ${weeklyTile()}
+        ${portfolioTile()}
+      </div>`;
+
+  document.getElementById('today').innerHTML = hero + gallery;
   wire();
 }
 

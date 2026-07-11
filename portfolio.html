@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Big Picture — HomeSkewl</title>
+  <title>Portfolio — HomeSkewl</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -19,11 +19,11 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
       <span>My Unit</span>
     </a>
-    <a href="portfolio.html" class="nav-link">
+    <a href="portfolio.html" class="nav-link active">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       <span>Portfolio</span>
     </a>
-    <a href="big-picture.html" class="nav-link active">
+    <a href="big-picture.html" class="nav-link">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       <span>Big Picture</span>
     </a>
@@ -36,23 +36,22 @@
 
 <main class="page">
   <div class="page-header">
-    <h1>The Big Picture</h1>
-    <div class="date">The whole year at a glance — the six units, and which standards they cover.</div>
+    <h1>Portfolio</h1>
+    <div class="date">Crasher's work, unit by unit — his answers, quiz scores, and vocabulary. Tap a unit to open it.</div>
   </div>
 
   <div class="stats-grid" id="stats-grid">
-    <div class="stat-card"><div class="stat-number" id="stat-units" style="color:var(--teal)">–</div><div class="stat-label">Units Live</div></div>
-    <div class="stat-card"><div class="stat-number" id="stat-cards" style="color:var(--success)">–</div><div class="stat-label">Cards Done</div></div>
-    <div class="stat-card"><div class="stat-number" id="stat-standards" style="color:#D19A1F">–</div><div class="stat-label">Standards Addressed</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-cards" style="color:var(--teal)">–</div><div class="stat-label">Cards Done</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-quiz" style="color:var(--success)">–</div><div class="stat-label">Avg Quiz Score</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-words" style="color:#D19A1F">–</div><div class="stat-label">Words Owned</div></div>
   </div>
 
-  <div id="content"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+  <div id="content"><div class="loading"><div class="spinner"></div>Reading his work…</div></div>
 </main>
 
 <script src="config.js"></script>
-<script src="curriculum.js"></script>
 <script src="unit-rivers.js"></script>
 <script src="unit-metals.js"></script>
-<script src="big-picture.js"></script>
+<script src="portfolio.js"></script>
 </body>
 </html>

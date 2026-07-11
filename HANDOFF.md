@@ -2,33 +2,50 @@
 
 ## Latest pass — Today rebuilt around the units, mastery view, clean readers
 The date-locked to-do list is **retired as the front door.** The site now runs on the units:
-- **Today (`index.html`/`index.js`) is now units-driven and Airtable-free.** A d.school-style
-  **textured tile gallery** (mixed subject colors + halftone + ribbon + loremflickr photos on the
-  lesson/reading tiles): a feature "lesson" tile = the next unlocked card of the unit he's in
-  (links into My Unit), Math + Reading daily tiles with focus timers, a weekly-pick tile, and a
-  black **portfolio tile → Big Picture**. **Gated to the school-year start** (`CURRICULUM.yearStart`,
-  Aug 31): before then it shows a summer countdown + "Preview the unit"; after, "Continue" + "Week N
-  of 37". **Nothing rolls over:** daily "done today" is keyed by LOCAL date (`homeskewl_daily_<date>`).
-  Edit the `DAILY` array / `UNIT_PHOTO` map at the top of `index.js`.
-  ⚠️ Gotcha: `config.js` and `curriculum.js` declare `SUBJECT_COLORS` / `CURRICULUM` as top-level
-  `const`, which are NOT on `window`. Reference them **by name** (guarded with `typeof`), never as
-  `window.SUBJECT_COLORS` — doing the latter is what made every Today tile fall back to teal ("all blue").
-- **Big Picture (`big-picture.html`/`big-picture.js`) is now a mastery + portfolio dashboard.**
-  It reads every unit's localStorage and shows, per unit: cards done, quiz accuracy (with a
-  per-lesson bar chart), vocab "words owned" (with the fuzzy words as a study list), the KWL,
-  and **every written answer he's typed**, reconstructed prompt-by-prompt. Top row totals
-  across all units. This is the answer to "where do his answers go / how do we see mastery."
-  Caveat: it reads *this browser's* localStorage, so it reflects the device he works on —
-  true cross-device sync is still the open Airtable to-do.
+- **Today (`index.html`/`index.js`) is units-driven and Airtable-free.** A d.school-style
+  **textured tile gallery** (mixed subject colors + halftone + ribbon + curated photos). Three
+  phases by date:
+  - **Deep summer** (`today < SUMMER_END` = Aug 1): ONLY the two daily tiles — 30 min Reading +
+    30 min Khan — plus a summer countdown. No unit/preview/weekly/portfolio (Danielle: over the
+    summer it's just reading + math).
+  - **Ramp** (Aug 1 – Aug 30): full gallery with the lesson tile in "Preview the unit" mode.
+  - **In session** (`>= CURRICULUM.yearStart` Aug 31): lesson tile = "Continue", "Week N of 37".
+  Tiles: feature lesson (unit's next card → My Unit), Reading + Math dailies w/ timers, weekly-pick
+  tile (→ this-week.html, framed "pick Monday, work all week"), black **"See your work" → Portfolio**.
+  **Nothing rolls over:** daily "done today" keyed by LOCAL date. Edit `DAILY` / `SUMMER_END` in `index.js`.
+  ✅ **Photos are curated + self-hosted** in `assets/units/` (rivers.jpg, metals.jpg, reading.jpg —
+  real Wikimedia Commons photos, see `assets/units/CREDITS.txt`). Static, high-quality, topical.
+  **Do NOT use loremflickr / keyword-random stock again** — it returned watermarked "AI slop" and
+  changed every load. New unit → add a real image to `assets/units/` and set `image:` on the unit.
+  ⚠️ Gotcha: `config.js` / `curriculum.js` declare `SUBJECT_COLORS` / `CURRICULUM` as top-level
+  `const`, NOT on `window`. Reference them **by name** (guarded with `typeof`), never `window.*` —
+  that's what made every Today tile fall back to teal ("all blue").
+- **Two separate result pages — keep them separate:**
+  - **Portfolio (`portfolio.html`/`portfolio.js`)** = HIS WORK. Each unit is a **collapsed
+    accordion** (closed by default; tap to open) so it never gets unwieldy: inside is cards-done,
+    quiz chart, vocab study list, KWL, and every written answer. Reads localStorage (this device
+    only; cross-device sync still a to-do).
+  - **Big Picture (`big-picture.html`/`big-picture.js`)** = THE YEAR + STANDARDS (its original
+    purpose — do not turn it back into an answer dump). Shows the six-unit arc (live vs. planned,
+    from `YEAR_PLAN`) with progress, and a **standards tracker** built by collecting the standards
+    codes off the built units' cards, grouped Science / Social Studies / ELA.
 - **Clean reading panes (`reader.html`/`reader.js` + `readings.js`).** Any lesson reading that
   used to link to an outside site (USGS, Britannica) now opens an in-app, ad-free, printable
   reading pane instead. Primary sources got real text: Gilgamesh's flood, the Code of
   Hammurabi, Yu the Great, the Shield of Achilles (Hephaestus), Ogun. Plus two research
   "reading room" pages (four river civilizations; materials that changed the world). 9 docs total.
-- **All lesson links open in a new tab** (external resources + readings), so the lesson never
-  gets navigated away from. Internal unit navigation and the "All lessons" map stay in-tab.
-- **Nav is consistent everywhere now:** Today · My Unit · This Week · Big Picture · Parents.
-  (The old "Review" link was dropped from the nav; `learning-review.html` still exists.)
+- **Parents (`parent-guide.html`/`parent-guide.js`) rebuilt units-driven (no Airtable, no week
+  table).** For the active unit (or `?u=<id>` via the switcher): a preview card w/ the unit photo +
+  "Preview the whole unit" link, **"Where he might get stuck"** (from `unit.parent.hotspots`), a
+  **Small/Medium/Large "do something real"** pick (from `unit.parent.activities` — one tiered set
+  per unit, Rogue-Valley-local), and **"Refresh your own memory"** = the unit's readings + videos
+  auto-collected from its cards. Per-unit granularity (add more activities to `unit.parent` if wanted).
+- **Ribbon** (`.ribbon`) is now a **top-right corner banner** (rotate 45°, clipped by the tile) so it
+  never crosses the tile's words — was a wide diagonal band across the middle before.
+- **All lesson links open in a new tab** (external resources + readings). Internal nav stays in-tab.
+- **Nav everywhere:** Today · My Unit · **Portfolio** · Big Picture · Parents. (This Week was pulled
+  from the nav — it's a once-a-week pick, reached from the Today weekly tile; `this-week.html` still
+  exists. "Review"/`learning-review.html` also still exists, not in nav.)
 
 Everything below is committed to git and live at **https://homeskewl.netlify.app**.
 A fresh session can pick up from this file + `CLAUDE.md` + the repo — nothing lives only in chat.

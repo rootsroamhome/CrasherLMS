@@ -17,6 +17,21 @@ window.HS_UNITS.push({
   short: 'Unit 1 · Rivers',
   title: 'Rivers & the Rise of Civilization',
   eq: 'How do rivers shape the way people live — and how do people shape rivers back?',
+  image: 'assets/units/rivers.jpg',
+
+  parent: {
+    hotspots: [
+      'The water cycle is a <b>loop, not a line</b>. Ask him to start somewhere odd — a puddle, a cloud, the ocean — and trace it all the way around. If he can only recite it in one fixed order, keep poking.',
+      'The <b>surplus → specialization → cities</b> chain is the whole unit. If he can\'t retell it in his own words (fertile floodplain → extra food → not everyone has to farm → specialized jobs → cities), slow down on cards 6–8 before moving on.',
+      '<b>Civilization</b>, <b>city</b>, and <b>city-state</b> get blurred together. Check he can give a concrete example of each (a city-state = Uruk running itself), not just a definition.',
+      'He may think a river only <b>destroys</b>. The stream-table build shows erosion <i>and</i> deposition — the dropping of silt is what builds the richest farmland on Earth. Don\'t skip it; that\'s the whole reason people showed up.',
+    ],
+    activities: [
+      { tier: 'Small', title: 'Read your own river — Bear Creek or the Rogue', detail: 'Walk a stretch of the Bear Creek Greenway or the Rogue. Find one spot where the water is cutting into a bank (erosion) and one where it\'s dropping a gravel bar (deposition). Then ask the unit\'s big question standing right there: why would people build a town on this water?', cost: 'Free', time: '1–2 hours' },
+      { tier: 'Medium', title: 'Table Rocks or TouVelle along the Rogue', detail: 'Hike the Table Rocks or visit TouVelle State Park and read the landscape together: the floodplain, the river\'s bends, why the Takelma lived and fished here for thousands of years. Pairs with the Mesopotamia and "Our River: the Rogue" cards.', cost: '≈ $5 day-use', time: 'Half day' },
+      { tier: 'Large', title: 'See a dam and a fish ladder', detail: 'Visit a dam with a fish ladder, or the Gold Ray / Savage Rapids dam-removal sites on the Rogue, and connect it to the "Harnessing Rivers" card — the trade-off between power and salmon, played out in your own valley.', cost: 'Free–$ gas', time: 'Half/full day' },
+    ],
+  },
 
   vocab: {
     mustOwn: [
