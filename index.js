@@ -323,9 +323,7 @@ function schoolFlag() {
     const wk = weekNumber();
     return `<div class="school-flag in-session">📚 School year 2026–27${wk ? ` · Week ${wk} of 37` : ''}</div>`;
   }
-  const d = daysToSchool();
-  return `<div class="school-flag summer">☀️ Summer break — school starts <strong>${fmtLong(SCHOOL_START)}</strong>
-    <span class="countdown">${d} ${d === 1 ? 'day' : 'days'} to go</span></div>`;
+  return '';   // no summer-break countdown banner
 }
 
 function datePicker() {
@@ -345,7 +343,6 @@ function render() {
       <h1 class="today-greeting">${greeting()}, Crasher.</h1>
       <p class="today-fact">${esc(getDailyFact(viewDate))}</p>
       ${schoolFlag()}
-      ${isSummer() ? `<p class="today-summer-note">Over the summer it's just your reading and your math. The units kick off when school starts.</p>` : ''}
       ${datePicker()}
     </div>`;
 
