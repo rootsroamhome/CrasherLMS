@@ -263,13 +263,14 @@ function lessonTile() {
     </a>`;
   }
 
-  const eyebrow = inSession() ? `Today's lesson · ${esc(u.short || u.title)}` : `Starts Mon, Aug 31 · ${esc(u.short || u.title)}`;
-  const cta = !inSession() ? 'Preview the unit →' : (done > 0 ? 'Continue the unit →' : 'Start the unit →');
+  // Thematic tile only renders on school days, so it's always in session here.
+  const isDone = !!dailyState()['thematic'];
+  const cta = done > 0 ? 'Continue the unit →' : 'Start the unit →';
 
-  return `<a class="card tile tex-a today-tile today-lesson-tile" href="unit.html?u=${u.id}" style="--tile:${c.tile}; --card-accent:${c.bg};">
+  return `<div class="card tile tex-a today-tile today-lesson-tile daily-card${isDone ? ' is-done' : ''}" data-key="thematic" style="--tile:${c.tile}; --card-accent:${c.bg};">
     <span class="tile-dot"></span><span class="tile-side">THEMATIC UNIT</span>
     ${PHOTO_PLAN.has('thematic') ? photoBand(u.image) : tileFill('thematic', u.short || u.title)}
-    <div class="tile-eyebrow">${eyebrow}</div>
+    <div class="tile-eyebrow">Today's lesson · ${esc(u.short || u.title)}</div>
     <h2 class="tile-title">${esc(card.title)}</h2>
     <div class="tile-meta">
       <span class="subject-badge" style="background:${c.bg}; color:#fff;">${esc(card.subject)}</span>
@@ -277,11 +278,12 @@ function lessonTile() {
       <span>${esc(card.standards || '')}</span>
     </div>
     <div class="tile-foot">
-      <span class="tile-cta">${cta}</span>
-      ${inSession() ? `<span class="tile-prog">${done} of ${total} lessons done</span>` : '<span class="tile-prog">Take a peek before the year starts</span>'}
+      <a class="tile-cta daily-cta" href="unit.html?u=${u.id}">${cta}</a>
+      <span class="tile-prog">${done} of ${total} lessons done</span>
     </div>
-    ${inSession() ? `<div class="tile-bar"><div style="width:${Math.round(done / total * 100)}%; background:${c.bg};"></div></div>` : ''}
-  </a>`;
+    <div class="tile-bar"><div style="width:${Math.round(done / total * 100)}%; background:${c.bg};"></div></div>
+    <div class="daily-actions"><button class="btn daily-done pill-sm${isDone ? ' is-checked' : ''}" type="button">✓ Done</button></div>
+  </div>`;
 }
 
 function dailyTile(item, i) {
@@ -329,29 +331,33 @@ function clepTile() {
   // Big sans title stays short — drop the "(CLEP Western Civ I · Module N)" tag
   // (the eyebrow already names the module).
   const shortTitle = (u.title || '').replace(/\s*\(.*\)\s*$/, '');
-  return `<a class="card tile tex-c today-tile today-clep-tile" href="unit.html?u=${u.id}" style="--tile:${CLEP_TILE}; --card-accent:${CLEP_ACCENT};">
+  const isDone = !!dailyState()['clep'];
+  return `<div class="card tile tex-c today-tile today-clep-tile daily-card${isDone ? ' is-done' : ''}" data-key="clep" style="--tile:${CLEP_TILE}; --card-accent:${CLEP_ACCENT};">
     <span class="tile-dot"></span><span class="tile-side">CLEP</span>
     ${PHOTO_PLAN.has('clep') && u.image ? photoBand(u.image) : tileFill('clep', 'C')}
     <div class="tile-eyebrow">${esc(u.short || 'Western Civ')}</div>
     <h2 class="tile-title tile-title-sans">${esc(shortTitle)}</h2>
     ${u.eq ? `<p class="tile-display">${esc(u.eq)}</p>` : ''}
     <div class="tile-foot">
-      <span class="tile-cta">${cta}</span>
+      <a class="tile-cta daily-cta" href="unit.html?u=${u.id}">${cta}</a>
       <span class="tile-prog">${done} of ${total} done</span>
     </div>
-  </a>`;
+    <div class="daily-actions"><button class="btn daily-done pill-sm${isDone ? ' is-checked' : ''}" type="button">✓ Done</button></div>
+  </div>`;
 }
 
 function weeklyTile() {
   const c = colorOf('Self-Study');
-  return `<a class="card tile tex-b today-tile" href="this-week.html" style="--tile:${c.tile}; --card-accent:${c.bg};">
+  const isDone = !!dailyState()['weekly'];
+  return `<div class="card tile tex-b today-tile daily-card${isDone ? ' is-done' : ''}" data-key="weekly" style="--tile:${c.tile}; --card-accent:${c.bg};">
     <span class="tile-dot"></span><span class="tile-side">THIS WEEK</span>
     ${tileFill('weekly', 'W')}
     <div class="tile-eyebrow">Pick Monday · work on it all week</div>
     <h2 class="tile-title">Self-Study, or a Rabbit Hole</h2>
     <p class="tile-desc">Choose your track on Monday, then come here each day to work on it — go deep on one thing, or chase something weird and make stuff.</p>
-    <div class="tile-foot"><span class="tile-cta">Open this week's work →</span></div>
-  </a>`;
+    <div class="tile-foot"><a class="tile-cta daily-cta" href="this-week.html">Open this week's work →</a></div>
+    <div class="daily-actions"><button class="btn daily-done pill-sm${isDone ? ' is-checked' : ''}" type="button">✓ Done</button></div>
+  </div>`;
 }
 
 function portfolioTile() {
