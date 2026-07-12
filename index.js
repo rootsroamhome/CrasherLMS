@@ -38,11 +38,15 @@ const SUMMER_END = '2026-08-01';
 
 /* The daily anchors. Edit this list to change what shows every day. */
 const DAILY = [
-  { key: 'reading', subject: 'ELA', title: 'Independent Reading', minutes: 30, side: 'EVERY DAY',
+  // Reading is a daily anchor, not one of the three tracks → cream (neutral).
+  { key: 'reading', subject: 'ELA', title: 'Independent Reading', minutes: 30, side: 'BE LITERATE', ghost: 'B',
+    tile: '#F8F4E9', accent: '#6F6F45',
     photos: ['assets/units/reading.jpg', 'assets/units/reading2.jpg', 'assets/units/reading3.jpg', 'assets/units/reading4.jpg'],
     link: null, note: 'Your pick of book. Just read — no log, no quiz.' },
-  { key: 'math', subject: 'Math', title: 'Math', minutes: 30, side: 'EVERY DAY',
-    link: 'unit.html?u=math-proportions', linkLabel: "Open today's math lesson", internal: true,
+  // Math = the gold track color (NOT its coral subject swatch — coral is reserved).
+  { key: 'math', subject: 'Math', title: 'Proportions', minutes: 30, side: 'MATH', ghost: 'M',
+    tile: '#F4CE5E', accent: '#D19A1F',
+    link: 'unit.html?u=math-proportions', linkLabel: 'Start', internal: true,
     noTimerInSession: true,   // self-paced once the 7th-grade units start (Aug 31): no timer
     note: 'Work the Proportional Relationships unit — a short video, a quick check, then Khan practice.' },
 ];
@@ -51,9 +55,38 @@ const DAILY = [
 function unitState(id) { try { return JSON.parse(localStorage.getItem('homeskewl_unit_' + id)) || {}; } catch (e) { return {}; } }
 function unitDoneCount(u) { const d = unitState(u.id).done || {}; return u.cards.filter(c => d[c.id]).length; }
 function currentCard(u) { const d = unitState(u.id).done || {}; return u.cards.find(c => !d[c.id]) || null; }
-const CORE_UNITS = HS_UNITS.filter(u => u.track !== 'math');
+// Interdisciplinary units carry no `track` (math='math', clep='clep'); the core
+// "Thematic Unit" slot is only those, so CLEP never hijacks Today's lesson tile.
+const CORE_UNITS = HS_UNITS.filter(u => !u.track);
 function activeUnit() { return CORE_UNITS.find(u => unitDoneCount(u) < u.cards.length) || CORE_UNITS[CORE_UNITS.length - 1]; }
 function mathUnit() { return HS_UNITS.find(u => u.track === 'math'); }
+// The College Credit (CLEP) elective — its own brown-tiled slot on Today.
+const CLEP_UNITS = HS_UNITS.filter(u => u.track === 'clep');
+function clepUnit() { return CLEP_UNITS.find(u => unitDoneCount(u) < u.cards.length) || CLEP_UNITS[0]; }
+const CLEP_TILE = '#F0B98C', CLEP_ACCENT = '#E07A3E';   // brown (Danielle's pick; not plum)
+
+/* Photo mix (d.school-style): only *some* tiles carry a photo on a given day,
+   the set rotates day to day, and never every tile at once. A tile is eligible
+   only if it actually has a real, topical, self-hosted image. */
+function dayHash(s) { return (s || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0); }
+// CLEP now has real, topical, self-hosted photos (assets/units/clep-*.jpg), so it
+// joins the photo rotation. Math still uses a placeholder (reading3.jpg bookstore),
+// so it stays out until a genuinely topical math image exists.
+const PHOTO_READY = { math: false, clep: true };
+let PHOTO_PLAN = new Set();
+function computePhotoPlan() {
+  const eligible = [];
+  const u = activeUnit(); if (u && u.image) eligible.push('thematic');
+  eligible.push('reading');                          // always has curated photos
+  const m = mathUnit(); if (m && m.image && PHOTO_READY.math) eligible.push('math');
+  const cl = clepUnit(); if (cl && cl.image && PHOTO_READY.clep) eligible.push('clep');
+  // each eligible tile has a ~60% (day-seeded) chance of showing its photo today
+  let picks = eligible.filter(k => (dayHash(k + '|' + viewDate) % 10) < 6);
+  const cap = eligible.length >= 3 ? eligible.length - 1 : eligible.length;  // leave at least one photo-less
+  if (!picks.length) picks = [eligible[dayHash(viewDate) % eligible.length]];
+  if (picks.length > cap) picks = picks.slice(0, cap);
+  PHOTO_PLAN = new Set(picks);
+}
 
 /* ── daily "done today" state (date-keyed, so it never carries over) ── */
 function dkey() { return 'homeskewl_daily_' + viewDate; }
@@ -84,6 +117,30 @@ function showToast(msg) {
 /* static, self-hosted photo band (curated real images — no random/AI stock) */
 function photoBand(src) {
   return src ? `<div class="today-photo"><img src="${src}" alt=""></div>` : '';
+}
+/* one big whitish serif initial — spans the tile behind the content */
+function ghostLetter(ch) {
+  const c = (ch || '').trim()[0];
+  return c ? `<span class="tile-ghost" aria-hidden="true">${esc(c.toUpperCase())}</span>` : '';
+}
+/* A photo-less tile gets one of three treatments — plain · faint arcs · ghost
+   letter. They're CYCLED across the no-photo tiles (so neighbours always differ
+   and there's a guaranteed mix), with a day-seeded offset so which tile gets
+   which changes daily. Photos, when present, take precedence. */
+const FILLS = ['plain', 'arcs', 'letter'];
+const FILL_ORDER = ['thematic', 'reading', 'math', 'clep', 'weekly', 'portfolio'];
+let FILL_PLAN = {};
+function computeFillPlan() {
+  const noPhoto = FILL_ORDER.filter(k => !PHOTO_PLAN.has(k));
+  const off = dayHash(viewDate);
+  FILL_PLAN = {};
+  noPhoto.forEach((k, i) => { FILL_PLAN[k] = FILLS[(i + off) % FILLS.length]; });
+}
+function tileFill(key, ghostChar) {
+  const t = FILL_PLAN[key] || 'plain';
+  if (t === 'arcs') return `<span class="tile-arcs${dayHash(key + viewDate) % 2 ? ' alt' : ''}" aria-hidden="true"></span>`;
+  if (t === 'letter') return ghostLetter(ghostChar);
+  return '';   // plain — just the solid color
 }
 /* rotating photo picker: a daily tile with a `photos` array cycles through them,
    advancing to a fresh photo each time it's marked done */
@@ -155,8 +212,8 @@ function lessonTile() {
   const cta = !inSession() ? 'Preview the unit →' : (done > 0 ? 'Continue the unit →' : 'Start the unit →');
 
   return `<a class="card tile tex-a today-tile today-lesson-tile" href="unit.html?u=${u.id}" style="--tile:${c.tile}; --card-accent:${c.bg};">
-    <span class="tile-dot"></span><span class="tile-side">LESSON</span>
-    ${photoBand(u.image)}
+    <span class="tile-dot"></span><span class="tile-side">THEMATIC UNIT</span>
+    ${PHOTO_PLAN.has('thematic') ? photoBand(u.image) : tileFill('thematic', u.short || u.title)}
     <div class="tile-eyebrow">${eyebrow}</div>
     <h2 class="tile-title">${esc(card.title)}</h2>
     <div class="tile-meta">
@@ -173,13 +230,14 @@ function lessonTile() {
 }
 
 function dailyTile(item, i) {
-  const c = colorOf(item.subject);
+  const c = item.tile ? { tile: item.tile, bg: item.accent } : colorOf(item.subject);
   const isDone = !!dailyState()[item.key];
   // Self-paced anchors drop the 30-min timer once school is in session (Aug 31+),
   // so he works through the unit with no time constraint. Summer keeps the timer.
   const timed = !(item.noTimerInSession && inSession());
+  // Plain text CTA (matches the CLEP/Thematic "Start →"), not a pill button.
   const linkHtml = item.link
-    ? `<a class="btn btn-primary" href="${item.link}"${item.internal ? '' : ' target="_blank" rel="noopener"'}>${esc(item.linkLabel || 'Open')} ${item.internal ? '→' : '↗'}</a>`
+    ? `<a class="tile-cta daily-cta" href="${item.link}"${item.internal ? '' : ' target="_blank" rel="noopener"'}>${esc(item.linkLabel || 'Open')} ${item.internal ? '→' : '↗'}</a>`
     : '';
   const eyebrow = timed ? `${item.minutes} min a day` : 'Self-paced · take your time';
   const timerHtml = timed
@@ -194,31 +252,56 @@ function dailyTile(item, i) {
   return `<div class="card tile ${TEX[i % TEX.length]} ${i % 2 ? 'dots-blue' : 'dots-pink'} today-tile daily-card${isDone ? ' is-done' : ''}"
       data-key="${item.key}" style="--tile:${c.tile}; --card-accent:${c.bg};">
     <span class="tile-dot"></span><span class="tile-side">${esc(item.side || 'DAILY')}</span>
-    ${photoBand(tilePhoto(item))}
+    ${PHOTO_PLAN.has(item.key) ? photoBand(tilePhoto(item)) : tileFill(item.key, item.ghost)}
     <div class="tile-eyebrow">${eyebrow}</div>
     <h2 class="tile-title">${esc(item.title)}</h2>
     <p class="tile-desc">${esc(item.note)}</p>
     ${timerHtml}
     <div class="daily-actions">${linkHtml}
-      <button class="btn btn-success daily-done" type="button">${isDone ? '✓ Done today' : 'Mark done today'}</button>
+      <button class="btn daily-done pill-sm${isDone ? ' is-checked' : ''}" type="button">✓ Done</button>
     </div>
   </div>`;
 }
 
+/* The College Credit (CLEP) elective — recipe B: a heavy sans title + a serif
+   line as the graphic. Brown, so it reads distinctly from teal/gold. */
+function clepTile() {
+  const u = clepUnit();
+  if (!u) return '';
+  const done = unitDoneCount(u), total = u.cards.length;
+  const cta = done > 0 ? 'Continue →' : 'Start →';
+  // Big sans title stays short — drop the "(CLEP Western Civ I · Module N)" tag
+  // (the eyebrow already names the module).
+  const shortTitle = (u.title || '').replace(/\s*\(.*\)\s*$/, '');
+  return `<a class="card tile tex-c today-tile today-clep-tile" href="unit.html?u=${u.id}" style="--tile:${CLEP_TILE}; --card-accent:${CLEP_ACCENT};">
+    <span class="tile-dot"></span><span class="tile-side">CLEP</span>
+    ${PHOTO_PLAN.has('clep') && u.image ? photoBand(u.image) : tileFill('clep', 'C')}
+    <div class="tile-eyebrow">${esc(u.short || 'Western Civ')}</div>
+    <h2 class="tile-title tile-title-sans">${esc(shortTitle)}</h2>
+    ${u.eq ? `<p class="tile-display">${esc(u.eq)}</p>` : ''}
+    <div class="tile-foot">
+      <span class="tile-cta">${cta}</span>
+      <span class="tile-prog">${done} of ${total} done</span>
+    </div>
+  </a>`;
+}
+
 function weeklyTile() {
-  const c = colorOf('Rabbit Hole');
+  const c = colorOf('Self-Study');
   return `<a class="card tile tex-b today-tile" href="this-week.html" style="--tile:${c.tile}; --card-accent:${c.bg};">
-    <span class="tile-dot"></span><span class="tile-side">WEEKLY</span>
+    <span class="tile-dot"></span><span class="tile-side">THIS WEEK</span>
+    ${tileFill('weekly', 'W')}
     <div class="tile-eyebrow">Pick Monday · work on it all week</div>
-    <h2 class="tile-title">Self-Study or Rabbit Hole</h2>
+    <h2 class="tile-title">Self-Study, or a Rabbit Hole</h2>
     <p class="tile-desc">Choose your track on Monday, then come here each day to work on it — go deep on one thing, or chase something weird and make stuff.</p>
     <div class="tile-foot"><span class="tile-cta">Open this week's work →</span></div>
   </a>`;
 }
 
 function portfolioTile() {
-  return `<a class="card tile black tex-d today-tile" href="portfolio.html" style="--card-accent:var(--teal); --ribbon:var(--teal); --ribbon-text:#fff; --rib-angle:50deg;">
-    <span class="tile-dot"></span><span class="tile-side">YOUR WORK</span>
+  return `<a class="card tile black tex-d today-tile today-wide" href="portfolio.html" style="--card-accent:var(--coral); --ribbon:var(--coral); --ribbon-text:#fff; --rib-angle:50deg;">
+    <span class="tile-dot"></span><span class="tile-side">SEE YOUR WORK</span>
+    ${tileFill('portfolio', 'P')}
     <div class="ribbon"><div class="ribbon-track">PORTFOLIO</div></div>
     <div class="tile-eyebrow">Everything you've made</div>
     <h2 class="tile-title">See your work</h2>
@@ -258,11 +341,14 @@ function render() {
       ${datePicker()}
     </div>`;
 
+  computePhotoPlan();
+  computeFillPlan();
   const gallery = isSummer()
     ? `<div class="today-gallery">${DAILY.map(dailyTile).join('')}</div>`
     : `<div class="today-gallery">
         ${lessonTile()}
         ${DAILY.map(dailyTile).join('')}
+        ${clepTile()}
         ${weeklyTile()}
         ${portfolioTile()}
       </div>`;
@@ -299,7 +385,7 @@ function wire() {
       const nowDone = !dailyState()[key];
       setDaily(key, nowDone);
       cardEl.classList.toggle('is-done', nowDone);
-      cardEl.querySelector('.daily-done').textContent = nowDone ? '✓ Done today' : 'Mark done today';
+      cardEl.querySelector('.daily-done').classList.toggle('is-checked', nowDone);
       if (nowDone) {
         showToast('Nice — checked off for today ✓');
         const item = DAILY.find(d => d.key === key);

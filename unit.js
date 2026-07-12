@@ -12,6 +12,7 @@ const UNIT = HS_UNITS.find(u => u.id === new URLSearchParams(location.search).ge
 const LS_KEY = 'homeskewl_unit_' + UNIT.id;
 let state = {};
 let viewId = null;
+let openTrack = null;   // which track's unit pills are revealed in the picker
 
 function load() {
   try { state = JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch (e) { state = {}; }
@@ -186,9 +187,14 @@ function blockHtml(card, b, bi) {
             </div></div>`).join('')}</div>`;
 
     case 'matching': {
-      const pairs = b.set.map(t => ({ t, d: (UNIT.vocab.mustOwn.find(v => v.term === t) || {}).def || '' }));
+      // Two ways to supply pairs: `set: [term,...]` looks defs up in vocab.mustOwn
+      // (the core tier), or `pairs: [{term, def}]` provides them inline (used for the
+      // separate "College Words" tier so it doesn't bloat the must-own flashcards).
+      const pairs = b.pairs
+        ? b.pairs.map(p => ({ t: p.term, d: p.def }))
+        : b.set.map(t => ({ t, d: (UNIT.vocab.mustOwn.find(v => v.term === t) || {}).def || '' }));
       const doneMatch = state.match[card.id];
-      return `<div class="u-block u-match" data-cardid="${card.id}" data-pairs='${esc(JSON.stringify(pairs))}'>
+      return `<div class="u-block u-match" data-cardid="${card.id}" data-pairs="${esc(JSON.stringify(pairs)).replace(/"/g, '&quot;')}">
         <div class="u-sec">🧩 ${esc(b.title || 'Word match')}</div>
         ${b.note ? `<p class="u-focus">${esc(b.note)}</p>` : ''}
         <div class="match-grid"><div class="match-col match-terms"></div><div class="match-col match-defs"></div></div>
@@ -286,29 +292,139 @@ function mapHtml() {
   }).join('') + `<button type="button" class="map-reset" id="map-reset">↺ Reset all progress</button>`;
 }
 
+/* ── track picker ────────────────────────────────────────────────
+   Three Today-style tiles (a mix of recipes: interdisciplinary carries a
+   real photo, math a big ghost letter, CLEP the heavy-sans + serif look).
+   Click a tile to reveal that track's individual unit pills below. */
+function trackStats(units) {
+  const done = units.reduce((n, u) => n + unitDoneCount(u), 0);
+  const total = units.reduce((n, u) => n + u.cards.length, 0);
+  return `${units.length} unit${units.length === 1 ? '' : 's'} · ${done}/${total} lessons`;
+}
+function trackActiveImage(units) {
+  const u = units.find(x => unitDoneCount(x) < x.cards.length) || units[units.length - 1];
+  return u && u.image ? u.image : '';
+}
+function trackPillsPanel(key, units) {
+  if (!units.length) return '';
+  const pills = units.map(u => {
+    // Strip the "Unit 1 · " / "CLEP · " / "Math · " prefix — the tile already
+    // names the track, so pills just carry the unit name (fits one line).
+    const name = (u.short || u.title).replace(/^[^·]*·\s*/, '');
+    return `<a class="u-switch-link${u.id === UNIT.id ? ' on' : ''}" href="unit.html?u=${u.id}" title="${esc(u.short || u.title)}">${esc(name)}</a>`;
+  }).join('');
+  return `<div class="track-pills u-switch-group ${key}" data-track="${key}" style="display:${openTrack === key ? 'flex' : 'none'};">${pills}</div>`;
+}
+function trackPicker(coreUnits, mathUnits, clepUnits) {
+  const cta = key => openTrack === key ? 'Units below ↓' : 'Pick a unit →';
+  const openCls = key => openTrack === key ? ' open' : '';
+
+  const coreImg = trackActiveImage(coreUnits);
+  const coreTile = coreUnits.length ? `<button type="button" class="card tile tex-a today-tile track-tile core${openCls('core')}" data-track="core" style="--tile:#8FD6E1; --card-accent:#17A0AE;">
+    <span class="tile-dot"></span><span class="tile-side">THEMATIC</span>
+    ${coreImg ? `<div class="today-photo"><img src="${coreImg}" alt=""></div>` : ''}
+    <div class="tile-eyebrow">${trackStats(coreUnits)}</div>
+    <h2 class="tile-title">Interdisciplinary</h2>
+    <div class="tile-foot"><span class="tile-cta">${cta('core')}</span></div>
+  </button>` : '';
+
+  const mathTile = mathUnits.length ? `<button type="button" class="card tile tex-c today-tile track-tile math${openCls('math')}" data-track="math" style="--tile:#F4CE5E; --card-accent:#D19A1F;">
+    <span class="tile-dot"></span><span class="tile-side">SKILLS</span>
+    <span class="tile-ghost" aria-hidden="true">M</span>
+    <div class="tile-eyebrow">${trackStats(mathUnits)}</div>
+    <h2 class="tile-title">Math</h2>
+    <div class="tile-foot"><span class="tile-cta">${cta('math')}</span></div>
+  </button>` : '';
+
+  const clepTileEl = clepUnits.length ? `<button type="button" class="card tile tex-b today-tile track-tile clep${openCls('clep')}" data-track="clep" style="--tile:#F0B98C; --card-accent:#E07A3E;">
+    <span class="tile-dot"></span><span class="tile-side">ELECTIVE</span>
+    <span class="tile-arcs" aria-hidden="true"></span>
+    <div class="tile-eyebrow">${trackStats(clepUnits)}</div>
+    <h2 class="tile-title tile-title-sans">CLEP</h2>
+    <p class="tile-display">College credit · Western Civ I</p>
+    <div class="tile-foot"><span class="tile-cta">${cta('clep')}</span></div>
+  </button>` : '';
+
+  return `<div class="u-tracks">
+    <div class="track-picker">${coreTile}${mathTile}${clepTileEl}</div>
+    ${trackPillsPanel('core', coreUnits)}
+    ${trackPillsPanel('math', mathUnits)}
+    ${trackPillsPanel('clep', clepUnits)}
+  </div>`;
+}
+
+/* ── lesson grid ─────────────────────────────────────────────────
+   When a unit is open (no single lesson picked), every lesson shows as a
+   Today-style tile. All tiles wear the unit's track color; variety comes
+   from mixed textures/recipes — one photo tile (the current lesson), the
+   rest cycling arcs · ghost-number · plain. Click a tile to open it. */
+function trackColors() {
+  if (UNIT.track === 'math') return { tile: '#F4CE5E', accent: '#D19A1F' };
+  if (UNIT.track === 'clep') return { tile: '#F0B98C', accent: '#E07A3E' };
+  return { tile: '#8FD6E1', accent: '#17A0AE' };
+}
+function lessonTile(card, i, curI) {
+  const done = !!state.done[card.id];
+  const status = done ? 'done' : (i === curI ? 'current' : 'locked');
+  const tc = trackColors();
+  const tex = ['tex-a', 'tex-b', 'tex-c', 'tex-d'][i % 4];
+  const showPhoto = i === curI && UNIT.image;
+  const fillType = ['plain', 'arcs', 'letter'][i % 3];
+  const fill = showPhoto
+    ? `<div class="today-photo"><img src="${UNIT.image}" alt=""></div>`
+    : fillType === 'arcs' ? `<span class="tile-arcs${i % 2 ? ' alt' : ''}" aria-hidden="true"></span>`
+    : fillType === 'letter' ? `<span class="tile-ghost" aria-hidden="true">${card.n}</span>`
+    : '';
+  const statusPill = done ? '<span class="lt-status done">✓ Done</span>'
+    : status === 'current' ? '<span class="lt-status current">● You’re here</span>'
+    : '<span class="lt-status locked">🔒 Locked</span>';
+  const cta = done ? 'Review →' : status === 'current' ? 'Open →' : 'Peek →';
+  return `<button type="button" class="card tile ${tex} today-tile lesson-tile ${status}" data-cardid="${card.id}"
+      style="--tile:${tc.tile}; --card-accent:${tc.accent};">
+    <span class="tile-dot"></span><span class="tile-side">LESSON ${card.n}</span>
+    ${fill}
+    <div class="tile-meta">
+      <span class="subject-badge" style="background:${tc.accent}; color:#fff;">${esc(card.subject)}</span>
+      <span>~${card.minutes} min</span>
+    </div>
+    <h2 class="tile-title">${esc(card.title)}</h2>
+    <div class="tile-foot"><span class="tile-cta">${cta}</span>${statusPill}</div>
+  </button>`;
+}
+function lessonGrid() {
+  const curI = currentIndex();
+  const tiles = UNIT.cards.map((c, i) => lessonTile(c, i, curI)).join('');
+  return `<div class="lesson-grid">${tiles}</div>
+    <button type="button" class="btn btn-ghost u-reset-grid" id="map-reset">↺ Reset all progress</button>`;
+}
+
 function render() {
   load();
   const curI = currentIndex();
-  if (!viewId || !UNIT.cards.find(c => c.id === viewId)) viewId = UNIT.cards[curI].id;
-  const viewCard = UNIT.cards.find(c => c.id === viewId);
-  const status = state.done[viewId] ? 'done' : (viewId === UNIT.cards[curI].id ? 'current' : 'locked');
+  // viewId === null → the lesson-grid view; otherwise show that one lesson.
+  if (viewId && !UNIT.cards.find(c => c.id === viewId)) viewId = null;
   const doneCount = Object.keys(state.done).filter(k => state.done[k]).length;
   const pct = Math.round((doneCount / UNIT.cards.length) * 100);
 
-  const switchRow = (units, cls, label) => units.length ? `<div class="u-switch-group ${cls}">
-    <div class="u-switch-label">${label}</div>
-    <div class="u-switch">${units.map(u => {
-      const d = unitDoneCount(u);
-      return `<a class="u-switch-link${u.id === UNIT.id ? ' on' : ''}" href="unit.html?u=${u.id}">${esc(u.short || u.title)}${d ? ` · ${d}/${u.cards.length}` : ''}</a>`;
-    }).join('')}</div></div>` : '';
-  const coreUnits = HS_UNITS.filter(u => u.track !== 'math');
+  const coreUnits = HS_UNITS.filter(u => !u.track);
   const mathUnits = HS_UNITS.filter(u => u.track === 'math');
-  const switcher = HS_UNITS.length > 1
-    ? `<div class="u-switch-wrap">${switchRow(coreUnits, 'core', 'Interdisciplinary')}${switchRow(mathUnits, 'math', 'Math')}</div>`
-    : '';
+  const clepUnits = HS_UNITS.filter(u => u.track === 'clep');
+  const curTrack = UNIT.track === 'math' ? 'math' : UNIT.track === 'clep' ? 'clep' : 'core';
+  if (openTrack === null) openTrack = curTrack;
+  const switcher = HS_UNITS.length > 1 ? trackPicker(coreUnits, mathUnits, clepUnits) : '';
+
+  let body, viewCard = null, status = null;
+  if (!viewId) {
+    body = lessonGrid();
+  } else {
+    viewCard = UNIT.cards.find(c => c.id === viewId);
+    status = state.done[viewId] ? 'done' : (viewId === UNIT.cards[curI].id ? 'current' : 'locked');
+    body = `<div class="u-lesson-back"><a href="#" class="u-to-grid">← All lessons</a></div>${cardHtml(viewCard, status)}`;
+  }
 
   const app = document.getElementById('unit-app');
   app.classList.toggle('theme-math', UNIT.track === 'math');
+  app.classList.toggle('theme-clep', UNIT.track === 'clep');
   app.innerHTML = `
     <div class="u-head">
       ${switcher}
@@ -317,11 +433,9 @@ function render() {
       <div class="u-progress">
         <div class="u-progress-bar"><div class="u-progress-fill" style="width:${pct}%;"></div></div>
         <div class="u-progress-label">${doneCount} of ${UNIT.cards.length} done</div>
-        <button type="button" id="map-toggle" class="btn btn-ghost">All lessons</button>
       </div>
-      <div id="unit-map" class="unit-map" style="display:none;">${mapHtml()}</div>
     </div>
-    ${cardHtml(viewCard, status)}`;
+    ${body}`;
 
   wire(viewCard, status);
 
@@ -339,10 +453,28 @@ function render() {
 function wire(card, isCurrent) {
   const app = document.getElementById('unit-app');
 
-  document.getElementById('map-toggle').onclick = () => {
-    const m = document.getElementById('unit-map');
-    m.style.display = m.style.display === 'none' ? 'grid' : 'none';
-  };
+  // Lesson grid: click a lesson tile to open it; "← All lessons" returns.
+  app.querySelectorAll('.lesson-tile').forEach(t => {
+    t.onclick = () => { viewId = t.dataset.cardid; render(); };
+  });
+  const toGrid = app.querySelector('.u-to-grid');
+  if (toGrid) toGrid.onclick = (e) => { e.preventDefault(); viewId = null; render(); };
+
+  // Track picker: click a tile to reveal its unit pills (accordion — one open).
+  app.querySelectorAll('.track-tile').forEach(t => {
+    t.onclick = () => {
+      const key = t.dataset.track;
+      openTrack = openTrack === key ? null : key;
+      app.querySelectorAll('.track-tile').forEach(x => {
+        x.classList.toggle('open', x.dataset.track === openTrack);
+        const c = x.querySelector('.tile-cta');
+        if (c) c.textContent = x.dataset.track === openTrack ? 'Units below ↓' : 'Pick a unit →';
+      });
+      app.querySelectorAll('.track-pills').forEach(p => {
+        p.style.display = p.dataset.track === openTrack ? 'flex' : 'none';
+      });
+    };
+  });
   app.querySelectorAll('.map-item').forEach(el => {
     el.onclick = () => { viewId = el.dataset.cardid; render(); };
   });

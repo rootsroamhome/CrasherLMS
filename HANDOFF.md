@@ -1,4 +1,14 @@
-# HomeSkewl — where we are (updated 2026-07-10, third pass)
+# HomeSkewl — where we are (updated 2026-07-11)
+
+> **⏭️ NEXT UP — page redesign for the new CLEP track.** A third unit track was added
+> (**College Credit / CLEP**, brown): the free Modern States *CLEP Western Civ I* course, **all 6
+> modules built** (`unit-clep-*.js`), wired into all 5 pages, quiz-aligned, meta-free, verified
+> (18/18 units live). The **pages now need a redesign** to fit three tracks instead of two
+> (Today, Units switcher, Big Picture 3-col grid, Portfolio, Parents). Full instructions:
+> **[`docs/REDESIGN-BRIEF.md`](docs/REDESIGN-BRIEF.md)** — read that first. Nothing is pushed
+> live yet; the CLEP build + redesign ship in one push, only when Danielle says so.
+
+
 
 > **New:** the project is now documented in [`docs/README.md`](docs/README.md) (index +
 > recap), [`docs/STYLE-GUIDE.md`](docs/STYLE-GUIDE.md) (design system + hard rules incl. the

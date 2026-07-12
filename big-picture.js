@@ -41,19 +41,18 @@ const MATH_PLAN = [
 ];
 
 /* College-credit elective — Modern States CLEP Western Civ I, one module at a time.
-   Taken slowly toward the CLEP exam Crasher can sit once he turns 13 (Feb). `id`
-   links a module to a built unit; only Module 1 is built so far. */
-/* Paced toward the free CLEP exam Crasher can sit once he turns 13 (Feb 2027).
-   ~one module a month, slow, 2–4 short Modern States lessons a week; Module 4 (Medieval,
-   21 lessons — the biggest, ~a quarter of the exam) gets extra time, and the winter modules
-   straddle the holiday break. Finish content by early Feb, leave ~2 weeks to review, then test. */
+   Starts WITH the school year (Aug 31), like every other track — nothing over the summer.
+   Slow: ~one module every 5–6 weeks alongside the interdisciplinary + math load; Module 4
+   (Medieval, 21 lessons — biggest, ~a quarter of the exam) gets extra time. Crasher is
+   eligible for the CLEP once he turns 13 (Feb 2027), but the exam is NOT a deadline — aim
+   for late spring, or simply whenever he's ready. `id` links a module to a built unit. */
 const CLEP_PLAN = [
-  { n: 1, id: 'clep-early-civ', title: 'Ancient Near East', theme: '10 lessons · Mesopotamia · Egypt · empires', window: 'Now – Aug' },
-  { n: 2, id: 'clep-greece', title: 'Greece & Its Legacy', theme: '14 lessons · Sparta & Athens · philosophy', window: 'September' },
-  { n: 3, id: 'clep-rome', title: 'Rome: Republic to Empire', theme: '14 lessons · Republic → Empire · Roman law', window: 'October' },
-  { n: 4, id: 'clep-medieval', title: 'Medieval Europe', theme: '21 lessons (biggest) · feudalism · the Church · Black Death', window: 'Nov – early Dec' },
-  { n: 5, id: 'clep-renaissance', title: 'Renaissance & Reformation', theme: '13 lessons · humanism · Luther & Calvin', window: 'mid-Dec – mid-Jan' },
-  { n: 6, id: 'clep-early-modern', title: 'Early Modern Europe', theme: '13 lessons · exploration · science · to 1648', window: 'mid-Jan – early Feb' },
+  { n: 1, id: 'clep-early-civ', title: 'Ancient Near East', theme: '10 lessons · Mesopotamia · Egypt · empires', window: 'Aug 31 – Oct 9' },
+  { n: 2, id: 'clep-greece', title: 'Greece & Its Legacy', theme: '14 lessons · Sparta & Athens · philosophy', window: 'Oct 12 – Nov 20' },
+  { n: 3, id: 'clep-rome', title: 'Rome: Republic to Empire', theme: '14 lessons · Republic → Empire · Roman law', window: 'Nov 30 – Jan 22' },
+  { n: 4, id: 'clep-medieval', title: 'Medieval Europe', theme: '21 lessons (biggest) · feudalism · the Church · Black Death', window: 'Jan 25 – Mar 19' },
+  { n: 5, id: 'clep-renaissance', title: 'Renaissance & Reformation', theme: '13 lessons · humanism · Luther & Calvin', window: 'Mar 22 – Apr 23' },
+  { n: 6, id: 'clep-early-modern', title: 'Early Modern Europe', theme: '13 lessons · exploration · science · to 1648', window: 'Apr 26 – late spring' },
 ];
 
 /* The full year's 7th-grade standards, by content area — the ACTUAL Oregon
@@ -170,26 +169,53 @@ function section(title, body) {
   return `<div class="bp-section"><div class="section-label">${title}</div>${body}</div>`;
 }
 
+/* ── the six sprints ── */
+/* The three tracks run in parallel; each sprint is one broad chunk of the year.
+   Dates are generalized per sprint (the tracks' exact windows differ by a week
+   or two — see YEAR_PLAN / MATH_PLAN / CLEP_PLAN). */
+const SPRINT_WHEN = ['Aug – Oct', 'Oct – Nov', 'Dec – Jan', 'Jan – Mar', 'Mar – Apr', 'Apr – Jun'];
+const TRACKS = [
+  { key: 'core', label: 'Interdisciplinary', plan: YEAR_PLAN },
+  { key: 'math', label: 'Math', plan: MATH_PLAN },
+  { key: 'clep', label: 'CLEP', plan: CLEP_PLAN },
+];
+
+function sprintCell(row, track) {
+  const u = builtUnit(row.id);
+  const inner =
+    `<span class="sc-track">${esc(track.label)}</span>` +
+    `<span class="sc-title">${esc(row.title)}</span>` +
+    `<span class="sc-theme">${esc(row.theme)}</span>`;
+  return u
+    ? `<a class="sprint-cell ${track.key}" href="unit.html?u=${u.id}">${inner}</a>`
+    : `<div class="sprint-cell ${track.key} planned">${inner}</div>`;
+}
+
+function sprintRow(i) {
+  return `<div class="sprint-row">
+    <div class="sprint-label">
+      <span class="sprint-eyebrow">Sprint</span>
+      <span class="sprint-n">${i + 1}</span>
+      <span class="sprint-when">${SPRINT_WHEN[i]}</span>
+    </div>
+    ${TRACKS.map(t => sprintCell(t.plan[i], t)).join('')}
+  </div>`;
+}
+
+function sprintTable() {
+  const head = `<div class="sprint-head">
+    <div class="sh-corner"></div>
+    ${TRACKS.map(t => `<div class="sh-track ${t.key}">${esc(t.label)}</div>`).join('')}
+  </div>`;
+  const rows = SPRINT_WHEN.map((_, i) => sprintRow(i)).join('');
+  return `<div class="sprint-table">${head}${rows}</div>`;
+}
+
 function load() {
   const content = document.getElementById('content');
-  const totalStd = STANDARDS.reduce((n, a) => n + a.list.length, 0);
-  const doneStd = STANDARDS.reduce((n, a) => n + areaDone(a), 0);
-  const unitsLive = HS_UNITS.length;
-  const totalUnits = YEAR_PLAN.length + MATH_PLAN.length + CLEP_PLAN.length;
-  const cardsDone = HS_UNITS.reduce((s, u) => s + doneCount(u), 0);
-
-  document.getElementById('stat-units').textContent = `${unitsLive}/${totalUnits}`;
-  document.getElementById('stat-cards').textContent = cardsDone;
-  document.getElementById('stat-standards').textContent = `${doneStd}/${totalStd}`;
-
-  const yearColumns = `<div class="yr-columns">
-    <div class="yr-col core"><div class="yr-col-label">Interdisciplinary</div><div class="yr-list">${YEAR_PLAN.map(unitRow).join('')}</div></div>
-    <div class="yr-col math"><div class="yr-col-label">Math</div><div class="yr-list">${MATH_PLAN.map(unitRow).join('')}</div></div>
-    <div class="yr-col clep"><div class="yr-col-label">College Credit (CLEP)</div><div class="yr-list">${CLEP_PLAN.map(unitRow).join('')}</div></div>
-  </div>`;
 
   content.innerHTML =
-    section('The year, unit by unit', yearColumns) +
+    section('The year, sprint by sprint', sprintTable()) +
     section('Standards checklist — the whole year', standardsCards());
 
   wire();
@@ -206,9 +232,6 @@ function wire() {
       const card = row.closest('.std-card');
       const area = STANDARDS.find(a => a.area === card.dataset.area);
       card.querySelector('.std-count').textContent = areaDone(area);
-      const totalStd = STANDARDS.reduce((n, a) => n + a.list.length, 0);
-      const doneStd = STANDARDS.reduce((n, a) => n + areaDone(a), 0);
-      document.getElementById('stat-standards').textContent = `${doneStd}/${totalStd}`;
     });
   });
 }
