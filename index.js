@@ -360,17 +360,6 @@ function weeklyTile() {
   </div>`;
 }
 
-function portfolioTile() {
-  return `<a class="card tile black tex-d today-tile today-wide" href="portfolio.html" style="--card-accent:var(--coral);">
-    <span class="tile-dot"></span><span class="tile-side">SEE YOUR WORK</span>
-    ${tileFill('portfolio', 'P')}
-    <div class="tile-eyebrow">Everything you've made</div>
-    <h2 class="tile-title">See your work</h2>
-    <p class="tile-desc">Your answers, quiz scores, and vocabulary — all in one place, unit by unit.</p>
-    <div class="tile-foot"><span class="tile-cta">Open your portfolio →</span></div>
-  </a>`;
-}
-
 function schoolFlag() {
   if (inSession()) {
     const wk = weekNumber();
@@ -422,7 +411,6 @@ function render() {
         ${DAILY.map(dailyTile).join('')}
         ${clepTile()}
         ${weeklyTile()}
-        ${portfolioTile()}
       </div>`;
   } else if (dt.type === 'july') {
     gallery = `<div class="today-gallery">${DAILY.map(dailyTile).join('')}</div>`;
