@@ -167,6 +167,8 @@ button { font-family: var(--sans); cursor: pointer; }
   color: var(--text-muted);
   max-width: 46ch;
 }
+/* This Week's intro runs the full page width, in line with the track tiles */
+.hero-sub.tw-intro { max-width: none; }
 
 /* =========================================================
    Ticker ribbon (diagonal repeating tape) — signature motif
@@ -659,6 +661,8 @@ a:hover > .circle-arrow, .circle-arrow:hover { background: var(--ink); color: va
 .track-choice:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(26,26,26,0.11); }
 .track-choice.selfstudy { background: #DAD2AC; --ribbon: #7C8A4E; --rib-angle: 42deg; }
 .track-choice.rabbithole { background: #DDC1EE; --ribbon: #B657A0; --rib-angle: 50deg; }
+/* keep the tape a tidy top-right corner accent, clear of the name + desc */
+.track-choice .ribbon { top: -38px; right: -78px; width: 200px; }
 .track-choice .track-eyebrow { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-soft); }
 .track-choice .track-name { font-family: var(--serif); font-size: 1.9rem; font-weight: 600; line-height: 1; margin: 4px 0 8px; }
 .track-choice .track-desc { font-size: 0.86rem; color: var(--ink-soft); line-height: 1.45; }
