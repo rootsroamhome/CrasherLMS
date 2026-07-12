@@ -1211,10 +1211,11 @@ textarea.u-ans { min-height: 84px; }
 .today-tile .daily-done.is-checked { background: var(--ink); color: var(--cream); }
 
 /* Corner-tape ribbon sized for a normal tile (Portfolio) */
-.today-tile .ribbon { top: -16px; right: -42px; width: 146px; transform: rotate(43deg);
+.today-tile .ribbon { top: 15px; right: -48px; width: 184px; transform: rotate(38deg);
   padding: 5px 0; font-size: 0.56rem; letter-spacing: 0.18em; }
-/* portfolio tile carries the corner tape — keep its eyebrow clear of it */
-.today-tile.today-wide .tile-eyebrow { padding-right: 84px; }
+/* portfolio tile: coral accent lives on the side label + dot (no corner tape) */
+.today-tile.tile.black.today-wide .tile-side { color: var(--coral); }
+.today-tile.tile.black.today-wide .tile-dot { background: var(--coral); }
 
 /* Photo-less tiles get one of three treatments — plain · faint arcs · big ghost
    letter — assigned per tile and re-rolled each day. All sit behind the content. */

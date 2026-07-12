@@ -307,10 +307,9 @@ function weeklyTile() {
 }
 
 function portfolioTile() {
-  return `<a class="card tile black tex-d today-tile today-wide" href="portfolio.html" style="--card-accent:var(--coral); --ribbon:var(--coral); --ribbon-text:#fff; --rib-angle:50deg;">
+  return `<a class="card tile black tex-d today-tile today-wide" href="portfolio.html" style="--card-accent:var(--coral);">
     <span class="tile-dot"></span><span class="tile-side">SEE YOUR WORK</span>
     ${tileFill('portfolio', 'P')}
-    <div class="ribbon"><div class="ribbon-track">PORTFOLIO</div></div>
     <div class="tile-eyebrow">Everything you've made</div>
     <h2 class="tile-title">See your work</h2>
     <p class="tile-desc">Your answers, quiz scores, and vocabulary — all in one place, unit by unit.</p>
