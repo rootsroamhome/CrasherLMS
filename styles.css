@@ -1145,6 +1145,11 @@ textarea.u-ans { min-height: 84px; }
 
 /* ── Today landing (d.school-style textured gallery) ── */
 .today-hero { margin-bottom: 22px; }
+/* Rest screen — weekends, holidays/breaks, and pre-school August (no work) */
+.today-rest { text-align: center; padding: 40px 20px 56px; }
+.today-rest-icon { font-size: 3rem; display: block; margin-bottom: 8px; }
+.today-rest-head { font-family: var(--serif); font-size: 2rem; font-weight: 600; margin: 0 0 6px; }
+.today-rest-sub { font-size: 1rem; color: var(--text-muted); margin: 0; }
 .today-date { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); }
 .today-greeting { font-family: var(--serif); font-size: 2.4rem; line-height: 1.05; margin: 4px 0 10px; }
 .today-fact { font-size: 1rem; color: var(--text-muted); max-width: 62ch; line-height: 1.5; }

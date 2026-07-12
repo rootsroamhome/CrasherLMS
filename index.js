@@ -31,10 +31,40 @@ const HS_UNITS = window.HS_UNITS || [];
 // config.js / curriculum.js declare these as top-level `const`, which share the
 // page's global lexical scope but are NOT properties of window — so reference
 // them by name (guarded), never as window.*.
-const SCHOOL_START = (typeof CURRICULUM !== 'undefined' && CURRICULUM.yearStart) || '2026-08-31';
-// Deep summer runs until this date: Today shows only the daily reading + math,
-// no unit content. Units/preview/weekly/portfolio appear once school is close.
+// Follows the Medford School District 549C 2026–27 calendar, EXCEPT we start
+// Aug 31 (the district's 7th-grade day is Sep 1, but we begin a day early).
+// Last student day is Jun 10. August 1–30 stay empty (school hasn't begun).
+const SCHOOL_START = '2026-08-31';
+const SCHOOL_END = '2027-06-10';
+// July weekdays show only the daily reading + Khan math; August is empty until
+// school starts. (isSummer = July and earlier → the daily math is generic Khan.)
 const SUMMER_END = '2026-08-01';
+
+/* No-school days for students (Medford SD 2026–27) — weekends are handled
+   separately. Single days use `d`; multi-day breaks use `from`/`to` (inclusive).
+   The label shows on the rest-day screen. */
+const NO_SCHOOL = [
+  { d: '2026-07-03', label: 'Independence Day' },
+  { d: '2026-09-04', label: 'No school' },
+  { d: '2026-09-07', label: 'Labor Day' },
+  { d: '2026-10-02', label: 'No school' },
+  { d: '2026-10-09', label: 'No school' },
+  { d: '2026-11-02', label: 'No school' },
+  { d: '2026-11-11', label: 'Veterans Day' },
+  { from: '2026-11-23', to: '2026-11-24', label: 'Conferences — no school' },
+  { from: '2026-11-25', to: '2026-11-27', label: 'Thanksgiving Break' },
+  { d: '2026-12-11', label: 'No school' },
+  { from: '2026-12-21', to: '2027-01-01', label: 'Winter Break' },
+  { d: '2027-01-18', label: 'Martin Luther King Jr. Day' },
+  { d: '2027-01-25', label: 'No school' },
+  { d: '2027-02-15', label: "Presidents' Day" },
+  { d: '2027-03-01', label: 'No school' },
+  { from: '2027-03-22', to: '2027-03-26', label: 'Spring Break' },
+  { d: '2027-04-05', label: 'No school' },
+  { d: '2027-04-23', label: 'No school' },
+  { d: '2027-05-10', label: 'No school' },
+  { d: '2027-05-31', label: 'Memorial Day' },
+];
 
 /* The daily anchors. Edit this list to change what shows every day. */
 const DAILY = [
@@ -104,10 +134,28 @@ function setDaily(k, v) { const s = dailyState(); if (v) s[k] = 1; else delete s
 function parseDate(s) { return new Date(s + 'T00:00:00'); }
 function daysBetween(a, b) { return Math.round((parseDate(b) - parseDate(a)) / 86400000); }
 function fmtLong(s) { return parseDate(s).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); }
-function daysToSchool() { return daysBetween(viewDate, SCHOOL_START); }
-function inSession() { return daysToSchool() <= 0; }
+function inSession() { return viewDate >= SCHOOL_START && viewDate <= SCHOOL_END; }
 function isSummer() { return viewDate < SUMMER_END; }
 function weekNumber() { const d = daysBetween(SCHOOL_START, viewDate); return d < 0 ? 0 : Math.floor(d / 7) + 1; }
+function isWeekend(date) { const wd = parseDate(date).getDay(); return wd === 0 || wd === 6; }
+function holidayLabel(date) {
+  for (const h of NO_SCHOOL) {
+    if (h.d && h.d === date) return h.label;
+    if (h.from && date >= h.from && date <= h.to) return h.label;
+  }
+  return null;
+}
+/* What kind of day is viewDate? Drives what Today shows.
+   weekend / holiday → rest (no work); school → full gallery; july → reading +
+   Khan math only; off → empty (August before school, or after the year ends). */
+function dayType() {
+  if (isWeekend(viewDate)) return { type: 'weekend' };
+  const hol = holidayLabel(viewDate);
+  if (hol) return { type: 'holiday', label: hol };
+  if (inSession()) return { type: 'school' };
+  if (viewDate >= '2026-07-01' && viewDate <= '2026-07-31') return { type: 'july' };
+  return { type: 'off' };
+}
 
 function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function colorOf(subject) {
@@ -320,9 +368,22 @@ function portfolioTile() {
 function schoolFlag() {
   if (inSession()) {
     const wk = weekNumber();
-    return `<div class="school-flag in-session">📚 School year 2026–27${wk ? ` · Week ${wk} of 37` : ''}</div>`;
+    return `<div class="school-flag in-session">📚 School year 2026–27${wk ? ` · Week ${wk}` : ''}</div>`;
   }
   return '';   // no summer-break countdown banner
+}
+
+/* Weekends, holidays/breaks, and pre-school August all show a calm rest screen
+   instead of the work gallery. */
+function restBlock(dt) {
+  let icon = '☀️', head = 'No schoolwork today', sub = '';
+  if (dt.type === 'weekend') { icon = '🌿'; head = "It's the weekend"; sub = 'No schoolwork today — go be a kid.'; }
+  else if (dt.type === 'holiday') { icon = '🎉'; head = dt.label; sub = 'No school today.'; }
+  return `<div class="today-rest">
+    <span class="today-rest-icon">${icon}</span>
+    <h2 class="today-rest-head">${esc(head)}</h2>
+    ${sub ? `<p class="today-rest-sub">${esc(sub)}</p>` : ''}
+  </div>`;
 }
 
 function datePicker() {
@@ -347,15 +408,21 @@ function render() {
 
   computePhotoPlan();
   computeFillPlan();
-  const gallery = isSummer()
-    ? `<div class="today-gallery">${DAILY.map(dailyTile).join('')}</div>`
-    : `<div class="today-gallery">
+  const dt = dayType();
+  let gallery;
+  if (dt.type === 'school') {
+    gallery = `<div class="today-gallery">
         ${lessonTile()}
         ${DAILY.map(dailyTile).join('')}
         ${clepTile()}
         ${weeklyTile()}
         ${portfolioTile()}
       </div>`;
+  } else if (dt.type === 'july') {
+    gallery = `<div class="today-gallery">${DAILY.map(dailyTile).join('')}</div>`;
+  } else {
+    gallery = restBlock(dt);
+  }
 
   document.getElementById('today').innerHTML = hero + gallery;
   wire();
