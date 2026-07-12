@@ -48,7 +48,14 @@ const DAILY = [
     tile: '#F4CE5E', accent: '#D19A1F',
     link: 'unit.html?u=math-proportions', linkLabel: 'Start', internal: true,
     noTimerInSession: true,   // self-paced once the 7th-grade units start (Aug 31): no timer
-    note: 'Work the Proportional Relationships unit — a short video, a quick check, then Khan practice.' },
+    note: 'Work the Proportional Relationships unit — a short video, a quick check, then Khan practice.',
+    // Over the summer there's no unit yet — it's just Khan practice to stay sharp.
+    // The Proportional Relationships unit only kicks in with the school year (Aug 31).
+    summer: {
+      title: 'Khan Math',
+      link: 'https://www.khanacademy.org/math/cc-seventh-grade-math', linkLabel: 'Open Khan', internal: false,
+      note: 'Summer math is just Khan — your pick of 7th-grade skills to keep sharp. The math unit starts when school does.',
+    } },
 ];
 
 /* ── unit progress (reads each unit's own localStorage) ── */
@@ -230,6 +237,7 @@ function lessonTile() {
 }
 
 function dailyTile(item, i) {
+  if (isSummer() && item.summer) item = { ...item, ...item.summer };
   const c = item.tile ? { tile: item.tile, bg: item.accent } : colorOf(item.subject);
   const isDone = !!dailyState()[item.key];
   // Self-paced anchors drop the 30-min timer once school is in session (Aug 31+),
